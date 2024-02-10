@@ -13,10 +13,12 @@ export default function Providers(props: PropsWithChildren) {
       enableSystem
     >
       <div className={cn(
-        "max-w-desktop bg-background mx-auto flex min-h-screen px-8 antialiased"
+        "bg-background desktop:grid desktop:grid-cols-[240px_minmax(0,1fr)] desktop:gap-10 container relative min-h-screen flex-1 antialiased"
       )}>
         <Sidebar />
-        {props.children}
+        <main className="w-full">
+          {props.children}
+        </main>
       </div>
     </ThemeProvider>
   );

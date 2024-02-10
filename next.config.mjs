@@ -2,26 +2,23 @@ import createMDX from "@next/mdx";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
+import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import { visit } from "unist-util-visit";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  pageExtensions: ["mdx", "ts", "tsx"],
+  pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
   reactStrictMode: true,
-};
-
-/** @type {import('rehype-pretty-code').Options} */
-const options = {
-  // See Options section below.
-  
-
 };
 
 const withMDX = createMDX({
   // Add markdown plugins here, as desired
   options: {
-    remarkPlugins: [remarkGfm],
+    remarkPlugins: [
+      remarkGfm,
+      remarkBreaks,
+    ],
     rehypePlugins: [
       rehypeSlug,
       () => (tree) => {

@@ -8,7 +8,7 @@ const description = "프론트엔드 개발자 김도현의 블로그입니다."
 
 export const metadata: Metadata = {
   title: {
-    template: "$s | GomBandal",
+    template: "$s | GomBandalBlog",
     default: "GomBandal Blog",
   },
   description,
