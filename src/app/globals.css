@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "pretendard/dist/web/static/pretendard.css";
+@import "github-markdown-css/github-markdown.css";
+@import "@/styles/mdx.css";
  
 @layer base {
   :root {

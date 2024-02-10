@@ -1,0 +1,20 @@
+[data-rehype-pretty-code-figure] {
+  @apply relative;
+}
+
+[data-rehype-pretty-code-title] {
+  @apply ml-4 text-sm font-medium;
+}
+
+[data-rehype-pretty-code-title] + pre {
+  @apply mt-2;
+}
+
+[data-rehype-pretty-code-title] + pre + button {
+  @apply top-9;
+}
+
+[data-rehype-pretty-code-figure] code {
+  @apply grid min-w-full break-words rounded-none border-0 bg-transparent p-0;
+  counter-reset: line;
+}
