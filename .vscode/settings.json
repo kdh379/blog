@@ -3,4 +3,19 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "css.lint.unknownAtRules": "ignore",
+    "cSpell.words": [
+        // tailwindcss
+        "tailwindcss",
+        "callees",
+        "classname",
+        
+        // mdx
+        "rehype",
+
+        // shadcn-ui
+        "cmdk",
+
+        // font
+        "pretendard"
+    ],
 }
