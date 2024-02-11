@@ -71,11 +71,9 @@ interface PostNavProps {
 function PostNav( {groupedPost, pathname, category}: PostNavProps) {
   if( isPostMatter(groupedPost) ) {
     return (
-      <li>
-        <NavItem href={`/posts/${groupedPost.slug}`} pathname={pathname}>
-          {groupedPost.title}
-        </NavItem>
-      </li>
+      <NavItem href={`/posts/${groupedPost.slug}`} pathname={pathname}>
+        {groupedPost.title}
+      </NavItem>
     );
   }
   
@@ -84,11 +82,15 @@ function PostNav( {groupedPost, pathname, category}: PostNavProps) {
       <AccordionTrigger className="mb-2 py-0 text-sm">
         {category}
       </AccordionTrigger>
-      {Object.entries(groupedPost).map(([key, post]) => (
-        <AccordionContent key={key} className="py-1 pl-3">
-          <PostNav groupedPost={post} pathname={pathname} category={key} />
-        </AccordionContent>
-      ))}
+      <ul>
+        {Object.entries(groupedPost).map(([key, post]) => (
+          <li key={key}>
+            <AccordionContent  className="py-1 pl-3">
+              <PostNav groupedPost={post} pathname={pathname} category={key} />
+            </AccordionContent>
+          </li>
+        ))}
+      </ul>
     </AccordionItem>
   </Accordion>;
 }
@@ -106,7 +108,9 @@ export default function SidebarNav( {postList}: SidebarNavProps ) {
         </li>
         {
           Object.entries(groupBySlug(postList)).map(([category, post]) => (
-            <PostNav key={category} groupedPost={post} pathname={pathname} category={category} />
+            <li key={category}>
+              <PostNav groupedPost={post} pathname={pathname} category={category} />
+            </li>
           ))
         }
       </ul>

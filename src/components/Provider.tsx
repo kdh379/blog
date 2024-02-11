@@ -16,9 +16,7 @@ export default function Providers(props: PropsWithChildren) {
         "bg-background desktop:grid desktop:grid-cols-[240px_minmax(0,1fr)] desktop:gap-10 container relative min-h-screen flex-1 antialiased"
       )}>
         <Sidebar />
-        <main className="w-full">
-          {props.children}
-        </main>
+        {props.children}
       </div>
     </ThemeProvider>
   );

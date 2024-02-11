@@ -8,7 +8,7 @@ import readingTime from "reading-time";
 const BASE_PATH = "src/content";
 const POST_PATH = path.join(process.cwd(), BASE_PATH);
 
-export const parsePost = (postPath: string): PostMatter | undefined => {
+export function parsePost(postPath: string): PostMatter | undefined{
   const file = fs.readFileSync(postPath, {encoding: "utf-8"});
   const { content, data } = matter(file);
   const grayMatter = data as PostMatter;
@@ -27,7 +27,7 @@ export const parsePost = (postPath: string): PostMatter | undefined => {
   };
 };
 
-export const getAllPosts = () => {
+export function getAllPosts() {
   const postPaths = sync(`${POST_PATH}/**/*.mdx`, {
     posix: true,
     ignore: ["**/(**)/**"],
