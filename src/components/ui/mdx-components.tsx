@@ -18,6 +18,7 @@ import {
 import { Callout } from "@/components/ui/callout";
 import { CodeBlockWrapper } from "@/components/ui/code-block-wrapper";
 import CopyButton from "@/components/ui/copy-button";
+import { mdxOptions } from "@/lib/mdx";
 import { cn } from "@/lib/utils";
 
 const mdxComponents: MDXComponents = {
@@ -227,6 +228,7 @@ export default function Mdx({source}: MDXRemoteProps) {
     <MDXRemote
       source={source}
       components={mdxComponents}
+      options={mdxOptions}
     />
   );
 }
