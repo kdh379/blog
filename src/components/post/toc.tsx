@@ -37,7 +37,6 @@ export function TableOfContents({ toc }: TocProps) {
 
   return (
     <div>
-      {itemIds.map((id) => (<span key={id}>{id}</span>))}
       <p className="font-medium">On This Page</p>
       <Tree tree={toc} activeItem={activeItem}  />
     </div>
