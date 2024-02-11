@@ -7,13 +7,14 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export default function ThemeToggle() {
+export default function ThemeToggle( {className}: {className?: string}) {
   const { setTheme, theme } = useTheme();
   
   return (
     <Button
       variant="ghost"
       size="icon"
+      className="ml-auto"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
     >
       <Sun className={cn("size-5 dark:hidden", theme==="light" && "animate-rotate")} />

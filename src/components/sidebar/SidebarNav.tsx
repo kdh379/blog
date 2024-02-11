@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSetRecoilState } from "recoil";
 
 import { cn } from "@/lib/utils";
+import { sidebarVisibleAtom } from "@/store/atom";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
-
-
 
 interface NavItemProps {
   href: string;
@@ -19,17 +19,27 @@ interface GroupedPost {
   [key: string]: PostMatter | GroupedPost;
 }
 
-const NavItem = ({ href, pathname, children }: NavItemProps) => (
-  <Link
-    href={href}
-    className={cn(
-      "text-muted-foreground text-sm hover:underline",
-      pathname === href && "text-primary font-bold"
-    )}
-  >
-    {children}
-  </Link>
-);
+function NavItem ({ href, pathname, children }: NavItemProps) {
+
+  const setOpen = useSetRecoilState(sidebarVisibleAtom);
+
+  const handleNavItemClick = () => {
+    setOpen(false);
+  };
+
+  return (
+    <Link
+      href={href}
+      onClick={handleNavItemClick}
+      className={cn(
+        "text-muted-foreground text-sm hover:underline",
+        pathname === href && "text-primary font-bold"
+      )}
+    >
+      {children}
+    </Link>
+  );
+};
 
 function groupBySlug(postList: PostMatter[]) {
   return postList.reduce((acc, post) => {
@@ -69,6 +79,7 @@ interface PostNavProps {
 }
 
 function PostNav( {groupedPost, pathname, category}: PostNavProps) {
+
   if( isPostMatter(groupedPost) ) {
     return (
       <NavItem href={`/posts/${groupedPost.slug}`} pathname={pathname}>

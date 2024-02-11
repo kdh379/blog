@@ -10,6 +10,10 @@ const screenValue = {
 const screens = Object.fromEntries( Object.entries( screenValue ).map( ( [key, value] ) => [key, `${value[0]}px`] ) );
 const screenWidth = Object.fromEntries( Object.entries( screenValue ).map( ( [key, value] ) => [key, `${value[1]}px`] ) );
 
+const customWidth = {
+  sidebar: "240px",
+};
+
 const config = {
   darkMode: ["class"],
   content: [
@@ -99,6 +103,9 @@ const config = {
       },
       maxWidth: {
         ...screenWidth,
+      },
+      spacing: {
+        ...customWidth,
       },
     },
   },
