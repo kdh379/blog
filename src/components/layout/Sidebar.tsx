@@ -2,6 +2,7 @@ import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 import SidebarNav from "../sidebar/SidebarNav";
@@ -22,15 +23,15 @@ export default function Sidebar( {postList, className}: SidebarProps ) {
       className
     )}>
       <Link href="/">
-        <p className="text-2xl font-bold">Bandal Blog</p>
+        <p className="text-2xl font-bold">{siteConfig.name}</p>
       </Link>
       <div className="relative my-4 w-32 after:block after:pb-[100%]">
         <Image
           src="/images/profile.jpg"
           alt="Profile Picture"
-          className="absolute size-full rounded-full object-cover shadow-xl"
-          width={300}
-          height={300}
+          className="absolute size-full rounded-md object-cover"
+          width={150}
+          height={150}
           priority
         />
       </div>
