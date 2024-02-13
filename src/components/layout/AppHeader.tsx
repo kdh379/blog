@@ -30,7 +30,7 @@ export default function AppHeader( props: AppHeaderProps ) {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="w-[calc(100vw-3.5rem)] pr-0">
-        <Sidebar className="ml-0 block px-2" postList={props.postList} />
+        <Sidebar className="static flex flex-col pr-8" postList={props.postList} />
       </SheetContent>
     </Sheet>
     <span className="text-xl font-bold">Bandal Blog</span>

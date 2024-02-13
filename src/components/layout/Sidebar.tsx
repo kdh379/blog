@@ -18,13 +18,13 @@ export default function Sidebar( {postList, className}: SidebarProps ) {
   return <>
     {/* <SidebarBackDrop /> */}
     <header className={cn(
-      "desktop:flex desktop:sticky fixed top-0 z-30 -ml-2 hidden h-screen shrink-0 flex-col",
+      "tablet:flex tablet:flex-col tablet:sticky fixed top-8 hidden h-[calc(100vh-3.5rem)] shrink-0",
       className
     )}>
       <Link href="/">
-        <h1 className="py-6 text-2xl font-bold">Bandal Blog</h1>
+        <p className="text-2xl font-bold">Bandal Blog</p>
       </Link>
-      <div className="relative w-32 after:block after:pb-[100%]">
+      <div className="relative my-4 w-32 after:block after:pb-[100%]">
         <Image
           src="/images/profile.jpg"
           alt="Profile Picture"
@@ -34,11 +34,11 @@ export default function Sidebar( {postList, className}: SidebarProps ) {
           priority
         />
       </div>
-      <div className="bg-background/95 my-4 flex gap-x-2 backdrop-blur">
+      <div className="bg-background/95 mobile:flex hidden gap-x-2">
         <div className="relative">
           <Search className="text-muted-foreground absolute left-2 top-3 size-4" />
           <Input
-            type="search"
+            type="text"
             placeholder="Search"
             className="py-1 pl-8"
             aria-label="Search"
@@ -46,7 +46,7 @@ export default function Sidebar( {postList, className}: SidebarProps ) {
         </div>
         <ToggleTheme />
       </div>
-      <ScrollArea className="size-full">
+      <ScrollArea className="size-full py-4 pr-4">
         <SidebarNav postList={postList} />
       </ScrollArea>
     </header>

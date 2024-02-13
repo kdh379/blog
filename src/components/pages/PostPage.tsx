@@ -17,9 +17,9 @@ export default async function PostPage(props: PostPageProps) {
 
   const toc = await getTableOfContents(props.content);
 
-  return <main className="tablet:grid tablet:grid-cols-[1fr_300px] tablet:gap-10 relative py-6">
-    <div>
-      <h1 className="mb-4 scroll-m-20 text-4xl font-bold tracking-tight">
+  return <main className="desktop:grid desktop:grid-cols-[1fr_300px] desktop:gap-10 relative py-6">
+    <div className="">
+      <h1 className="mb-4 text-4xl font-bold tracking-tight">
         {props.title}
       </h1>
       <div className="text-muted-foreground space-y-2">
@@ -50,7 +50,7 @@ export default async function PostPage(props: PostPageProps) {
         </Badge>
       ))}
     </div>
-    <div className="tablet:block hidden text-sm">
+    <div className="desktop:block hidden text-sm">
       <div className="sticky top-16">
         <ScrollArea className="h-[calc(100vh-6rem)]">
           <TableOfContents toc={toc} />

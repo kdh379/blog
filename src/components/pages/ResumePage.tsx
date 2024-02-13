@@ -5,7 +5,9 @@ interface ResumePageProps extends PostMatter {
 }
 
 export default function ResumePage(props: ResumePageProps) {
-  return <Mdx
-    source={props.content}
-  />;
+  return <div>
+    <Mdx
+      source={props.content}
+    />
+  </div>;
 }

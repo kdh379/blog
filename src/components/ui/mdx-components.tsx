@@ -122,7 +122,7 @@ const mdxComponents: MDXComponents = {
     <img className={cn("rounded-md", className)} alt={alt} {...props} />
   ),
   hr: ({ ...props }: React.HTMLAttributes<HTMLHRElement>) => (
-    <hr className="my-4 md:my-8" {...props} />
+    <hr className="tablet:my-8 my-4" {...props} />
   ),
   table: ({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) => (
     <div className="my-6 w-full overflow-y-auto">
@@ -215,7 +215,7 @@ const mdxComponents: MDXComponents = {
   LinkedCard: ({ className, ...props }: React.ComponentProps<typeof Link>) => (
     <Link
       className={cn(
-        "bg-card text-card-foreground hover:bg-muted/50 flex w-full flex-col items-center rounded-xl border p-6 shadow transition-colors sm:p-10",
+        "bg-card text-card-foreground hover:bg-muted/50 mobile:p-10 flex w-full flex-col items-center rounded-xl border p-6 shadow transition-colors",
         className
       )}
       {...props}
