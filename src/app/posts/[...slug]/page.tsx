@@ -10,7 +10,7 @@ interface PostPageProps {
 }
 
 function getPostFromParams({ params }: PostPageProps) {
-  const slug = typeof params.slug === "string" ? params.slug : params.slug.join("/");
+  const slug = typeof params.slug === "string" ? params.slug : decodeURIComponent(params.slug.join("/"));
   
   const post = getAllPosts().find((post) => post.slug === slug);
 

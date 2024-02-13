@@ -33,7 +33,7 @@ function NavItem ({ href, pathname, children }: NavItemProps) {
       onClick={handleNavItemClick}
       className={cn(
         "text-muted-foreground text-sm hover:underline",
-        pathname === href && "text-primary font-bold"
+        decodeURIComponent(pathname) === href && "text-primary font-bold"
       )}
     >
       {children}

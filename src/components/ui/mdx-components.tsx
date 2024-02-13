@@ -21,6 +21,7 @@ import CopyButton from "@/components/ui/copy-button";
 import { mdxOptions } from "@/lib/mdx";
 import { cn } from "@/lib/utils";
 
+
 const mdxComponents: MDXComponents = {
   Accordion,
   AccordionContent,
@@ -170,7 +171,7 @@ const mdxComponents: MDXComponents = {
           "mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg border px-2 py-4"
         )}
         {...props}
-      />;
+      />
       {__rawString__ && (
         <CopyButton
           value={__rawString__}

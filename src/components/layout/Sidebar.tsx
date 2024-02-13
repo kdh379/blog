@@ -27,7 +27,7 @@ export default function Sidebar( {postList, className}: SidebarProps ) {
       </Link>
       <div className="relative my-4 w-32 after:block after:pb-[100%]">
         <Image
-          src="/images/profile.jpg"
+          src={siteConfig.image}
           alt="Profile Picture"
           className="absolute size-full rounded-md object-cover"
           width={150}
