@@ -1,23 +1,24 @@
-import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
+import { getAllPosts } from "@/lib/posts";
 import { cn } from "@/lib/utils";
 
-import SidebarNav from "../sidebar/SidebarNav";
-import ToggleTheme from "../sidebar/ToggleTheme";
-import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
+import PostsSearch from "./PostsSearch";
+import SidebarNav from "./SidebarNav";
+import ToggleTheme from "./ToggleTheme";
 
 interface SidebarProps {
-  postList: PostMatter[];
   className?: string;
 }
 
-export default function Sidebar( {postList, className}: SidebarProps ) {
+export default function Sidebar( {className}: SidebarProps ) {
+
+  const postList = getAllPosts();
+
   return <>
-    {/* <SidebarBackDrop /> */}
     <header className={cn(
       "tablet:flex tablet:flex-col tablet:sticky fixed top-8 hidden h-[calc(100vh-3.5rem)] shrink-0",
       className
@@ -36,14 +37,8 @@ export default function Sidebar( {postList, className}: SidebarProps ) {
         />
       </div>
       <div className="bg-background/95 mobile:flex hidden gap-x-2">
-        <div className="relative">
-          <Search className="text-muted-foreground absolute left-2 top-3 size-4" />
-          <Input
-            type="text"
-            placeholder="Search"
-            className="py-1 pl-8"
-            aria-label="Search"
-          />
+        <div className="flex-1">
+          <PostsSearch />
         </div>
         <ToggleTheme />
       </div>

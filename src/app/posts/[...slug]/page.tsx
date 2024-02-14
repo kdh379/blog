@@ -1,7 +1,7 @@
 
 import PostPage from "@/components/pages/PostPage";
 import { siteConfig } from "@/config/site";
-import { getAllPosts } from "@/lib/posts";
+import { getAllPosts, getAllPostStaticParams } from "@/lib/posts";
 
 interface PostPageProps {
   params: {
@@ -47,9 +47,7 @@ export function generateMetadata({ params }: PostPageProps) {
 }
 
 export function generateStaticParams() {
-  return getAllPosts().map((post) => ({
-    slug: post.slug.split("/"),
-  }));
+  return getAllPostStaticParams();
 }
 
 const Post = ({ params }: PostPageProps) => {

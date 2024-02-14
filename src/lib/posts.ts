@@ -8,6 +8,13 @@ import readingTime from "reading-time";
 const BASE_PATH = "src/content";
 const POST_PATH = path.join(process.cwd(), BASE_PATH);
 
+function getAllPostPaths() {
+  return sync(`${POST_PATH}/**/*.mdx`, {
+    posix: true,
+    ignore: ["**/(**)/**"],
+  });
+};
+
 export function parsePost(postPath: string): PostMatter | undefined{
   const file = fs.readFileSync(postPath, {encoding: "utf-8"});
   const { content, data } = matter(file);
@@ -15,7 +22,7 @@ export function parsePost(postPath: string): PostMatter | undefined{
 
   if( grayMatter.draft ) return;
 
-  const {minutes, ...rest} = readingTime(content);
+  const {minutes} = readingTime(content);
   
   return {
     ...grayMatter,
@@ -28,12 +35,7 @@ export function parsePost(postPath: string): PostMatter | undefined{
 };
 
 export function getAllPosts() {
-  const postPaths = sync(`${POST_PATH}/**/*.mdx`, {
-    posix: true,
-    ignore: ["**/(**)/**"],
-  });
-  
-  return postPaths.reduce<PostMatter[]>((acc, postPath) => {
+  return getAllPostPaths().reduce<PostMatter[]>((acc, postPath) => {
     const post = parsePost(postPath);
     
     if( !post ) return acc;
@@ -41,3 +43,11 @@ export function getAllPosts() {
     return [...acc, post];
   }, []);
 };
+
+export function getAllPostStaticParams() {
+  return getAllPostPaths().map((postPath) => ({
+    params: {
+      slug: postPath.slice(postPath.indexOf(BASE_PATH) + BASE_PATH.length + 1).replace(".mdx", "").split("/"),
+    },
+  }));
+}
