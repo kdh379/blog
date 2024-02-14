@@ -3,6 +3,10 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "css.lint.unknownAtRules": "ignore",
+    "tailwindCSS.experimental.classRegex": [
+        ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+        ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+    ],
     "pasteImage.defaultName": "YYMMDD-HHmmss",
     "pasteImage.basePath": "${projectRoot}/public",
     "pasteImage.path": "${projectRoot}/public/posts/${currentFileNameWithoutExt}",
