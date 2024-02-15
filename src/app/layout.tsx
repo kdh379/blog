@@ -19,13 +19,16 @@ export const metadata: Metadata = {
   ],
   creator: "kdh379",
   openGraph: {
+    title: {
+      template: `%s | ${siteConfig.name}`,
+      default: siteConfig.name,
+    },
     type: "website",
     locale: "ko_KR",
     url: siteConfig.url,
-    title: siteConfig.name,
-    description: siteConfig.description,
     siteName: siteConfig.name,
     images: [
+      siteConfig.description,
       {
         url: siteConfig.image,
         width: 500,

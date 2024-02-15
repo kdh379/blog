@@ -26,7 +26,7 @@ export default function Sidebar( {className}: SidebarProps ) {
         <Image
           src={siteConfig.image}
           alt="Profile Picture"
-          className="absolute size-full rounded-md object-cover"
+          className="absolute size-full rounded-full object-cover"
           width={150}
           height={150}
           priority
