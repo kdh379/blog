@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 import { siteConfig } from "@/config/site";
@@ -12,7 +13,9 @@ export default function AppHeader( ) {
     <MobileSheet>
       <Sidebar className="static flex flex-col pr-8" />
     </MobileSheet>
-    <span className="text-xl font-bold">{siteConfig.name}</span>
-    <ThemeToggle className="size-4" />
+    <Link href="/">
+      <span className="text-xl font-bold">{siteConfig.name}</span>
+    </Link>
+    <ThemeToggle />
   </header>;
 }

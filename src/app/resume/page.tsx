@@ -1,8 +1,9 @@
+import { allPosts } from "contentlayer/generated";
+
 import ResumePage from "@/components/pages/ResumePage";
-import { parsePost } from "@/lib/posts";
 
 const Resume = () => {
-  const resume = parsePost("src/content/(resume)/resume.mdx");
+  const resume = allPosts.find((post) => post.slug === "/resume");
 
   if( !resume ) return null;
 

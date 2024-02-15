@@ -1,13 +1,14 @@
+import { Post } from "contentlayer/generated";
+
 import Mdx from "../ui/mdx-components";
 
-interface ResumePageProps extends PostMatter {
-
+interface ResumePageProps extends Post {
 }
 
-export default function ResumePage(props: ResumePageProps) {
+export default function ResumePage({body}: ResumePageProps) {
   return <div>
     <Mdx
-      source={props.content}
+      code={body.code}
     />
   </div>;
 }

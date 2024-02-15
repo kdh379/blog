@@ -1,5 +1,6 @@
 "use client";
 
+import { allPosts, Post } from "contentlayer/generated";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSetRecoilState } from "recoil";
@@ -16,23 +17,19 @@ interface NavItemProps {
 }
 
 interface GroupedPost {
-  [key: string]: PostMatter | GroupedPost;
+  [key: string]: Post | GroupedPost;
 }
 
 function NavItem ({ href, pathname, children }: NavItemProps) {
 
   const setOpen = useSetRecoilState(sidebarVisibleAtom);
 
-  const handleNavItemClick = () => {
-    setOpen(false);
-  };
-
   return (
     <Link
       href={href}
-      onClick={handleNavItemClick}
+      onClick={() => setOpen(false)}
       className={cn(
-        "text-muted-foreground text-sm hover:underline",
+        "text-muted-foreground flex w-full text-sm hover:underline",
         decodeURIComponent(pathname) === href && "text-primary font-bold"
       )}
     >
@@ -41,9 +38,9 @@ function NavItem ({ href, pathname, children }: NavItemProps) {
   );
 };
 
-function groupBySlug(postList: PostMatter[]) {
-  return postList.reduce((acc, post) => {
-    const slugParts = post.slug.split("/");
+function groupBySlug(posts: Post[]) {
+  return posts.filter((post) => post.slug.startsWith("/posts")).reduce((acc, post) => {
+    const slugParts = post.slug.split("/").slice(2);
 
     if( slugParts.length === 0 ) 
       return acc;
@@ -63,26 +60,21 @@ function groupBySlug(postList: PostMatter[]) {
   }, {} as GroupedPost);
 }
 
-function isPostMatter(post: PostMatter | GroupedPost): post is PostMatter {
-  return (post as PostMatter).title !== undefined;
-}
-
-interface SidebarNavProps {
-  postList: PostMatter[];
+function isPost(post: Post | GroupedPost): post is Post {
+  return (post as Post).title !== undefined;
 }
 
 interface PostNavProps {
-  groupedPost: PostMatter | GroupedPost;
+  groupedPost: Post | GroupedPost;
   pathname: string;
   category: string;
 
 }
 
 function PostNav( {groupedPost, pathname, category}: PostNavProps) {
-
-  if( isPostMatter(groupedPost) ) {
+  if( isPost(groupedPost) ) {
     return (
-      <NavItem href={`/posts/${groupedPost.slug}`} pathname={pathname}>
+      <NavItem href={groupedPost.slug} pathname={pathname}>
         {groupedPost.title}
       </NavItem>
     );
@@ -106,9 +98,9 @@ function PostNav( {groupedPost, pathname, category}: PostNavProps) {
   </Accordion>;
 }
 
-export default function SidebarNav( {postList}: SidebarNavProps ) {
+export default function SidebarNav() {
   const pathname = usePathname();
-  
+
   return (
     <nav className="flex-1">
       <ul className="flex flex-col gap-y-2">
@@ -118,7 +110,7 @@ export default function SidebarNav( {postList}: SidebarNavProps ) {
           </NavItem>
         </li>
         {
-          Object.entries(groupBySlug(postList)).map(([category, post]) => (
+          Object.entries(groupBySlug(allPosts)).map(([category, post]) => (
             <li key={category}>
               <PostNav groupedPost={post} pathname={pathname} category={category} />
             </li>

@@ -1,7 +1,7 @@
 import { MDXComponents } from "mdx/types";
 import Image from "next/image";
 import Link from "next/link";
-import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc";
+import { useMDXComponent } from "next-contentlayer/hooks";
 import * as React from "react";
 
 import {
@@ -18,7 +18,6 @@ import {
 import { Callout } from "@/components/ui/callout";
 import { CodeBlockWrapper } from "@/components/ui/code-block-wrapper";
 import CopyButton from "@/components/ui/copy-button";
-import { mdxOptions } from "@/lib/mdx";
 import { cn } from "@/lib/utils";
 
 
@@ -224,12 +223,14 @@ const mdxComponents: MDXComponents = {
   ),
 };
 
-export default function Mdx({source}: MDXRemoteProps) {
+interface MdxProps {
+  code: string;
+}
+
+export default function Mdx({code}: MdxProps) {
+  const Component = useMDXComponent(code);
+
   return (
-    <MDXRemote
-      source={source}
-      components={mdxComponents}
-      options={mdxOptions}
-    />
+    <Component components={mdxComponents} />
   );
 }

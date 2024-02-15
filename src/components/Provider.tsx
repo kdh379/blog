@@ -10,11 +10,7 @@ import { Toaster } from "./ui/toaster";
 
 export default function Providers(props: PropsWithChildren) {
   return (
-    <ClientSideProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-    >
+    <ClientSideProvider>
       <div className="bg-background relative min-h-screen antialiased transition ease-in-out">
         <AppHeader />
         <div className={cn(

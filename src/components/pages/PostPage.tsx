@@ -1,6 +1,8 @@
 
+import { Post } from "contentlayer/generated";
 import dayjs from "dayjs";
 import { Calendar, Clock } from "lucide-react";
+import readingTime from "reading-time";
 
 import { getTableOfContents } from "@/lib/toc";
 
@@ -9,13 +11,13 @@ import { Badge } from "../ui/badge";
 import Mdx from "../ui/mdx-components";
 import { ScrollArea } from "../ui/scroll-area";
 
-interface PostPageProps extends PostMatter {
+interface PostPageProps extends Post {
 
 }
 
 export default async function PostPage(props: PostPageProps) {
 
-  const toc = await getTableOfContents(props.content);
+  const toc = await getTableOfContents(props.body.raw);
 
   return <main className="desktop:grid desktop:grid-cols-[1fr_300px] desktop:gap-10 relative py-6">
     <div className="">
@@ -33,15 +35,15 @@ export default async function PostPage(props: PostPageProps) {
           <time dateTime={props.date}>
             {dayjs(props.date).locale("ko").format("YYYY년 M월 D일")}
           </time>
-          <Clock className="ml-auto mr-2 size-4" />
+          <Clock className="ml-4 mr-2 size-4" />
           <span>
-            {props.readingTime}분
+            {Math.ceil(readingTime(props.body.raw).minutes)}분
           </span>
         </div>
       </div>
       <div className="pb-12 pt-8">
         <Mdx
-          source={props.content}
+          code={props.body.code}
         />
       </div>
       {props.tags && props.tags.map(tag => (

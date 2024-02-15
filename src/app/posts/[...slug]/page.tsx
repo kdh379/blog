@@ -1,7 +1,8 @@
 
+import { allPosts } from "contentlayer/generated";
+
 import PostPage from "@/components/pages/PostPage";
 import { siteConfig } from "@/config/site";
-import { getAllPosts, getAllPostStaticParams } from "@/lib/posts";
 
 interface PostPageProps {
   params: {
@@ -10,9 +11,9 @@ interface PostPageProps {
 }
 
 function getPostFromParams({ params }: PostPageProps) {
-  const slug = typeof params.slug === "string" ? params.slug : decodeURIComponent(params.slug.join("/"));
-  
-  const post = getAllPosts().find((post) => post.slug === slug);
+  const slug = decodeURIComponent(params.slug?.join("/") || "");
+
+  const post = allPosts.find((post) => post.slugAsParams === slug);
 
   if (!post) {
     return null;
@@ -47,7 +48,11 @@ export function generateMetadata({ params }: PostPageProps) {
 }
 
 export function generateStaticParams() {
-  return getAllPostStaticParams();
+  return allPosts.map((post) => ({
+    params: {
+      slug: post.slugAsParams.split("/"),
+    },
+  }));
 }
 
 const Post = ({ params }: PostPageProps) => {

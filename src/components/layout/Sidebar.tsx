@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
-import { getAllPosts } from "@/lib/posts";
 import { cn } from "@/lib/utils";
 
 import { ScrollArea } from "../ui/scroll-area";
@@ -15,9 +14,6 @@ interface SidebarProps {
 }
 
 export default function Sidebar( {className}: SidebarProps ) {
-
-  const postList = getAllPosts();
-
   return <>
     <header className={cn(
       "tablet:flex tablet:flex-col tablet:sticky fixed top-8 hidden h-[calc(100vh-3.5rem)] shrink-0",
@@ -36,14 +32,14 @@ export default function Sidebar( {className}: SidebarProps ) {
           priority
         />
       </div>
-      <div className="bg-background/95 mobile:flex hidden gap-x-2">
+      <div className="mobile:flex hidden gap-x-2">
         <div className="flex-1">
           <PostsSearch />
         </div>
         <ToggleTheme />
       </div>
       <ScrollArea className="size-full py-4 pr-4">
-        <SidebarNav postList={postList} />
+        <SidebarNav />
       </ScrollArea>
     </header>
   </>;
