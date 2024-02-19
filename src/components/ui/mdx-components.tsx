@@ -20,6 +20,8 @@ import { CodeBlockWrapper } from "@/components/ui/code-block-wrapper";
 import CopyButton from "@/components/ui/copy-button";
 import { cn } from "@/lib/utils";
 
+import VideoCard from "./video-card";
+
 
 const mdxComponents: MDXComponents = {
   Accordion,
@@ -220,6 +222,9 @@ const mdxComponents: MDXComponents = {
       )}
       {...props}
     />
+  ),
+  VideoCard: (props: React.ComponentProps<typeof VideoCard>) => (
+    <VideoCard {...props} />
   ),
 };
 
