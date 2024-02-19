@@ -20,6 +20,7 @@ import { CodeBlockWrapper } from "@/components/ui/code-block-wrapper";
 import CopyButton from "@/components/ui/copy-button";
 import { cn } from "@/lib/utils";
 
+import LinkedCard from "./linked-card";
 import VideoCard from "./video-card";
 
 
@@ -214,14 +215,8 @@ const mdxComponents: MDXComponents = {
       {...props}
     />
   ),
-  LinkedCard: ({ className, ...props }: React.ComponentProps<typeof Link>) => (
-    <Link
-      className={cn(
-        "bg-card text-card-foreground hover:bg-muted/50 mobile:p-10 flex w-full flex-col items-center rounded-xl border p-6 shadow transition-colors",
-        className
-      )}
-      {...props}
-    />
+  LinkedCard: ({ ...props }: React.ComponentProps<typeof LinkedCard>) => (
+    <LinkedCard {...props} />
   ),
   VideoCard: (props: React.ComponentProps<typeof VideoCard>) => (
     <VideoCard {...props} />

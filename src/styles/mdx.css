@@ -22,3 +22,13 @@
 pre {
   scrollbar-width: thin;
 }
+
+.video-wrapper {
+  @apply relative;
+  padding-bottom: 56.25%;
+  height: 0;
+}
+
+.video-wrapper iframe {
+  @apply absolute top-0 left-0 w-full h-full;
+}
