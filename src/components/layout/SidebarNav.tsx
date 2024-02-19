@@ -10,52 +10,36 @@ import { sidebarVisibleAtom } from "@/store/atom";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
 
-interface NavItemProps {
-  href: string;
-  children: React.ReactNode;
-}
-
-function NavItem ({ href, children }: NavItemProps) {
-
-  const pathname = usePathname();
-  const setOpen = useSetRecoilState(sidebarVisibleAtom);
-
-  return (
-    <Link
-      href={href}
-      onClick={() => setOpen(false)}
-      className={cn(
-        "text-muted-foreground flex w-full text-sm hover:underline",
-        decodeURIComponent(pathname) === href && "text-primary font-bold"
-      )}
-    >
-      {children}
-    </Link>
-  );
-};
-
-interface TreeProps {
+interface PostNavProps {
   postTree: PostTree;
 }
 
-function Tree({postTree}: TreeProps) {
+function PostNav({postTree}: PostNavProps) {
+  const pathname = usePathname();
+  const setOpen = useSetRecoilState(sidebarVisibleAtom);
+
   return postTree.length && (
     <ul className="flex flex-col gap-y-2">
       {postTree.map((post, index) => (
         <li key={index}>
           { post.slug &&(
-            <NavItem
+            <Link
               href={post.slug}
+              onClick={() => setOpen(false)}
+              className={cn(
+                "text-muted-foreground flex w-full text-sm hover:underline",
+                decodeURIComponent(pathname) === post.slug && "text-primary font-bold"
+              )}
             >
               {post.title}
-            </NavItem>
+            </Link>
           )}
           { post.category && post.children?.length && (
             <Accordion type="multiple">
               <AccordionItem value={post.category}>
                 <AccordionTrigger className="mb-2 py-0 text-sm">{post.category}</AccordionTrigger>
                 <AccordionContent className="py-1 pl-3">
-                  <Tree postTree={post.children} />
+                  <PostNav postTree={post.children} />
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -71,7 +55,7 @@ export default function SidebarNav() {
 
   return (
     <nav className="flex-1">
-      <Tree postTree={postTree} />
+      <PostNav postTree={postTree} />
     </nav>
   );
 }

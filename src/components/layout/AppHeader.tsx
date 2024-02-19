@@ -4,18 +4,22 @@ import React from "react";
 import { siteConfig } from "@/config/site";
 
 import MobileSheet from "./MobileSheet";
+import PostsSearch from "./PostsSearch";
 import Sidebar from "./Sidebar";
 import ThemeToggle from "./ToggleTheme";
 
 export default function AppHeader( ) {
 
-  return <header className="tablet:hidden bg-background/95 supports-[backdrop-filter]:bg-background/60 container sticky top-0 z-30 flex h-14 items-center gap-x-4 border-b py-2 shadow-md backdrop-blur">
+  return <header className="tablet:hidden bg-background/95 supports-[backdrop-filter]:bg-background/60 container sticky top-0 z-30 flex h-14 items-center border-b py-2 shadow-md backdrop-blur">
     <MobileSheet>
       <Sidebar className="static flex flex-col pr-8" />
     </MobileSheet>
     <Link href="/">
-      <span className="text-xl font-bold">{siteConfig.name}</span>
+      <span className="ml-4 text-xl font-bold">{siteConfig.name}</span>
     </Link>
-    <ThemeToggle />
+    <div className="ml-auto flex items-center gap-x-2">
+      <PostsSearch />
+      <ThemeToggle />
+    </div>
   </header>;
 }

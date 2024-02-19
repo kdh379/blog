@@ -1,31 +1,69 @@
 "use client";
 
 import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
+import { getPostTree, type PostTree } from "@/lib/post";
+
 import { Button } from "../ui/button";
-import { CommandDialog, CommandEmpty, CommandInput, CommandList } from "../ui/command";
+import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
+
+interface PostTreeProps {
+  postTree: PostTree;
+  onSelect: (slug?: string) => void;
+}
+
+function PostTreeProps({ postTree, onSelect }: PostTreeProps) {
+  return postTree.length && postTree.map((post, index) => (
+    <React.Fragment key={index}>
+      {post.slug && (
+        <CommandItem
+          className="cursor-pointer"
+          onSelect={() => onSelect(post.slug)}
+        >
+          {post.title}
+        </CommandItem>
+      )}
+      {post.category && post.children?.length && (
+        <CommandGroup heading={post.category}>
+          {post.children?.length && (
+            <PostTreeProps postTree={post.children} onSelect={onSelect} />
+          )}
+        </CommandGroup>
+      )}
+    </React.Fragment>
+  )
+  );
+}
 
 export default function PostsSearch() {
 
+  const router = useRouter();
   const [open, setOpen] = React.useState(false);
 
   return (
     <>
       <Button
         variant="outline"
-        className="text-muted-foreground w-full justify-start gap-x-1"
+        size="icon"
+        className="text-muted-foreground mobile:w-full mobile:justify-start mobile:px-2 ml-auto justify-center gap-x-1"
+        onClick={() => setOpen(true)}
       >
         <Search className="size-4" />
         <span className="mobile:block hidden">Search posts...</span>
-        <kbd className="bg-muted pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden h-5 select-none items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-          <span className="text-xs">ctrl</span>K
-        </kbd>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Type to search posts..." />
         <CommandList>
           <CommandEmpty>No posts found</CommandEmpty>
+          <PostTreeProps
+            postTree={getPostTree()}
+            onSelect={(slug) => {
+              setOpen(false);
+              router.push(slug ?? "/");
+            }}
+          />
         </CommandList>
       </CommandDialog>
     </>

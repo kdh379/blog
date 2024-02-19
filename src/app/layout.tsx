@@ -60,6 +60,7 @@ export default function RootLayout({
       <link
         rel="shortcut icon"
         href="/svg/favicon.svg"
+        type="image/x-icon"
       />
       <link
         rel="stylesheet preload"

@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { TableOfContents } from "@/lib/toc";
+import type { TableOfContents } from "@/lib/toc";
 import { cn } from "@/lib/utils";
 
 const MAX_DEPTH = 3;
