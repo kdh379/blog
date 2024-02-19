@@ -1,7 +1,6 @@
 "use client";
 
-import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, CheckIcon, CopyIcon } from "lucide-react";
 import React from "react";
 
 import { cn } from "@/lib/utils";
