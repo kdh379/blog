@@ -1,6 +1,7 @@
 
 import { allPosts } from "contentlayer/generated";
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 import PostPage from "@/components/pages/PostPage";
 import { siteConfig } from "@/config/site";
@@ -62,7 +63,7 @@ const Post = ({ params }: PostPageProps) => {
   const post = getPostFromParams({ params });
 
   if (!post) {
-    return null;
+    notFound();
   }
   
   return <PostPage {...post} />;
