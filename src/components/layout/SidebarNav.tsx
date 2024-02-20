@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import React, { PropsWithChildren } from "react";
 import { useSetRecoilState } from "recoil";
 
 import { getPostTree, PostTree } from "@/lib/post";
@@ -14,39 +15,47 @@ interface PostNavProps {
   postTree: PostTree;
 }
 
-function PostNav({postTree}: PostNavProps) {
+interface NavLinkProps {
+  href: string;
+}
+
+function NavLink({ href, children }: PropsWithChildren<NavLinkProps>) {
+
   const pathname = usePathname();
   const setOpen = useSetRecoilState(sidebarVisibleAtom);
 
-  return postTree.length && (
-    <ul className="flex flex-col gap-y-2">
-      {postTree.map((post, index) => (
-        <li key={index}>
-          { post.slug &&(
-            <Link
-              href={post.slug}
-              onClick={() => setOpen(false)}
-              className={cn(
-                "text-muted-foreground flex w-full text-sm hover:underline",
-                decodeURIComponent(pathname) === post.slug && "text-primary font-bold"
-              )}
-            >
-              {post.title}
-            </Link>
-          )}
-          { post.category && post.children?.length && (
-            <Accordion type="multiple">
-              <AccordionItem value={post.category}>
-                <AccordionTrigger className="mb-2 py-0 text-sm">{post.category}</AccordionTrigger>
-                <AccordionContent className="py-1 pl-3">
-                  <PostNav postTree={post.children} />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          ) }
-        </li>
-      ))}
-    </ul>
+  return <>
+    <Link
+      href={href}
+      onClick={() => setOpen(false)}
+      className={cn(
+        "text-muted-foreground mb-2 flex w-full text-sm hover:underline",
+        decodeURIComponent(pathname) === href && "text-primary font-bold"
+      )}
+    >
+      {children}
+    </Link>
+  </>;
+}
+
+function PostNav({postTree}: PostNavProps) {
+  return postTree.length && postTree.map((post, index) => (
+    <React.Fragment key={index}>
+      { post.slugAsParams &&(
+        <NavLink href={post.slugAsParams}>
+          {post.title}
+        </NavLink>
+      )}
+      { post.category && post.children?.length && (
+        <AccordionItem value={post.category}>
+          <AccordionTrigger className="mb-2 py-0 text-sm">{post.category}</AccordionTrigger>
+          <AccordionContent className="py-1 pl-2">
+            <PostNav postTree={post.children} />
+          </AccordionContent>
+        </AccordionItem>
+      ) }
+    </React.Fragment>
+  )
   );
 }
 
@@ -55,7 +64,10 @@ export default function SidebarNav() {
 
   return (
     <nav className="flex-1">
-      <PostNav postTree={postTree} />
+      <NavLink href="/resume">Resume</NavLink>
+      <Accordion type="multiple" className="flex flex-col gap-y-2">
+        <PostNav postTree={postTree} />
+      </Accordion>
     </nav>
   );
 }

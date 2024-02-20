@@ -3,7 +3,7 @@ import { allPosts, type Post } from "contentlayer/generated";
 interface Item {
   category?: string;
   title?: string;
-  slug?: string;
+  slugAsParams?: string;
   children?: Item[];
 }
 
@@ -12,13 +12,12 @@ export type PostTree = Item[];
 function createTree(posts: Post[]) {
   const root: Item = {};
 
-  posts.forEach((post) => {
-    const slugs = post.slug.split("/").slice(1);
+  posts.filter((post) => !post.slug.startsWith("/__")).forEach((post) => {    
+    const slugs = post.slug.split("/").slice(2);
 
     let currentNode = root;
 
     for( const slug of slugs ) {
-      if( slug === "posts" ) continue;
       currentNode.children = currentNode.children || [];
       let foundNode = currentNode.children.find((node) => node.category === slug);
 
@@ -35,7 +34,7 @@ function createTree(posts: Post[]) {
 
     currentNode.title = post.title;
     currentNode.category = undefined;
-    currentNode.slug = post.slug;
+    currentNode.slugAsParams = `/${post.slugAsParams}`;
   });
 
   return root.children || [];

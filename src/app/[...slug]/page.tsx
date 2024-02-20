@@ -36,7 +36,7 @@ export function generateMetadata({ params }: PostPageProps) {
       title: post.title,
       description: post.description,
       type: "article",
-      url: `${siteConfig.url}/posts/${post.slug}`,
+      url: `${siteConfig.url}/${post.slug}`,
       article: {
         publishedTime: post.date,
         modifiedTime: post.date,

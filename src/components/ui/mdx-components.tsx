@@ -33,6 +33,8 @@ const mdxComponents: MDXComponents = {
   AlertTitle,
   AlertDescription,
   Image,
+  LinkedCard,
+  VideoCard,
   Callout,
   h1: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h1
@@ -90,8 +92,9 @@ const mdxComponents: MDXComponents = {
   ),
   a: ({ className, ...props }: React.HTMLAttributes<HTMLAnchorElement>) => (
     <a
-
-      className={cn("font-medium underline underline-offset-4", className)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn("hover:text-primary underline underline-offset-4 transition-colors", className)}
       {...props}
     />
   ),
@@ -101,8 +104,9 @@ const mdxComponents: MDXComponents = {
       {...props}
     />
   ),
+  
   ul: ({ className, ...props }: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul className={cn("my-6 ml-6 list-disc", className)} {...props} />
+    <ul className={cn("ml-6 list-disc", className)} {...props} />
   ),
   ol: ({ className, ...props }: React.HTMLAttributes<HTMLOListElement>) => (
     <ol className={cn("my-6 ml-6 list-decimal", className)} {...props} />
@@ -194,10 +198,10 @@ const mdxComponents: MDXComponents = {
   CodeBlockWrapper: ({ ...props }) => (
     <CodeBlockWrapper className="rounded-md border" {...props} />
   ),
-  Step: ({ className, ...props }: React.ComponentProps<"h3">) => (
-    <h3
+  Fore: ({ className, ...props }: React.ComponentProps<"p">) => (
+    <p
       className={cn(
-        "font-heading mt-8 scroll-m-20 text-xl font-semibold tracking-tight",
+        "text-muted-foreground mt-2",
         className
       )}
       {...props}
@@ -205,21 +209,17 @@ const mdxComponents: MDXComponents = {
   ),
   Steps: ({ ...props }) => (
     <div
-      className="[&>h3]:step steps mb-12 ml-4 border-l pl-8 [counter-reset:step]"
+      className="[&>h3]:step steps mb-12 ml-4 mt-6 border-l pl-8 [counter-reset:step]"
       {...props}
     />
   ),
   Link: ({ className, ...props }: React.ComponentProps<typeof Link>) => (
     <Link
       className={cn("font-medium underline underline-offset-4", className)}
+      target="_blank"
+      rel="noopener noreferrer"
       {...props}
     />
-  ),
-  LinkedCard: ({ ...props }: React.ComponentProps<typeof LinkedCard>) => (
-    <LinkedCard {...props} />
-  ),
-  VideoCard: (props: React.ComponentProps<typeof VideoCard>) => (
-    <VideoCard {...props} />
   ),
 };
 

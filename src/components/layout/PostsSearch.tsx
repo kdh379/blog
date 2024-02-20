@@ -2,7 +2,7 @@
 
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import * as React from "react";
 
 import { getPostTree, type PostTree } from "@/lib/post";
 
@@ -17,10 +17,10 @@ interface PostTreeProps {
 function PostTreeProps({ postTree, onSelect }: PostTreeProps) {
   return postTree.length && postTree.map((post, index) => (
     <React.Fragment key={index}>
-      {post.slug && (
+      {post.slugAsParams && (
         <CommandItem
           className="cursor-pointer"
-          onSelect={() => onSelect(post.slug)}
+          onSelect={() => onSelect(post.slugAsParams)}
         >
           {post.title}
         </CommandItem>
