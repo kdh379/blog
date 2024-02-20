@@ -28,7 +28,6 @@ export const metadata: Metadata = {
     url: siteConfig.url,
     siteName: siteConfig.name,
     images: [
-      siteConfig.description,
       {
         url: siteConfig.image,
         width: 500,
@@ -36,10 +35,6 @@ export const metadata: Metadata = {
         alt: siteConfig.name,
       },
     ],
-  },
-  icons: {
-    icon: "/svg/favicon.svg",
-    shortcut: "/svg/favicon.svg",
   },
 };
 
