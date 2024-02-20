@@ -1,0 +1,578 @@
+---
+title: 'Context, Redux, Recoil의 차이 비교하기'
+description: 'React 3대장 상태관리 라이브러리를 비교해봅시다.'
+tags:
+  - 상태 관리
+  - Props Drilling
+draft: false
+date: 2024-02-20 21:37:07
+---
+
+## 시작하며
+
+React는 컴포넌트 기반의 라이브러리여서, 작은 컴포넌트들이 모여서 복잡한 구조를 구성하게 됩니다.
+앱의 규모가 커질수록 상태관리가 점점 복잡해지고 컴포넌트들 간의 데이터 흐름을 효율적으로 관리하기가 어려워집니다.
+이러한 상태 관리의 어려움을 해결하기 위해 상태관리 라이브러리를 사용할 수 있습니다.
+  
+상태관리 라이브러리는 앱의 전역 상태를 효과적으로 관리하는 기능을 제공합니다.
+이를 이용해서 컴포넌트들 간에 데이터를 손쉽게 공유하고, 상태를 일관성있게 업데이트할 수 있습니다.
+덕분에 애플리케이션의 복잡성을 줄이고, 코드 유지보수성을 높이는데 큰 역할을 합니다.
+
+상태관리 라이브러리를 사용하면 앱의 전역 상태를 효과적으로 관리할 수 있습니다.
+예를 들어서 부모 컴포넌트의 상태를 하위 컴포넌트로 계속 전달해주는 **Props Drilling** 작업이 없어지고,
+라이브러리 함수를 이용해 상태를 변경하기 때문에, 여러 컴포넌트에서 동일한 상태에 접근하고, 업데이트 하여도 일관성을 유지할 수 있습니다.
+
+## Context API는 어떤가요?
+
+Context를 이용하면 일일이 props를 넘겨주지 않고, 컴포넌트 트리 전체에 데이터를 제공할 수 있으며, React에 내장되어 있어서 라이브러리를 추가로 설치할 필요가 없습니다.
+
+Context API 또한 상태 관리의 복잡성을 줄일 수 있습니다. 아래는 간단한 예시입니다.
+
+<Alert>
+  <AlertTitle>Context에 들어가기 전에</AlertTitle>
+  <AlertDescription>
+    context는 쉽게 남용될 수 있습니다. **props를 몇 단계 깊이 전달해야 한다고 해서 해당 정보를 context에 넣어야 한다는 의미는 아닙니다.**
+    데이터를 다른 컴포넌트로 전달하는 **가장 기본적인 방법은 props를 사용하는 것입니다.** 상위 컴포넌트에서 하위 컴포넌트로 전달하면, 데이터의 흐름이 명확하게 드러나서 코드 유지보수에 더 유리합니다.
+  </AlertDescription>
+</Alert>
+
+1. 먼저 Context를 생성합니다.
+
+```tsx 
+import { Dispatch, PropsWithChildren, createContext, useContext, useState } from "react";
+
+interface HomePageContext {
+    theme: [string | undefined, Dispatch<string | undefined>];
+    locale: [string | undefined, Dispatch<string | undefined>];
+}
+
+const homePageContext = createContext<HomePageContext>( {} as HomePageContext );
+
+export function HomePageProvider( props: PropsWithChildren )
+{
+    const theme = useState<string | undefined>( "dark" );
+    const locale = useState<string | undefined>( "kr" );
+
+    return <settingContext.Provider
+        value={{
+            theme,
+            locale,
+        }}
+    >
+        {props.children}
+    </settingContext.Provider>;
+}
+
+export function useHomePageContext( )
+{
+    const context = useContext( homePageContext );
+
+    return {
+        context,
+    };
+}
+```
+
+2. 이후 사용할 하위 컴포넌트를 Provider로 감싸줍니다.
+
+```tsx
+import React from 'react';
+import { HomePageProvider } from './HomePage.Context';
+
+const App: React.FC = () => {
+  return (
+    <HomePageProvider>
+      <div className="app">
+        <h1>React Context API 예시</h1>
+        <ThemeSelector />
+        <LocaleSelector />
+      </div>
+    </HomePageProvider>
+  );
+};
+
+export default App;
+```
+
+그러면 하위 컴포넌트에서 `useSettingContext`를 통해 상태를 가져올 수 있습니다.
+
+```tsx
+import React from 'react';
+import { useHomePageContext } from './HomePage.Context';
+
+export default fucntion ThemeSelector()
+{
+  const { theme } = useHomePageContext();
+
+  return (
+    <div>
+      <span>테마</span>
+      <Select option={ThemeOption} value={theme} />
+    </div>
+  );
+};
+```
+
+ContextAPI를 통해 상태의 복잡도를 간소화 할 수 있지만, 아래 주의 사항들을 파악하고 사용해야 합니다.
+
+1.  Provider의 컴포넌트 트리의 상위에서  상태 변경이 일어나면 하위에 **Context를 구독하고 있는 모든 컴포넌트가 리렌더링 됩니다.**
+2.  특정 Context에 의존하기 때문에 컴포넌트 간 결합도가 증가하여 재사용이 어려워 집니다.
+
+React 공식 문서에서 **[언제 context를 써야 할까](https://ko.legacy.reactjs.org/docs/context.html#when-to-use-context)** 를 참고하면 전역적 ( global )이라고 볼 수 있는 데이터를 **공유**하는 방법으로 사용하도록 고안된 방법이라 명시되어 있습니다.
+
+> context는 React 컴포넌트 트리 안에서 전역적(global)이라고 볼 수 있는 데이터를 공유할 수 있도록 고안된 방법입니다. 그러한 데이터로는 현재 로그인한 유저, 테마, 선호하는 언어 등이 있습니다.
+
+Context는 전역적으로 데이터를 공유하는 API 입니다.
+반복적이고 복잡한 업데이트에 사용할 경우 불필요한 리렌더링이 일어날 수 있다는 것을 인지해야 합니다.
+때문에 아래의 경우 사용할 것을 권장합니다.
+
+- Component가 ContextAPI 에서 관리하는 전역 상태에 종속되어 있음을  명시할 때
+  - Provider 내부에만 존재할 수 있으므로, Recoil이나 Jotai 보다 코드 흐름을 읽을 때 더 쉽게 파악할 수 있습니다.
+- 낮은 빈도로 업데이트가 일어나는 데이터를 공유할 때
+
+## Redux 를 더 많이 쓰던데?
+
+React가 출시한 당시엔 전역 상태를 관리하기 위한 라이브러리가 존재하지 않았습니다.
+Context API 또한 없었어서 Props Drilling이 React의 유지보수가 어려운 요소중 하나로 자리잡았었습니다.
+또한 예전 웹은 MVC 패턴으로 많이 개발되었습니다.
+
+![240220-215116](/posts/state-management/240220-215116.png)
+
+MVC 구조에는 웹 앱의 규모가 커질수록 다양한 Model과 다양한 View를 정의해야하기 때문에 데이터 변경 시 해당 데이터를 사용하는 모든 곳에서 코드를 작성하고 변경해주어야 합니다. 이런 과정을 생략하면 예측하지 못한 부분에서 문제가 발생하거나, 다르게 동작하는 Side Effect가 발생할 수 있습니다.
+
+페이스북에선 위 문제를 해결하기 위해 **Flux 패턴**을 개발하였습니다.
+Flux는 **단방향 데이터 흐름 아키텍처 패턴***으로 상태 관리를 단순화하고 예측 가능한 상태 변화를 제공하기 위해 만들어졌습니다.
+
+![240220-215205](/posts/state-management/240220-215205.png)
+
+우선 Redux는 리액트용이 아닌 **JavaScript 상태 관리 라이브러리** 입니다.
+Redux 로 상태를 안정적으로 유지하기 위해선 Flux 패턴에 맞게 많은 **반복적인 코드 구현이 필요한데 이를 Redux Boilerplate ( 리덕스 보일러플레이트 ) 라고 부릅니다.**
+
+### Boilerplate 주요 요소
+
+**Action**
+
+상태를 변화시키기 위해 발생시키는 이벤트로 type 필드를 반드시 가져야 합니다. type 에 따라서 어떤 이벤트를 발생시킬지 결정합니다.
+
+**Reducer**
+
+상태가 변화하는 로직을 담당하는 함수입니다.
+
+**Dispatcher**
+
+액션을 발생시키는 역할을 합니다. 액션을 생성하고, 생성된 액션을 Store로 보내 상태 변화를 요청합니다.
+
+**Store**
+
+애플리케이션의 상태를 담고있는 객체입니다.
+
+위 Boilerplate를 모두 구현하면 React에서 상태관리를 사용할 수 있습니다. 아래는 간단한 예시 입니다.
+우선 액션을 정의합니다.
+
+```tsx
+export const INCREMENT = "INCREMENT";
+export const DECREMENT = "DECREMENT";
+
+export const increment = () => ({
+  type: INCREMENT,
+});
+
+export const decrement = () => ({
+  type: DECREMENT,
+});
+```
+
+리듀서를 작성하여 액션에 따른 상태 변화를 정의합니다.
+
+```tsx
+import { INCREMENT, DECREMENT } from "./actions";
+
+const initialState = {
+  count: 0,
+};
+
+const counterReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case INCREMENT:
+      return {
+        ...state,
+        count: state.count + 1,
+      };
+    case DECREMENT:
+      return {
+        ...state,
+        count: state.count - 1,
+      };
+    default:
+      return state;
+  }
+};
+
+export default counterReducer;
+```
+
+리듀서를 합치고 스토어를 생성합니다.
+
+```tsx
+import { createStore } from "redux";
+import counterReducer from "./reducers";
+
+const store = createStore(counterReducer);
+
+export default store;
+```
+
+프로바이더로 감싸서 스토어를 명시해줍니다.
+
+```tsx
+import React from "react";
+import { Provider } from "react-redux";
+import store from "./store";
+import Counter from "./Counter";
+
+const App = () => {
+  return (
+    <Provider store={store}>
+      <div className="app">
+        <h1>Redux 카운터 앱</h1>
+        <Counter />
+      </div>
+    </Provider>
+  );
+};
+
+export default App;
+```
+
+위 과정을 전부 거치면 드디어 Redux로 상태관리를 할 수 있습니다.
+
+```tsx
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { increment, decrement } from "./actions";
+
+const Counter = () =>
+{
+  const count = useSelector((state) => state.count);
+  const dispatch = useDispatch();
+
+  return (
+    <div>
+      <h1>카운터: {count}</h1>
+      <button onClick={() => dispatch(increment())}>증가</button>
+      <button onClick={() => dispatch(decrement())}>감소</button>
+    </div>
+  );
+};
+
+export default Counter;
+```
+
+useSelector를 사용하여 상태값을 가져오고, useDispatch 를 이용해서 액션을 수행시킬 수 있습니다.
+
+### React-Redux v6의 Context API 도입과 성능 최적화
+
+Redux는 React 16.3에서 새로 도입된 createContext API를 도입하였습니다.
+Redux Store State를 Context API를 통해 전파하였으나, 이는 이전 v5 대비 성능 저하를 일으켰습니다.
+때문에 Redux v7 부터는 Store 내부적으로 상태를 관리할 시에만 Context API를 사용하는 방식으로 변경되었고, Store와 Component간 데이터 접근 시 React.memo를 사용하여 성능을 최적화 하였습니다.
+
+<LinkedCard href="https://blog.isquaredsoftware.com/2018/11/react-redux-history-implementation/#v7-0" title="React-Redux 7.0 History" />
+
+### Redux의 단점
+
+Redux는 위처럼 상태 관리를 위 비용이 상당히 높습니다.
+
+액션 하나를 추가하기 위해 작성해야할 코드가 많고, 스토어와 리듀서를 연결해야하는 필수적인 부분이 있어서 코드량이 많아질 수 있고, 반응형 업데이트나 비동기 상태관리를 위해 라이브러리를 추가로 사용해야하는 문제가 있습니다.( redux-thunk, redux-toolkit 등 )
+결론적으로 Learning Curve 가 상당히 높고 비용이 많이 들어서 Redux를 사용하기 위해 많은 시간을 투자해야 합니다.
+
+## Recoil 은 어떻게 다른가요?
+
+Recoil은 React를 구현한 페이스북에서 직접 구현한 React 만을 위한 상태관리 라이브러리로 가장 큰 장점은 배우기가 쉽습니다. API가 단순하고 hook 과 비슷한 사용경험을 제공합니다.
+또한 React v18 부터 도입된 Concurrent Mode ( 동시성 모드 )와 개발 방향성이 같습니다. Recoil 에서 Transition을 지원하는 기능을 개발하여 업데이트가 무거운 컴포넌트의 경우 **상태 업데이트 중 상위 Suspense를 호출**하는 기능 등을 개발중에 있습니다.
+
+Concurrent Mode 는 이전에 작성하였던 글을 참고해주세요
+
+<LinkedCard href="https://blog-kdh379.vercel.app/React/concurrent" title=" " />
+
+### Recoil 시작하기
+
+Recoil을 사용하기 위해선 앱을 RecoilRoot로 감싸고, 데이터를 atom 단위로 선언하여 사용하면 됩니다.
+
+```jsx
+import React from "react";
+import ReactDOM from "react-dom";
+import { RecoilRoot } from "recoil";
+import App from "./App";
+
+ReactDOM.render(
+  <RecoilRoot>
+    <App />
+  </RecoilRoot>,
+  document.getElementById("root")
+);
+```
+
+### Atoms
+
+![240220-215834](/posts/state-management/240220-215834.png)
+
+Atoms( 공유 상태 )은 상태의 단위 입니다. Atom을 업데이트하거나 구독할 수 있고, atom이 업데이트 되면 각각 구독된 컴포넌트는 새로운 값을 반영하여 다시 렌더링 됩니다.
+
+atom을 생성하기 위해선 고유한 키 값과 디폴트 값을 설정해야 합니다.
+
+```jsx
+import { atom } from "recoil";
+
+export const counterState = atom({
+  key: "counterState",
+  default: 0,
+});
+```
+
+이 후 컴포넌트에서 atom을 읽고 쓰려면 useRecoilState 훅을 사용하면 됩니다.
+
+```jsx
+import React from "react";
+import { useRecoilState } from "recoil";
+import { counterState } from "./atoms";
+
+export default function Counter() {
+  const [count, setCount] = useRecoilState(counterState);
+
+  const handleIncrement = () => {
+    setCount((prevCount) => prevCount + 1);
+  };
+
+  const handleDecrement = () => {
+    setCount((prevCount) => prevCount - 1);
+  };
+
+  return (
+    <div>
+      <h1>카운터: {count}</h1>
+      <button onClick={handleIncrement}>증가</button>
+      <button onClick={handleDecrement}>감소</button>
+    </div>
+  );
+};
+```
+
+useRecoilState 외에 **atom 값만 사용하기 위해선 useRecoilValue**, **setter만 사용하려면 useSetRecoilState** Hook을 사용하면 됩니다.
+
+#### atom with TypeScript
+
+Recoil 은 타입스크립트를 지원합니다. 아래는 타입 스크립트를 사용해서 atom을 정의한 예시 입니다.
+
+```tsx
+import { atom } from 'recoil';
+import { User } from './types';
+
+interface User {
+  name: string;
+  age: number;
+}
+
+export const userAtom = atom<User>({
+  key: 'userAtom',
+  default: { 
+    name: '',
+    age: 0
+  },
+});
+```
+
+### selector
+
+selector는 상태에서 파생된 데이터를 정의하는데 사용합니다. selector 를 사용하면 하나 이상의 'atom' 이나 selector를 기반으로 계산되는 상태를 만들 수 있습니다. selector는 구현한 함수에 따라 반환되는 객체가 다른데, **get 함수만 제공되면 RecoilValueReadOnly, set 함수 또한 제공되면 RecoilState**를 반환합니다.
+
+#### 읽기 전용 Selector
+
+```jsx
+import { atom, selector } from 'recoil';
+
+const number1State = atom({
+  key: 'number1State',
+  default: 0,
+});
+
+const number2State = atom({
+  key: 'number2State',
+  default: 0,
+});
+
+const sumSelector = selector({
+  key: 'sumSelector',
+  get: ({ get }) => {
+    const number1 = get(number1State);
+    const number2 = get(number2State);
+    return number1 + number2;
+  },
+});
+```
+
+읽기만 가능한 selector는 의존하는 상태가 변경될 때만 재계산하여 리렌더링을 수행합니다.
+
+#### 쓰기 가능한 Selector
+
+입력 값을 받아서 다른 Recoil State에 변경 사항을 전파하는 데 사용할 수 있습니다.
+
+```tsx
+import {atom, selector, useRecoilState, DefaultValue} from 'recoil';
+
+const tempFahrenheit = atom({
+  key: 'tempFahrenheit',
+  default: 32,
+});
+
+const tempCelcius = selector({
+  key: 'tempCelcius',
+  get: ({get}) => ((get(tempFahrenheit) - 32) * 5) / 9,
+  set: ({set}, newValue) =>
+    set(
+      tempFahrenheit,
+      newValue instanceof DefaultValue ? newValue : (newValue * 9) / 5 + 32,
+    ),
+});
+
+function TempCelcius() {
+  const [tempF, setTempF] = useRecoilState(tempFahrenheit);
+  const [tempC, setTempC] = useRecoilState(tempCelcius);
+  const resetTemp = useResetRecoilState(tempCelcius); // default 값으로 리셋합니다.
+
+  const addTenCelcius = () => setTempC(tempC + 10);
+  const addTenFahrenheit = () => setTempF(tempF + 10);
+  const reset = () => resetTemp();
+
+  return (
+    <div>
+      Temp (Celcius): {tempC}
+      <br />
+      Temp (Fahrenheit): {tempF}
+      <br />
+      <button onClick={addTenCelcius}>Add 10 Celcius</button>
+      <br />
+      <button onClick={addTenFahrenheit}>Add 10 Fahrenheit</button>
+      <br />
+      <button onClick={reset}>Reset</button>
+    </div>
+  );
+}
+```
+
+섭씨/화씨를 표시하고 사용자가 변경할 수 있는 컴포넌트 입니다.
+
+위 코드에서 setTempF 를 호출할 경우 tempCelcius Selector 의 get 에서 tempFahrenheit이 변경된 것을 탐지하여 리렌더링하여 tempF, tempC 모두 리렌더링 시킬 수 있습니다.
+
+또한 setTempC를 호출할 경우에도 tempFahrenheit에 변경 사항을 전파하여서 상태를 업데이트 시키고, tempFahrenheit이 변경됨에 따라 tempCelcius Selector의 get을 수행시켜서 tempF, tempC 모두 리렌더링 시킬 수 있습니다.
+
+#### 비동기 Selector
+
+selector를 이용해서 비동기 상태를 관리할 수도 있습니다. 비동기 데이터를 처리하기 위해서는 async  함수나 Promise를 사용하여 비동기 함수를 작성하고 하고 selector에 정의하면 됩니다.
+
+```jsx
+import { selector } from 'recoil';
+
+const dataSelector = selector({
+  key: 'dataSelector',
+  get: async ({ get }) => {
+    const data = await fetchData(); // 비동기 함수 호출
+    return data;
+  },
+});
+```
+
+```jsx
+import React from 'react';
+import { useRecoilValue } from 'recoil';
+import { dataSelector } from './selectors';
+
+export default function DataComponent() {
+  const data = useRecoilValue(dataSelector); // 비동기 데이터 가져오기
+
+  return (
+    <div>
+      {/* 데이터를 사용하여 UI를 렌더링 */}
+      <h1>{data.title}</h1>
+      <p>{data.description}</p>
+    </div>
+  );
+};
+```
+
+위 DataComponent를 그냥 사용하려고 `<Suspense fallback=...>`을 상위 트리에 작성하라는 에러가 나옵니다.
+
+**Suspense를 이용한 Recoil 비동기 Selector 처리**
+
+```jsx
+import React,{ Suspense } from 'react';
+import DataComponent from 'data-component';
+
+const App = () => {
+  return (
+    <RootRecoil>
+      <Suspense fallback={<div>Loading...</div>}>
+        <DataComponent />
+      </Suspense>
+    </RootRecoil>
+  );
+}
+
+export default App;
+```
+
+**Loadable을 이용한 Recoil 비동기 Selector 처리**
+
+Suspense는 React v18 부터 지원하는 fallback UI 로 그 이전버전에서 사용할 경우엔 **useRecoilStateLoadable**을 사용하여 비동기 Selector를 처리하면 됩니다.
+
+```jsx
+import React from 'react';
+import { useRecoilValueLoadable } from 'recoil';
+import { dataSelector } from './selectors';
+
+export default function DataComponent() {
+  const dataLoadable = useRecoilValueLoadable(dataSelector);
+
+  switch(dataLoadable.state) {
+    case 'hasValue':
+        return <div>{dataLoadable.contents}</div>;
+    case 'loading':
+        return <Spinner />;
+    case 'hasError':
+        throw dataLoadable.contents;
+  }
+};
+```
+
+하지만 필자는 비동기 데이터 처리는 React Query 를 사용하는게 훨씬 더 높은 상태관리를 제공해주고, React Query도 Concurrent Mode 를 지원중에 있으므로 비동기 상태 관리는 React Query 를 사용하는 것을 추천합니다.
+
+### Recoil Store 내부 구조
+
+Recoil 또한 React-Redux v7 과 같이, Context API를 이용하여 내부적으로 상태를 관리합니다. Recoil 내부에는 2가지 주요 요소로 구성되어 있습니다.
+
+**Graph ( 의존성 그래프 )**
+
+상태 값과 컴포넌트의 의존성을 관리합니다. 어떤 상태 값이 어떤 컴포넌트에게 영향을 미치는지 추적합니다.
+
+**Tree**
+
+상태에 대한 구독을 관리하여, 컴포넌트가 상태를 읽고 업데이트할 때 사용합니다. 트리는 currentTree와 nextTree로 구성되어 있습니다.
+
+**currentTree** : 현재 렌더링 중인 컴포넌트에서 읽고 있는 상태입니다. 현재 렌더링 중인 컴포넌트에서 Recoil 상태를 읽을 때 currentTree에 있는 값이 사용됩니다.
+
+**nextTree** : 다음 렌더링 사이클에서 사용될 상태입니다. 컴포넌트가 상태를 업데이트할 때 nextTree에 값을 설정하고, 다음 렌더링 사이클에서 읽어와서 새로운 상태로 사용됩니다.
+
+### Recoil Hook 내부 구조
+
+Recoil 상태를 읽고 업데이트 하는데 사용하기 위한 Hook 입니다. 각각 Atom과 Selector별로 Hook( useRecoilValue, useRecoilState 등 )이 제공되며, 이러한 Hook을 사용하면 해당 상태에 대해 접근하고, 업데이트할 수 있습니다.
+
+내부적으로 상태의 의존성을 추적하고, 상태가 변경될 때 마다 관련된 **useEffect** 를 실행합니다. 
+
+## 마치며
+
+Facebook에서 개발된 React 전용 상태 관리 라이브러리 Recoil은 Context와 Redux의 단점을 개선하면서, 가장 React 스러운 상태 관리를 제공합니다. React의 철학에 따라 hook과 사용 방식이 유사하여 러닝 커브가 매우 낮다는 큰 장점이 있습니다.
+
+하지만 가장 아쉬운 점은 DevTools가 존재하지 않다는 점입니다. Redux는 DevTools를 제공하여 state를 시각화하여 확인하고, 디버깅할 수 있지만 Recoil은 기본적으로 제공되진 않고 있습니다.
+
+그나마 Recoil 사용자들을 위한 비공식 DevTools인 [Recoilize](https://github.com/open-source-labs/Recoilize) 라는 도구가 존재합니다. Recoilize는 비공식이지만 Chrome DevTools의 확장 프로그램으로서, Recoil 상태를 시작적으로 추적하고 디버깅하는데 도움을 줍니다.
+
+Recoil은 "쉽게 배우고 간단하게 쓸 수 있다" 라는 점이 가장 큰 장점이라 느꼈습니다. 또한 최근 React의 철학인 끊이지 않는 사용 경험 "Concurrent Mode" 와 개발 방향이 같고 공식 문서가 한글화가 잘되어있어서 앞으로가 기대 되는 라이브러리 입니다.

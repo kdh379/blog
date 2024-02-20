@@ -1,0 +1,168 @@
+---
+title: 'JavaScript의 비동기 통신'
+description: ''
+tags:
+  - async
+  - Task Queue
+draft: false
+date: 2023-04-30 19:23:00
+---
+
+![240220-220706](/posts/async/240220-220706.png)
+
+비동기 통신은 현대의 웹 페이지에서 사용자에게 더 나은 사용성을 제공하기 위해 필수적으로 구현해야 하는 통신 방법 입니다.
+
+동기 통신은 요청과 응답이 순서대로 진행되어서 서버에서 응답이 오기 전까지 브라우저에선 아무 기능도 수행하지 못해서 네트워크가 느린 사용자일 수록 부정적인 경험을 제공하게 됩니다.
+
+하지만 비동기 통신은 화면이 렌더링되는 동안에도 데이터를 받아올 수 있고, 데이터 요청을 보낸 이후에도 자유롭게 동작 수행이 가능합니다.
+
+요청을 보낸 이후 다른 작업을 수행하다가, 응답이 온 이후 결과를 보여주는 방식을 통해 사용자의 부정적 경험을 최소화 시킬 수도 있습니다.
+
+JavaScript 에서는 XMLHttpRequest, Fetch API 등의 라이브러리를 통해 비동기 통신을 처리할 수 있습니다.
+
+특히 리액트에서는 HTTP 통신 라이브러리를 통해 REST API 를 통한 데이터 통신을 처리할 수 있습니다.
+
+이번 글에서는 JavaScript의 비동기 통신에 대한 소개 및 리액트에서 사용되는 HTTP 통신 라이브러리인 react-query, swr, alova 에 대해 비교해보겠습니다.
+
+## XMLHttpRequest
+
+```js
+const xhr = new XMLHttpRequest();
+xhr.open('GET', 'https://example.com/data.json');
+xhr.send();
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+    const data = JSON.parse(xhr.responseText);
+    // do something
+  }
+}
+```
+
+JavaScript에서 최초로 제공된 비동기 통신 방법 입니다.
+
+옛날부터 만들어진 기능답게 IE7 버전에서도 문제없이 작동할 수 있는 장점이 있어서, 호환을 중요시하는 웹앱같은 경우 XHR을 사용하면 좋은 선택이 됩니다.
+
+다만 오래된 기술답게 코드의 가시성이 현저히 떨어지고 보안이 취약하여 CSRF, XSS 공격 등에  쉽게 노출됩니다.
+
+## jQuery AJAX
+
+```js
+$.ajax({
+  url: "서버 URL",
+  type: "HTTP Method GET POST 등",
+  data: "서버에 전송할 데이터",
+  success: function(response) {
+    // Response 데이터 처리
+  },
+  error: function(xhr, status, error) {
+    // Ajax 요청 실패 시 처리
+  }
+});
+```
+
+jQuery에서 제공되는 비동기 통신 방식 입니다.
+
+위에 설명한 XMLHttpRequest 방식 대비 쉽고 간단해서 성공/실패시에 대한 처리를 편리하게 할 수 있고, 체이닝 방식을 지원해서 요청이 성공 했을 경우 다음 처리의.. 다음처리의.. then().then().then() 등의 구현이 가능합니다.
+
+또한 JSON, XML, Text 등 다양한 데이터 타입도 지원합니다.
+
+## Fetch API
+
+```js
+async function fetchData() {
+  try {
+    const response = await fetch('url');
+    const data = response.json();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+fetchData();
+```
+
+Fetch API는 Promise 기반으로 동작하는 방식 입니다.
+
+async/await 문법을 제공하여 위의 방법보다 코드가 더 간결해지고 더 나은 가독성을 제공합니다.
+
+또한 CORS 를 지원하여 서로 다른 도메인의 리소스에 접근할 수 있습니다.
+
+Promise는 비동기 작업을 처리하기 위한 객체로, I/O가 완료되면 Promise에 감싸져서 반환되고 then() 혹은 await 으로 풀은 뒤에 데이터를 꺼내올 수 있습니다.
+
+이 때 then() 혹은 async/await 구문에 작성된 코드는 **micro task queue** 에 담기게 되어 task queue에 있는 코드가 모두 실행된 이후에 작업이 수행되게 됩니다.
+
+```js
+console.log('start'); // 1번
+
+// Macro Task
+setTimeout(() => {
+  console.log('setTimeout'); // 5번
+}, 0);
+
+// Micro Task
+Promise.resolve(
+	console.log("Request"); // 2번
+	).then(() => {
+  console.log('Promise'); // 4번
+});
+
+console.log('end'); // 3번
+
+/*
+start
+Request
+end
+Promise
+setTimeout
+*/
+```
+
+JavaScript 의 Event Roop, Task Queue에 대해 움짤과 함께 쉽게 설명해놓은 블로그가 있어서 아래를 참고하면 이해하기 더 좋을 것 같습니다.
+
+[JavaScript-Task-Queue말고-다른-큐가-더-있다고-MicroTask-Queue-Animation-Frames-Render-Queue](https://velog.io/@titu/JavaScript-Task-Queue말고-다른-큐가-더-있다고-MicroTask-Queue-Animation-Frames-Render-Queue)
+
+**Promise는 3가지 상태값을 가집니다.**
+
+-   **Pending** : 작업 진행 전
+-   **Fulfilled** : 작업 완료
+-   **Rejected** : 작업 실패
+
+Promise의 생성자 함수에는 `resolve()` 와 `reject()` 콜백 함수가 전달됩니다. 작업이 완료되면 `resolve()` 함수를 호출하고, 작업이 실패하면 `reject()` 함수를 호출합니다.
+
+또한 Node.js에서도 사용이 가능하여 서버단에서도 동일한 코드로 네트워크 요청 처리가 가능합니다.
+
+다만 IE 같은 구버전 브라우저에서는 지원이 안된다는 단점이 있습니다.
+
+## axios
+
+```ts
+async function postRequest() {
+  try {
+    const response = await axios.post('https://example.com/api/endpoint', {
+      data: 'example data'
+    });
+    console.log(response.data); // 응답 결과 출력
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+postRequest();
+```
+
+XMLHttpRequest 기반으로 브라우저 호환성이 높으며, 사용방법이 불편한 단점을 개선시킨 라이브러리 입니다.
+
+Async/Await 문법을 지원하며, get() / post() 같이 요청하는 http method 따라 함수를 제공하여 코드 가독성을 높일 수 있습니다.
+
+또한 HTTP Status 및 Error에 따른 핸들링이 가능하고, Req/Res Interceptor 기능을 제공해서 요청/응답 메시지에 헤더 정보를 추가하거나 변경하는 작업이 가능합니다.
+
+| **axios** | **Fetch API** |
+| --------- | ------------- |
+| 외부 라이브러리로 추가 네트워킹 필요 ( 11KB ) | 브라우저 내장 |
+| XML HTTP Request 기반으로 IE 7 지원 | IE 지원 X |
+| JSON 자동 파싱 | .json() 함수를 통해 파싱 필요 |
+| HTTP Status 코드를 통한 핸들링 | 200 ~ 299 까지 ok() 만 뱉고 끝 |
+| XRSF 보호 |  |
+| Req/Res Intercept |  |
+| Timeout |  |
