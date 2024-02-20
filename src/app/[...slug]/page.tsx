@@ -1,5 +1,6 @@
 
 import { allPosts } from "contentlayer/generated";
+import { Metadata } from "next";
 
 import PostPage from "@/components/pages/PostPage";
 import { siteConfig } from "@/config/site";
@@ -22,7 +23,7 @@ function getPostFromParams({ params }: PostPageProps) {
   return post;
 }
 
-export function generateMetadata({ params }: PostPageProps) {
+export function generateMetadata({ params }: PostPageProps): Metadata {
   const post = getPostFromParams({ params });
 
   if (!post) {
@@ -37,12 +38,14 @@ export function generateMetadata({ params }: PostPageProps) {
       description: post.description,
       type: "article",
       url: `${siteConfig.url}/${post.slug}`,
-      article: {
-        publishedTime: post.date,
-        modifiedTime: post.date,
-        authors: [siteConfig.name],
-        tags: post.tags,
-      },
+      images: [
+        {
+          url: siteConfig.image,
+          width: 500,
+          height: 500,
+          alt: siteConfig.name,
+        },
+      ],
     },
   };
 }
