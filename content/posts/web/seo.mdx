@@ -1,0 +1,130 @@
+---
+title: '검색엔진최적화 SEO'
+description: ''
+tags:
+  - SEO
+  - robots
+  - sitemap
+draft: false
+date: 2023-10-22
+---
+
+사람들은 검색결과에서 다음 페이지로 넘어가는 일이 거의 없습니다. 그 중 상위 몇 개의 검색결과만을 보고 하나를 선택하여 클릭합니다. 따라서 아무리 좋은 내용물을 가지고 있더라도 검색엔진에서 상위에 노출되지 않는다면 사람들이 내용물을 찾아보지 않습니다.
+
+검색엔진최적화는 검색엔진에서 상위에 노출되기 위한 방법입니다. 검색엔진은 크롤러라는 프로그램을 통해 웹 페이지를 수집합니다. 수집된 웹 페이지는 **검색엔진의 알고리즘**을 통해 순위가 매겨집니다. 검색엔진최적화는 검색엔진의 알고리즘을 이해하여 웹 페이지를 구성하는 방법을 의미합니다.
+
+## 검색엔진의 알고리즘
+
+검색엔진에게 높은 순위를 받기 위해서는 검색엔진의 알고리즘을 이해해야 합니다. 그러기 위해선 유명 포털 구글, 네이버, 다음 등의 검색엔진의 알고리즘을 이해해야 합니다. 먼저 네이버는 블로그, 카페, 지식인 등 고유 컨텐츠를 가지고 있어서 노출이 쉽지 않습니다. 하지만 구글은 오직 검색에 집중한 검색엔진이기 때문에 검색엔진최적화를 하기에 적합합니다. 더불어 점유율도 구글이 네이버를 앞서고 있습니다.
+
+구글은 [Google 검색 센터](https://developers.google.com/search/?hl=ko&card=seo)를 통해 자세히 소개하고 있습니다. 요약하자면 크롤링, 색인 생성, 검색결과 게재 등의 과정을 거쳐 검색결과를 생성합니다.
+
+1.  크롤링 : Google Crawler Bot이 페이지에 방문하여 텍스트, 이미지, 링크 등을 수집합니다.
+2.  색인 생성 : 수집된 페이지를 분석하여 DB인 Google 색인에 저장합니다.
+3.  검색결과 게재 : 검색어에 맞는 페이지를 Google 색인에서 찾아 검색결과에 노출합니다.
+
+## 검색엔진최적화 방법
+
+### HTTPS 사용
+
+구글은 HTTPS 보안 프로토콜을 사용하는 사이트를 선호합니다.
+
+### 고유 URL 부여
+
+- 검색에 노출할 페이지는 고유한 URL을 가지고 있어야 합니다.
+- SPA(Single Page Application)는 URL이 고유하지 않습니다. 따라서 검색엔진최적화를 하기 위해서는 SSR을 고려하거나, 불가능할 경우 prerender를 고려해야 합니다.
+- [검색 친화적인 URL](https://searchadvisor.naver.com/guide/seo-advanced-url)을 사용합니다.
+
+### 페이지 이동 시 a 태그 사용
+
+크롤러는 a태그를 통해 페이지를 이동할 수 있습니다. 만일 다른 방식으로 페이지를 이동한다면 크롤러가 페이지를 인식하지 못할 수 있습니다.  
+또한 링크 대신 "#" 혹은 "javascript:void(0)"을 사용하는 것은 검색엔진이나 크롤러가 페이지를 인식하지 못하게 합니다. 즉 링크들과의 관계 파악이 불가능하여 인덱싱이 어려워지고, 랭킹에도 영향을 미칩니다.
+
+### robots.txt 작성
+
+웹 사이트 검색엔진의 접근을 제어하여 검색엔진이 웹 페이지를 수집하는 것을 방지하는 표준입니다. 웹 사이트 내부의 특정 페이지가 검색엔진에 노출되지 않았으면 할 때 사용합니다.
+
+**robots.txt 파일 생성**
+
+사이트의 root 디렉토리( public )에 robots.txt 파일을 생성합니다.
+
+```
+User-agent: *
+Disallow: /
+
+User-agent: Googlebot
+User-agent: NaverBot
+User-agent: Yeti
+User-agent: Daumoa
+User-agent: BingBot
+User-agent: Facebook External Hit
+Disallow: /admin/
+Disallow: /user/
+Sitemap: https://www.example.com/sitemap.xml
+```
+
+특정 검색엔진만 크롤링을 허용하되, 특정 디렉토리는 크롤링을 제한하고 싶을 때 위와 같이 작성합니다.
+
+-   구글은 500kb가 넘지 않을 것을 권장합니다.
+
+**Sitemap.xml**
+
+검색엔진이 사이트의 페이지를 크롤링할 때, 사이트의 구조를 파악하기 위해 sitemap.xml 파일을 참고합니다. 크롤링 과정에서 쉽게 발견되지 않는 페이지를 크롤링할 수 있도록 도와줍니다.
+
+### 메타 설명 태그 작성
+
+```html
+<html>
+    <head>
+        <title>
+            Brandon's Baseball Cards - Buy Cards, Baseball News, Card Prices
+        </title>
+        <meta
+            name="description"
+            content="Brandon's Baseball Cards provides a large selection of vintage and modern baseball cards for sale. We also offer daily baseball news and events."
+        />
+    </head>
+    <body>
+        ...
+    </body>
+</html>
+```
+
+메타 태그는 Google 및 다른 검색엔진에 페이지 내용을 요약하여 제공하며 매우 중요합니다. Google은 Meta Description 태그를 검색결과에서 페이지의 스니펫으로 사용할 수 있기 때문입니다. Google에서 검색어와 잘 어울리는 텍스트가 있을 경우 이를 선택할 수 있습니다.
+
+### HTML 시멘틱 마크업
+
+검색엔진은 HTML태그를 기준으로 내용을 분석하여 인덱스에 포함시킬 확률이 높습니다. 즉 효과적으로 크롤링할 수 있도록 도와줍니다.
+
+### 캐노니컬 태그
+
+캐노니컬 태그는 검색엔진에게 동일한 내용의 페이지가 여러 개 있을 경우, 어떤 페이지를 우선으로 색인할 것인지 알려주는 태그입니다. 즉, 검색엔진에게 대표 URL을 검색엔진에게 알려주는 역할을 합니다.
+
+```
+<link rel="canonical" href="https://www.example.com/" />
+```
+
+### 이미지 alt 속성
+
+검색엔진은 이미지를 인식하지 못합니다. 따라서 이미지의 alt 속성을 통해 이미지를 설명해주어야 합니다. 또한 이미지의 alt 속성은 시각장애인을 위한 웹 접근성을 높여줍니다. 하지만 alt 태그에 너무 긴 설명을 적어주면 오히려 검색엔진에게 스팸으로 인식될 수 있습니다.
+
+### 페이지 로딩 속도
+
+검색엔진은 페이지의 로딩 속도를 고려합니다. 따라서 페이지의 로딩 속도를 높이기 위해선 이미지의 용량을 줄이거나, 불필요한 리소스를 제거하는 등의 방법을 사용합니다.
+
+구글은 DevTools Lighthouse 혹은 [PageSpeed Insights](https://developers.google.com/speed/pagespeed/insights/?hl=ko&url=https%3A%2F%2Fwww.google.com%2F&tab=desktop)를 통해 페이지의 로딩 속도를 측정하고, 속도가 짧은 웹사이트에 더 높은 SEO 점수를 줍니다.
+
+### 모바일 친화성
+
+구글은 모바일 버전을 우선 사용하여 순위를 지정하여 검색결과를 생성하고 있습니다. 따라서 모바일 친화적인 웹 페이지를 구성해야 합니다. 구글은 아래 구현 방법을 권장합니다.
+
+- 반응형 웹 디자인
+- 동적으로 생성된 콘텐츠
+- 별도 URL
+
+웹사이트의 모바일 친화성을 확인하려면 크롬 LightHouse 혹은 [구글 모바일 친화성 테스트](https://search.google.com/test/mobile-friendly)를 사용해볼 수 있습니다.
+
+**참조**
+
+<LinkedCard href="https://developers.google.com/search/docs/fundamentals/seo-starter-guide?hl=ko" title="Google 검색 센터" />
+<LinkedCard href="https://searchadvisor.naver.com/guide/seo-basic-intro" title="네이버 서치 어드바이저" />

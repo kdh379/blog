@@ -1,0 +1,312 @@
+---
+title: '선언형으로 비동기 컴포넌트 개발하기'
+description: 'Concurrent Mode를 사용하여 비동기 컴포넌트 작성 방식을 개선합니다.'
+tags:
+  - 
+draft: false
+date: 2023-07-02 23:49:00
+---
+
+## 시작하며
+
+프론트엔드 개발자는 웹 애플리케이션을 개발할 때 항상 사용자 경험에 대해 고민하게 됩니다. 사용자들은 웹 앱에서 빠른 응답성, 부드러운 애니메이션, 실시간 업데이트 같은 매혹적인 기능을 기대하고 있습니다. 이러한 기대에 부응하기 위해 프론트엔드 개발자는 사용자가 서비스를 정상적으로 사용할 수 있도록 컴포넌트를 설계하고 최적화하는 등의 고민을 하고 있습니다.
+
+이러한 고민을 해결하기 위해 React Concurrent UI 패턴은 많은 개발자들에게 새로운 개발 방법을 제시하고 있습니다. Concurrent UI 패턴은 React 애플리케이션의 동작 방식을 개선하여 사용자 경험을 향상시키는 방법을 제공합니다.
+
+React Concurrent UI를 사용하면 복잡한 UI 상황에서도 부드러운 애니메이션과 실시간 업데이트를 제공할 수 있습니다. 예를 들어, 대규모 데이터 집합을 표시하거나 네트워크 요청을 처리하는 경우에도 사용자는 애플리케이션이 끊김 없이 반응하고 데이터를 실시간으로 갱신해 나가는 것을 경험할 수 있습니다.
+
+또한 **Concurrent UI 패턴을 이용하여 React의 특징인 선언형 프로그래밍이 가능**합니다.
+
+## 명령형으로 만든 비동기 컴포넌트
+
+```tsx
+import { useQuery } from 'react-query';
+
+function MyComponent() {
+  const { data, isLoading, isError, error } = useQuery('myData', fetchData);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (isError) {
+    return <UserFallback error={error} />;
+  }
+
+  return <DataComponent data={data} />;
+}
+
+async function fetchData() {
+  // 데이터 요청 로직
+}
+```
+
+명령형 프로그래밍으로 비동기 컴포넌트를 구현할 때는 **무엇을 어떻게 할 것이다** 라는 구조로 코드가 작성됩니다. 예를 들어, isLoading일 때는 사용자에게 데이터가 로딩 중임을 알리기 위해 Spinner 컴포넌트를 보여주고, 에러가 발생한 경우에는 UserFallback 컴포넌트를 사용하여 사용자에게 에러 상황임을 알립니다.
+
+위의 코드 구조는 명령형으로 작성되어 **UI를 어떻게 보여줄 것인지**에 초점을 맞추고 있습니다.
+
+## 선언형으로 만든 비동기 컴포넌트
+
+선언형 프로그래밍은 **무엇을 보여줄 것이다.** 구조로 코드가 작성됩니다.
+
+React의 Concurrent UI 에서는 컴포넌트를 선언형으로 작성할 수 있게 도와주는 2가지 구성요소를 제공합니다.
+
+### Suspense
+
+Suspense는 비동기적으로 로딩되는 컴포넌트나 리소스를 위해 **로딩 상태를 처리하는 컴포넌트** 입니다. Suspense를 사용하면 로딩 중인 상태에서 특정 컴포넌트를 렌더링하여 사용자에게 데이터를 가져오는 중일 때 표시할 컴포넌트를 지정할 수 있습니다.
+
+```tsx
+import { useQuery } from 'react-query';
+import { Suspense } from "react";
+
+function MyComponent() {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <DataComponent />
+    </Suspense>
+  );
+}
+
+async function fetchData() {
+  // 데이터 요청 로직
+}
+
+function DataComponent() {
+  const { data } = useQuery( {
+        queryKey: "fetcher",
+        queryFn: fetchData,
+        suspense: true,
+    } );
+
+  return <div>{data}</div>;
+}
+```
+
+Suspense를 지원하는 데이터 요청 로직을 사용하면 비동기 데이터를 불러올 때 Suspense를 통해 처리가 가능해집니다.
+
+비동기 데이터를 불러올 때 Suspense를 사용하면 **상태에 따라 어떤 화면을 보여줄 것인지**에 집중할 수 있습니다. DataComponent는 데이터를 성공적으로 받아왔을 때에 집중하여 구성되어 있으며, 비동기 요청의 진행 상태에는 전혀 신경을 쓰지 않습니다. Suspense의 fallback을 이용하여 비동기 진행 상태를 컴포넌트 바깥에서 처리할 수 있게 됩니다.
+
+이렇게 구성된 코드는 가독성을 개선하고, **각 컴포넌트가 자신의 역할과 책임에 집중**할 수 있도록 도와줍니다. DataComponent는 데이터를 표시하는 컴포넌트로서, 비동기적인 데이터 로딩 과정은 Suspense가 처리하므로 DataComponent는 비동기 상태를 고려하지 않고 데이터를 표시할 수 있습니다. 이로써 코드의 가독성이 향상되고 유지보수가 용이해집니다.
+
+### ErrorBoundary
+
+ErrorBoundary는 React Component 내부에서 에러가 났을 때를 감지하여 **빈 화면이나 잘못된 UI 대신 다른 대체 UI**를 렌더링할 수 있습니다. 에러가 발생할 수 있는 해당 경계 내에서 에러를 처리하여 **웹앱 전체를 중단시키지 않고 에러를 관리**하고 대응할 수 있습니다.
+
+```tsx
+import { Component, ErrorInfo, ReactNode } from "react";
+
+interface Props {
+    children?: ReactNode;
+    fallback?: JSX.Element;
+}
+
+export interface State {
+    hasError: boolean;
+    error?: Error;
+}
+
+export class ErrorBoundary extends Component<Props, State>
+{
+    public state: State = {
+        hasError: false,
+    };
+
+    public static getDerivedStateFromError( error: Error ): State
+    {
+        // 에러 발생 시 Fallback Component가 보이도록 상태를 업데이트 합니다.
+        return {
+            hasError: true,
+            error,
+        };
+    }
+
+    public componentDidCatch( error: Error, errorInfo: ErrorInfo ): void
+    {
+        // 에러를 기록하거나 표시할 수 있습니다.
+        console.error( "Uncaught error:", error, errorInfo );
+    }
+
+    public render(): ReactNode
+    {
+        if( !this.state.hasError ) return this.props.children;
+
+        if( this.state.hasError )
+            if( this.props.fallback )
+                return this.props.fallback;
+            else return <h3>알 수 없는 오류가 발생했습니다.</h3>;
+
+        return this.props.children;
+    }
+}
+```
+
+```tsx
+import { useQuery } from 'react-query';
+import { Suspense } from "react";
+
+function MyComponent() {
+  return (
+    <ErrorBoundary>
+      <Suspense fallback={<Spinner />}>
+        <DataComponent />
+      </Suspense>
+     </ErrorBoundary>
+  );
+}
+
+async function fetchData() {
+  // 데이터 요청 로직
+}
+
+function DataComponent() {
+  const { data } = useQuery( {
+        queryKey: "fetcher",
+        queryFn: fetchData,
+        suspense: true,
+    } );
+
+  return <div>{data}</div>;
+}​
+```
+
+React Error Boundary를 사용하려면 **componentDidCatch 혹은 getDerivedStateFromError 메소드를 구현**해야 합니다. componentDidCatch는 에러를 기록하거나, 로깅, 표시하는 데에 사용되며, getDerivedStateFromError 는 에러가 발생핬을 때 호출되는 정적 메서드로, 해당 에러를 기반으로 상태를 업데이트하는데 사용됩니다. 이 메서드는 componentDidCatch보다 먼저 호출되며, 상태를 업데이트하기 위한 객체를 반환해야 합니다.
+
+### Error Boundary를 쉽게 쓰기 위한  react-error-boundary
+
+react-error-boundary라이브러리([https://www.npmjs.com/package/react-error-boundary](https://www.npmjs.com/package/react-error-boundary))를 이용하면 Error Boundary를 쉽게 구현할 수 있습니다. **componentDidCatch와 getDerivedStateFromError를 구현할 필요가 없고**, 에러가 발생했을 때 보여주기 위한 **Fallback UI를 Prop으로 받아서 보여줄 수 있습니다.** 이 라이브러리를 사용하면 Fallback UI를 커스텀하기 쉬워지므로, 해당 영역의 디자인에 맞게 구현할 수 있습니다.
+
+```tsx
+import { ErrorBoundary, resetErrorBoundary } from 'react-error-boundary';
+import { useQueryErrorResetBoundary } from "@tanstack/react-query";
+
+function ErrorFallback({ error, resetErrorBoundary }) {
+  return (
+    <div>
+      <h2>에러가 발생했습니다.</h2>
+      <p>{error.message}</p>
+      <button onClick={resetErrorBoundary}>새로고침</button>
+    </div>
+  );
+}
+
+function App() {
+
+  const { reset } = useQueryErrorResetBoundary();
+  
+  return (
+    <ErrorBoundary onReset={reset}
+        fallbackRender={( { resetErrorBoundary } ) => ( fallbackRender( { resetErrorBoundary } )
+        )}>
+      <DataComponent />
+    </ErrorBoundary>
+  );
+}
+```
+
+또한 **FallbackComponent** 를 사용하여 **resetErrorBoundary 함수를 Props로 제공**할 수 있습니다. 이를 활용하면 refetch UI도 간편하게 구현할 수 있습니다. resetErrorBoundary 함수는 Fallback UI에서 호출할 수 있는 함수로, 애플리케이션을 재시작하거나 데이터를 다시 요청하는 작업을 수행할 수 있습니다.
+
+결과적으로 Fallback UI를 특정 영역에 맞게 커스텀하여 구현하기 쉽고, resetErrorBoundary를 통해 refetch UI도 간단하게 구현할 수 있습니다.
+
+## Next.js 환경에서 react-query +  Suspense 삽질 과정
+
+<Fore>13.4 버전 당시의 기준입니다.</Fore>
+
+위에서 소개한 편리하면서도 강력한 기능들을 실제 프로젝트에서 사용해보았습니다. 하지만 Suspense는 아직 ReactDOMServer를 지원하지 않아서 서버 사이드에서 사용하는 데에 어려움이 있었습니다.
+
+1.  클라이언트 사이드 영역에서 Fetcher를 사용하였는데 서버 사이드와 클라이언트 사이드 둘 다 보내지는 문제가 있었습니다.
+2.  그러다보니 서버 사이드에서 보낸 Fetcher가 next.js의 rewrite(Propx)를 거치지 않아서, 404 에러가 발생했습니다.
+3.  middleware를 거치게 하여 서버 사이드일 경우 직접 API경로로 요청하도록 구현해보았지만, 이로 인해 서버에서도 요청을 기다리는 시간이 추가되어 렌더링 속도가 느려졌습니다.
+4.  또한 서버 사이드에서 요청한 API는 쿠키 인증 정보 없이 호출하는 문제가 있었습니다.
+
+이러한 이유로 결국 서버 사이드에서 Fetch 요청을 보내는 것은 적절하지 않다는 결론을 내렸습니다.
+
+Suspense 컴포넌트를 Next.js 의 서버 사이드를 우회하여 클라이언트 사이드에서만 동작하도록 커스터마이징해야만 했습니다.
+
+<Alert variant="destructive">
+  <AlertTitle>아래 코드는 SEO에 불리합니다.</AlertTitle>
+  <AlertDescription>
+    "use client"를 사용하더라도 서버에서 렌더링 후 HTML을 전달합니다.
+    하지만 ComponentDidUpdated 이 후 children을 return하게 할 경우,
+    클라이언트에서만 렌더링 되어 SEO에 문제가 생깁니다.
+  </AlertDescription>
+</Alert>
+```tsx
+import { ComponentProps, Suspense, useEffect, useState } from "react";
+
+export default function CustomSuspense( props: ComponentProps<typeof Suspense> )
+{
+    const [isMounted, setIsMounted] = useState( false );
+
+    useEffect( () =>
+    {
+        setIsMounted( true );
+    }, [] );
+
+    return isMounted ? <Suspense {...props} /> : <>{props.fallback}</>;
+}
+```
+
+```tsx
+import { ReactElement } from "react";
+
+import { useQueryErrorResetBoundary } from "@tanstack/react-query";
+import { ErrorBoundary } from "react-error-boundary";
+
+import CustomSuspense from "./custom-suspense";
+
+interface AsyncBoundaryProps {
+    children: ReactElement;
+
+    suspenseFallback?: ReactElement;
+    fallbackRender?: ( props: { resetErrorBoundary: () => void } ) => React.ReactNode;
+}
+
+export default function AsyncBoundary( props: AsyncBoundaryProps )
+{
+    const { suspenseFallback, fallbackRender, children } = props;
+
+    const { reset } = useQueryErrorResetBoundary();
+
+    return <ErrorBoundary onReset={reset}
+        fallbackRender={( { resetErrorBoundary } ) => (
+            fallbackRender
+                ? fallbackRender( { resetErrorBoundary } )
+                : <div>
+                    <h1>네트워크 오류가 발생하였습니다!</h1>
+                    <button onClick={() => resetErrorBoundary()}>Try again</button>
+                </div>
+        )}>
+        <CustomSuspense fallback={suspenseFallback}>
+            {children}
+        </CustomSuspense>
+    </ErrorBoundary>
+    ;
+}
+```
+
+React의 훅을 이용하여 클라이언트 사이드에서 DOM 에 마운트 된 후에 Suspense를 렌더링하도록 했습니다.
+
+새로 만든 Suspnse와 react-error-boundary의 resetErrorBoundary 함수를 사용하여 fallbackRender 와 Susponse의 fallback을 결합하여 비동기 전용 ErrorBoundary를 만들어서 사용했습니다.
+
+```tsx
+function App() {
+  return <>
+    <AsyncBoundary
+      fallbackRender={( { resetErrorBoundary } ) => <DataComponentFallback onReset={resetErrorBoundary} />}
+      suspenseFallback={<DataComponentSkeleton />}
+    >
+      <DataComponent />
+    </AsyncBoundary>
+  </>
+}
+```
+
+## 마치며
+
+지금까지 Concurrent UI 패턴을 이용하여 선언형 프로그래밍으로 구현하는 방법을 살펴보았습니다. 이 과정에서 ErrorBoundary를 사용하여 예외 상황을 처리하고 대체 UI를 보여줌으로써 사용자에게 친숙한 화면을 제공할 수 있었습니다. ErrorBoundary는 애플리케이션에서 예외가 발생하더라도 전체 앱이 중단되지 않도록 보호하는 역할을 합니다. 이를 통해 사용자 경험을 향상시키고 애플리케이션의 안정성을 높일 수 있었습니다.
+
+하지만, Suspense는 현재의 React 버전에서는 아직 안정화되지 않은 기능으로 몇 가지 문제가 존재할 수 있습니다. 특히 Next.js와 같은 서버 사이드 렌더링 프레임워크와 함께 사용할 때는 추가적인 주의가 필요합니다. Suspense를 사용할 때에는 현재 버전의 제약 사항과 불안정한 측면을 인지하고, 문제가 발생했을 때 적절한 대응 방법을 찾을 수 있어야 합니다.
+
+그럼에도 불구하고, Suspense는 복잡한 컴포넌트 구조를 개선하고 개발을 편리하게 할 수 있는 강력한 도구입니다. Suspense를 사용하면 컴포넌트의 역할을 분리하여 유지보수성과 가독성을 높일 수 있습니다. 데이터 로딩, 비동기 작업, 코드 스플리팅 등과 관련된 작업을 더욱 간편하게 처리할 수 있습니다. 또한, ErrorBoundary와 Suspense를 함께 사용하면 예외 상황에 대한 에러 복구를 효과적으로 다룰 수 있습니다. 이를 통해 애플리케이션의 안정성을 향상시키고 사용자에게 원활한 경험을 제공할 수 있습니다.
+
+따라서, Suspense를 사용함으로써 컴포넌트의 구조를 개선하고 개발을 편리하게 할 수 있는 많은 이점을 얻을 수 있습니다. 불안정한 측면이 있을지라도, Suspense를 사용함으로써 애플리케이션의 성능과 사용자 경험을 크게 향상시킬 수 있습니다.
