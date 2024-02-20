@@ -23,9 +23,10 @@ export const metadata: Metadata = {
       template: `%s | ${siteConfig.name}`,
       default: siteConfig.name,
     },
+    description: siteConfig.description,
+    url: siteConfig.url,
     type: "website",
     locale: "ko_KR",
-    url: siteConfig.url,
     siteName: siteConfig.name,
     images: [
       {
