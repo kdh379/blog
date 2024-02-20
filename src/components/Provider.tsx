@@ -1,6 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Analytics } from "@vercel/analytics/react";
 import { ThemeProvider } from "next-themes";
 import { PropsWithChildren } from "react";
 import { RecoilRoot } from "recoil";
@@ -33,6 +34,7 @@ export default function Providers(props: PropsWithChildren) {
             </div>
             <Toaster />
           </div>
+          <Analytics />
         </ThemeProvider>
       </RecoilRoot>
     </QueryClientProvider>
