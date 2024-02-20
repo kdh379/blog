@@ -37,3 +37,6 @@ next-env.d.ts
 
 # contnetlayer
 .contentlayer
+
+# analyze
+analyze
