@@ -23,6 +23,7 @@ export default function LinkedCard({ href, title }: LinkCardProps) {
       key: "getOpenGraph",
       params: { url: href },
     }),
+    staleTime: 1000 * 60 * 60 * 24,
   });
 
   return <>

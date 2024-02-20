@@ -20,6 +20,7 @@ export default function VideoCard({ href }: VideoCardProps) {
       key: "getOpenGraph",
       params: { url: href },
     }),
+    staleTime: 1000 * 60 * 60 * 24,
   });
 
   return <div className="mt-4 flex flex-col gap-y-2">
