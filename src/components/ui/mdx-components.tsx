@@ -106,7 +106,7 @@ const mdxComponents: MDXComponents = {
   ),
   
   ul: ({ className, ...props }: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul className={cn("ml-6 list-disc", className)} {...props} />
+    <ul className={cn("mb-4 ml-6 list-disc", className)} {...props} />
   ),
   ol: ({ className, ...props }: React.HTMLAttributes<HTMLOListElement>) => (
     <ol className={cn("my-6 ml-6 list-decimal", className)} {...props} />
@@ -189,7 +189,7 @@ const mdxComponents: MDXComponents = {
   code: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <code
       className={cn(
-        "bg-muted font-pretendard rounded px-[0.3rem] py-[0.2rem] text-sm",
+        "bg-muted font-pretendard min-w-full rounded px-[0.3rem] py-[0.2rem] text-sm",
         className
       )}
       {...props}

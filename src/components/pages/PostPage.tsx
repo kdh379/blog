@@ -18,7 +18,7 @@ export default async function PostPage(props: PostPageProps) {
   const toc = await getTableOfContents(props.body.raw);
 
   return <main className="desktop:grid desktop:grid-cols-[1fr_300px] desktop:gap-10 relative py-6">
-    <article>
+    <article className="mx-auto w-full min-w-0">
       <section>
         <h1 className="mb-4 text-4xl font-bold tracking-tight">
           {props.title}
