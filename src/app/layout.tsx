@@ -37,8 +37,8 @@ export const metadata: Metadata = {
       },
     ],
   },
-  verification: {
-    google: "wfcju7MAeDDN5zq5XGTMmKK-e8ZO8NfPdIInckGBpFI",
+  icons: {
+    icon: "/favicon.ico",
   },
 };
 
@@ -56,11 +56,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <link
-        rel="shortcut icon"
-        href="/svg/favicon.svg"
-        type="image/x-icon"
-      />
+      <link rel="shortcut icon" href="/favicon.png" />
       <link
         rel="stylesheet preload"
         as="style"
