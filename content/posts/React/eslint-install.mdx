@@ -9,8 +9,8 @@ draft: false
 date: 2023-10-27
 ---
 
-React 프로젝트를 개발할 때 각종 편리했던 기능들에 대해 정리해보려 합니다.
-그 중 코드를 깔끔하게 정리해주는 EsLint에 대해 작성해보겠습니다.
+ESLint 설정 방법에 대해 정리한 글입니다.
+제가 React 프로젝트를 진행할 때 주로 사용했던 ESLint 설정 기반으로 작성되었습니다.
 
 ## 정의
 
@@ -38,7 +38,7 @@ Javascript, JSX의 코드를 분석하여 **문법 오류나 안티 패턴을 �
 Prettier는 코드를 읽고 다시 작성하여 코드 스타일을 일관성 있게 맞춰주는 도구입니다.
 ESLint와 함께 사용할 경우 코드 스타일 관련된 ESLint 규칙을 비활성화하고 Prettier에 맡기는 방식으로 사용합니다.
 
-### Linters vs Formatters
+### 왜 Prettier는 다루지 않나요?
 
 Linters는 코드를 분석하여 문제점을 찾아내는 것이 주 할이고, Formatters는 코드를 정리하는 것이 주 역할입니다.
   
@@ -69,6 +69,8 @@ ESLint v8.53.0부터 포매팅 규칙을 deprecate 처리하였고, 이후 v10�
 ## 설정 방법
 
 ### IDE에 ESLint 설치
+
+![240222-004856](/posts/eslint-install/240222-004856.png)
 
 VSCode의 확장탭에서 ESLint를 검색하여 설치합니다.
 
@@ -214,7 +216,7 @@ pnpm i -D eslint eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-sim
 }
 ```
 
-### 공통 설정
+### VSCode 설정
 
 소스코드를 내려받은 사용자가 VSCode에 ESLint를 기본 Formatter로 사용할 수 있도록 공통 설정을 추가합니다.
 .vscode/settings.json 파일을 생성하고 아래와 같이 설정합니다.
