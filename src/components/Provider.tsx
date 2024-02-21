@@ -24,10 +24,10 @@ export default function Providers(props: PropsWithChildren) {
           enableSystem
           disableTransitionOnChange
         >
-          <div className="bg-background relative min-h-screen antialiased transition ease-in-out">
+          <div className="relative min-h-screen antialiased transition ease-in-out">
             <AppHeader />
             <div className={cn(
-              "tablet:grid tablet:grid-cols-[240px_minmax(0,1fr)] tablet:gap-10 container min-h-screen flex-1 antialiased"
+              "tablet:grid tablet:grid-cols-[240px_minmax(0,1fr)] tablet:gap-10 mobile:min-h-screen min-h-[calc(100vh - 3.5rem)] container flex-1 antialiased"
             )}>
               <Sidebar />
               {props.children}

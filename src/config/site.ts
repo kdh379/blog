@@ -6,4 +6,5 @@ export const siteConfig = {
   links: {
     github: "https://github.com/kdh379",
   },
+  github: "https://github.com/kdh379",
 };
