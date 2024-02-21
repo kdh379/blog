@@ -4,7 +4,8 @@
 
 @import "github-markdown-css/github-markdown.css";
 @import "@/styles/mdx.css";
- 
+@import "@/styles/slide-enter.css";
+
 
 @layer base {
   :root {

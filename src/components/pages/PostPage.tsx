@@ -41,7 +41,7 @@ export default async function PostPage(props: PostPageProps) {
           </div>
         </div>
       </section>
-      <section className="pb-12 pt-8">
+      <section className="slide-enter-content pb-12 pt-8">
         <Mdx
           code={props.body.code}
         />
