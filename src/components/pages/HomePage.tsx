@@ -27,7 +27,7 @@ export default function HomePage() {
 
       <p>웹 개발과 저에 대해 작성하고 있습니다.</p>
       <p>보고 배운걸 까먹지 않기 위해 기록해둔 곳입니다.</p>
-      <p>동료에게 좋은 평가를 받는 것을 좋아합니다. 그것이 저의 원동력입니다.</p>
+      <p>동료에게 좋은 평가를 받는 것을 좋아합니다. 그래서 더 노력합니다.</p>
 
       <div className="mt-12">
         <p className="mb-2">Connect me on</p>
