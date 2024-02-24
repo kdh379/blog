@@ -65,7 +65,11 @@ export default function SidebarNav() {
   return (
     <nav className="flex-1">
       <NavLink href="/resume">Resume</NavLink>
-      <Accordion type="multiple" className="flex flex-col gap-y-2">
+      <Accordion 
+        type="multiple"
+        defaultValue={postTree.map((post) => post.category || "")}
+        className="flex flex-col gap-y-2"
+      >
         <PostNav postTree={postTree} />
       </Accordion>
     </nav>
