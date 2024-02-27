@@ -1,9 +1,12 @@
 import "./globals.css";
 
 import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 
+import Layout from "@/components/Layout";
 import Providers from "@/components/Provider";
 import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: {
@@ -49,6 +52,31 @@ export const viewport: Viewport = {
   ],
 };
 
+const pretendard = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Pretendard-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Pretendard-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -57,18 +85,14 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <link rel="shortcut icon" href="/favicon.png" />
-      <link
-        rel="stylesheet preload"
-        as="style"
-        crossOrigin="anonymous"
-        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
-      />
       <meta name="description" content={siteConfig.description} />
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <body>
+      <body className={cn(pretendard.className, "relative min-h-screen antialiased transition ease-in-out")}>
         <Providers>
-          {children}
+          <Layout>
+            {children}
+          </Layout>
         </Providers>
       </body>
     </html>

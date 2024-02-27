@@ -6,10 +6,6 @@ import { ThemeProvider } from "next-themes";
 import { PropsWithChildren } from "react";
 import { RecoilRoot } from "recoil";
 
-import { cn } from "@/lib/utils";
-
-import AppHeader from "./layout/AppHeader";
-import Sidebar from "./layout/Sidebar";
 import { Toaster } from "./ui/toaster";
 
 const queryClient = new QueryClient();
@@ -24,16 +20,8 @@ export default function Providers(props: PropsWithChildren) {
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative min-h-screen antialiased transition ease-in-out">
-            <AppHeader />
-            <div className={cn(
-              "tablet:grid tablet:grid-cols-[240px_minmax(0,1fr)] tablet:gap-10 mobile:min-h-screen min-h-[calc(100vh - 3.5rem)] container flex-1 antialiased"
-            )}>
-              <Sidebar />
-              {props.children}
-            </div>
-            <Toaster />
-          </div>
+          {props.children}
+          <Toaster />
           <Analytics />
         </ThemeProvider>
       </RecoilRoot>
