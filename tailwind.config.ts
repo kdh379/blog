@@ -12,6 +12,7 @@ const screenWidth = Object.fromEntries( Object.entries( screenValue ).map( ( [ke
 
 const customWidth = {
   sidebar: "240px",
+  mobileHeader: "56px",
 };
 
 const config = {
@@ -21,6 +22,7 @@ const config = {
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
+    "./stories/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {

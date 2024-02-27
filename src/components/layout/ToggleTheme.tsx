@@ -22,7 +22,6 @@ export default function ThemeToggle() {
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
     >
       {mounted && (<>
-        {/* <Sun className={cn("size-5 dark:hidden")} /> */}
         { theme === "light" 
           ? <Icons.sun className={cn("size-5")} />
           : <Icons.moon className={cn("size-5")} />

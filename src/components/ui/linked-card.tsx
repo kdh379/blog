@@ -29,12 +29,13 @@ export default function LinkedCard({ href, title }: LinkCardProps) {
   return <>
     <Button
       variant="link"
-      className="hover:text-primary pl-0"
+      className="w-full justify-start p-0"
     >
       <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
+        className="hover:text-primary line-clamp-1"
       >
         {title || href}
       </a>

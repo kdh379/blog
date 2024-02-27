@@ -47,7 +47,7 @@ export default function PostsSearch() {
       <Button
         variant="outline"
         size="icon"
-        className="text-muted-foreground mobile:w-full mobile:justify-start mobile:px-2 ml-auto justify-center gap-x-1"
+        className="text-muted-foreground mobile:w-full mobile:justify-start mobile:px-2 ml-auto justify-center gap-x-1 bg-transparent"
         onClick={() => setOpen(true)}
       >
         <Search className="size-4" />
