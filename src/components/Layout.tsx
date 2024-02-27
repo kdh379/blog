@@ -13,7 +13,7 @@ export default function Layout(props: PropsWithChildren) {
         "tablet:grid tablet:grid-cols-[240px_minmax(0,1fr)] tablet:gap-10 container min-h-screen flex-1 antialiased"
       )}>
         <Sidebar />
-        <main className="pt-mobileHeader mobile:pt-0">{props.children}</main>
+        <main className="pt-mobileHeader mobile:pt-0 flex flex-col">{props.children}</main>
       </div>
     </>
   );
