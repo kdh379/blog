@@ -22,7 +22,7 @@ const config = {
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
-    "./stories/**/*.{ts,tsx}",
+    "./storybook/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {
