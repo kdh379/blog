@@ -1,4 +1,3 @@
-
 import { Post } from "contentlayer/generated";
 import dayjs from "dayjs";
 import { Calendar, Clock } from "lucide-react";

@@ -1,7 +1,4 @@
-"use client";
-
 import { MDXComponents } from "mdx/types";
-import Image from "next/image";
 import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import * as React from "react";
@@ -25,7 +22,6 @@ import { cn } from "@/lib/utils";
 import LinkedCard from "./linked-card";
 import VideoCard from "./video-card";
 
-
 const mdxComponents: MDXComponents = {
   Accordion,
   AccordionContent,
@@ -34,7 +30,6 @@ const mdxComponents: MDXComponents = {
   Alert,
   AlertTitle,
   AlertDescription,
-  Image,
   LinkedCard,
   VideoCard,
   Callout,

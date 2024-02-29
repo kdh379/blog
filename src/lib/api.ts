@@ -1,12 +1,12 @@
-import axios from "axios";
+import { OgObject } from "open-graph-scraper/dist/lib/types";
 
 interface APIInterface {
-  "getOpenGraph": HttpReqRes<OpenGraphReq, OpenGraphRes>;
+  "getOpenGraph": HttpReqRes<OpenGraphReq, OgObject>;
 };
 
 const URLDict: Record<keyof APIInterface, HttpRequestInfo> = {
   getOpenGraph: {
-    url: "/api/open-graph",
+    url: "/open-graph",
     method: "GET",
   },
 };
@@ -23,18 +23,9 @@ type HttpRequestInfo = {
   method: "GET";
 }
 
-interface RequestOption <T_Key extends keyof APIInterface> {
+interface RequestOption<T_Key extends keyof APIInterface> extends RequestInit {
   key: T_Key;
   params: APIInterface[T_Key]["params"];
-}
-
-function getInstance() {
-  return axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL,
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
-  });
 }
 
 function getAPIInfo<T_Key extends keyof APIInterface>(
@@ -54,17 +45,21 @@ function getAPIInfo<T_Key extends keyof APIInterface>(
   };
 }
 
-export default async function api<T_Key extends keyof APIInterface>({
-  key,
-  params,
-}: RequestOption<T_Key>
+export default async function api<T_Key extends keyof APIInterface>(
+  {
+    key,
+    params,
+    ...options
+  }: RequestOption<T_Key>
 ) {
   const { url, method } = getAPIInfo(key, params);
-
-  const response = await getInstance().request<APIInterface[T_Key]["res"]>({
-    url,
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method,
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    ...options,
   });
 
-  return response.data;
+  return response.json();
 }

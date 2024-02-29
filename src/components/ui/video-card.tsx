@@ -1,6 +1,3 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
 
 import api from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -9,18 +6,11 @@ interface VideoCardProps {
   href: string;
 }
 
-export default function VideoCard({ href }: VideoCardProps) {
+export default async function VideoCard({ href }: VideoCardProps) {
 
-  const {
-    data: openGraph,
-    isLoading,
-  } = useQuery({
-    queryKey: ["getOpenGraph", { href }],
-    queryFn: () => api({
-      key: "getOpenGraph",
-      params: { url: href },
-    }),
-    staleTime: 1000 * 60 * 60 * 24,
+  const openGraph = await api({
+    key: "getOpenGraph",
+    params: { url: href },
   });
 
   return <div className="mt-4 flex flex-col gap-y-2">
@@ -29,17 +19,14 @@ export default function VideoCard({ href }: VideoCardProps) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      {isLoading && <div className="bg-accent h-6 w-1/2 animate-pulse rounded-md" />}
       <p className={cn(
-        "hover:text-primary font-medium underline underline-offset-4 transition-colors",
-        isLoading && "bg-accent animate-pulse rounded-md"
+        "hover:text-primary font-medium underline underline-offset-4 transition-colors"
       )}
       >
         {openGraph?.ogTitle}
       </p>
     </a>
     <div className="bg-muted/50 relative aspect-video rounded-md pb-[56.25%]">
-      {isLoading && <div className="bg-accent absolute inset-0 animate-pulse rounded-md" /> }
       {openGraph?.ogVideo.length &&
         <iframe
           title={openGraph?.ogTitle || "Video"}

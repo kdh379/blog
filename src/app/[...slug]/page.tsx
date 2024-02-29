@@ -59,7 +59,7 @@ export function generateStaticParams() {
   }));
 }
 
-const Post = ({ params }: PostPageProps) => {
+const Post = async ({ params }: PostPageProps) => {
   const post = getPostFromParams({ params });
 
   if (!post) {

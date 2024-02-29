@@ -1,29 +1,21 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
 
 import api from "@/lib/api";
 
 import { Button } from "./button";
-
 
 interface LinkCardProps {
   href: string;
   title?: string;
 }
 
-export default function LinkedCard({ href, title }: LinkCardProps) {
+export default async function LinkedCard({ href, title }: LinkCardProps) {
 
-  const {
-    data:openGraph,
-    isLoading,
-  } = useQuery({
-    queryKey: ["getOpenGraph", { href }],
-    queryFn: () => api({
-      key: "getOpenGraph",
-      params: { url: href },
-    }),
-    staleTime: 1000 * 60 * 60 * 24,
+  const openGraph = await api({
+    key: "getOpenGraph",
+    params: { url: href },
+    next: {
+      revalidate: 1000 * 60 * 60 * 24,
+    },
   });
 
   return <>
@@ -47,7 +39,6 @@ export default function LinkedCard({ href, title }: LinkCardProps) {
       className="bg-muted/50 hover:bg-muted/100 mobile:h-32 mb-4 flex h-24 rounded-md border transition-colors active:opacity-50"
     >
       <div className="flex overflow-hidden">
-        {isLoading && <div className="bg-accent h-full animate-pulse" />}
         {openGraph?.ogImage?.length && (
           <div
             style={{

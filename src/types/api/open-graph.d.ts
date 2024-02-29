@@ -7,7 +7,7 @@ interface OpenGraphRes {
   ogType: string;
   ogUrl: string;
   ogDescription: string;
-  chartset: string;
+  charset: string;
   requestUrl: string;
   success: boolean;
   ogImage: OGImage[];
