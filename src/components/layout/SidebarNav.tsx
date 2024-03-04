@@ -3,11 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { PropsWithChildren } from "react";
-import { useSetRecoilState } from "recoil";
 
 import { getPostTree, PostTree } from "@/lib/post";
 import { cn } from "@/lib/utils";
-import { sidebarVisibleAtom } from "@/store/atom";
+import { useSidebarStore } from "@/store";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
 
@@ -22,12 +21,12 @@ interface NavLinkProps {
 function NavLink({ href, children }: PropsWithChildren<NavLinkProps>) {
 
   const pathname = usePathname();
-  const setOpen = useSetRecoilState(sidebarVisibleAtom);
+  const setClose = useSidebarStore((state) => state.close);
 
   return <>
     <Link
       href={href}
-      onClick={() => setOpen(false)}
+      onClick={setClose}
       className={cn(
         "text-muted-foreground mb-2 flex w-full text-sm hover:underline",
         decodeURIComponent(pathname) === href && "text-primary font-bold"

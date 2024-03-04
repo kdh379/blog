@@ -2,19 +2,18 @@
 
 import { Menu } from "lucide-react";
 import React, { PropsWithChildren } from "react";
-import { useRecoilState } from "recoil";
 
-import { sidebarVisibleAtom } from "@/store/atom";
+import { useSidebarStore } from "@/store";
 
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 
 export default function MobileSheet( props: PropsWithChildren ) {
-  const [open, setOpen] = useRecoilState(sidebarVisibleAtom);
+  const {visible, toggle} = useSidebarStore();
     
   return (
     <>
-      <Sheet open={open} onOpenChange={setOpen}>
+      <Sheet open={visible} onOpenChange={toggle}>
         <SheetTrigger asChild>
           <Button
             variant="ghost"
