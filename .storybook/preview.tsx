@@ -28,6 +28,15 @@ const preview: Preview = {
         <Story />
       </Providers>
     ),
+    // RSC에서 테마 변경 시 에러 발생
+    // https://github.com/storybookjs/storybook/pull/26243
+    // withThemeByClassName({
+    //   themes: {
+    //     light: "light",
+    //     dark: "dark",
+    //   },
+    //   defaultTheme: "light",
+    // }),
   ]
 };
 

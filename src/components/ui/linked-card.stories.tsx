@@ -10,6 +10,13 @@ const meta = {
   parameters: {
     layout: "centered",
   },
+  decorators: [
+    (Story) => (
+      <div className="w-[600px]">
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof LinkedCard>;
 export default meta;
 
@@ -17,8 +24,20 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    title: "Title",
-    href: "https://blog.bandal.dev",
+    title: "Title Example",
+    href: "https://www.example.com",
+  },
+  parameters: {
+    msw: {
+      handlers,
+    },
+  },
+};
+
+export const Loading: Story = {
+  args: {
+    title: "Title Example",
+    href: "pending",
   },
   parameters: {
     msw: {

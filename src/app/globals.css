@@ -67,7 +67,7 @@
     text-rendering: optimizeLegibility;
   }
   html {
-    @apply font-pretendard overflow-y-scroll;
+    @apply font-pretendard;
   }
 
 }

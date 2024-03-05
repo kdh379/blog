@@ -9,16 +9,13 @@ const config: StorybookConfig = {
     "@storybook/addon-essentials",
     "@chromatic-com/storybook",
     "@storybook/addon-interactions",
+    "@storybook/addon-themes",
     "msw-storybook-addon"
   ],
   features: { experimentalRSC: true },
   framework: {
     name: "@storybook/nextjs",
-    options: {
-      builder: {
-        useSWC: true,
-      }
-    },
+    options: {},
   },
   docs: {
     autodocs: "tag",

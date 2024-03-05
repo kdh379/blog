@@ -1,8 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { allPosts } from "contentlayer/generated";
 
-import { handlers } from "@/mocks/handlers";
-
 import Layout from "../Layout";
 import PostPage from "./PostPage";
 
@@ -25,9 +23,4 @@ if(!post) {
 
 export const Default: Story = {
   args: post,
-  parameters: {
-    msw: {
-      handlers,
-    },
-  },
 };
