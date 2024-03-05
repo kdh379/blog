@@ -17,7 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...allPosts.map((post) => ({
       url: `${siteConfig.url}/${post.slugAsParams}`,
-      lastModified: dayjs(post.date).tz().format(),
+      lastModified: dayjs(post.date).tz("Asia/Seoul").format(),
     })),
   ];
 }
