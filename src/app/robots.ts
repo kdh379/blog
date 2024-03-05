@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: [],
     },
-    sitemap: "/sitemap.xml",
+    sitemap: "https://blog.bandal.dev/sitemap.xml",
   };
 }
