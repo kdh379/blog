@@ -512,12 +512,6 @@ export default function Sheet( props: PropsWithChildren ) {
     </>
   );
 }
-
-// Vanilla JS에서 사용
-// get the property
-const visible = useSidebarStore.use.visible();
-// get the action
-const toggle = useSidebarStore.use.toggle();
 ```
 
 `Zustand`를 사용하기 위해 필요한 주요 코드는 위가 전부입니다.
@@ -526,9 +520,91 @@ const toggle = useSidebarStore.use.toggle();
 Zustand는 Redux의 복잡한 구조를 간소화하고, Context API의 성능 문제를 해결하였습니다.
 - 중앙 집중식으로 상태를 관리합니다.
 - Redux와 달리 Boilerplate가 적어 러닝 커브가 낮고, 코드가 간결하여 쉽게 이해할 수 있습니다.
+- Redux DevTools를 지원합니다.
 - 번들 사이즈가 **3.1 kb**입니다. 이는 Recoil ( 79.4 kb ), react-redux ( 11.2 kb ) 보다 작습니다.
 - 컴포넌트 외부에서도 상태에 접근할 수 있습니다.
-- store의 상태가 변경될 때 리렌더링됩니다. 이는 Context API와 달리 불필요한 리렌더링이 발생하지 않습니다.
+- store의 `state`가 변경될 때 리렌더링됩니다. 이는 Context API와 달리 불필요한 리렌더링이 발생하지 않습니다.
+
+### Zustand 레시피
+아래는 Zustand를 사용하기 전에 알아두면 좋은 팁들입니다.
+
+#### 불필요한 리렌더링 방지하기
+Store를 구독하는 방식에 따라 불필요한 리렌더링을 방지할 수 있습니다.
+
+```tsx
+// store 전체를 구독하게 되어 모든 경우에 리렌더링이 발생
+const { nuts } = useBearStore()
+
+// nuts만 구독하게 되어 nuts가 변경될 때만 리렌더링이 발생
+const nuts = useBearStore((state) => state.nuts)
+
+// 하나의 객체로 복수개의 state를 가져오려면
+import { useShallow } from 'zustand/react/shallow'
+
+// Object Pick
+const { nuts, honey } = useBearStore(
+  useShallow((state) => ({ nuts: state.nuts, honey: state.honey })),
+)
+
+// Array pick
+const [nuts, honey] = useBearStore(
+  useShallow((state) => [state.nuts, state.honey]),
+)
+
+// Mapped picks
+const treats = useBearStore(useShallow((state) => Object.keys(state.treats)))
+```
+
+#### 상태 덮어쓰기
+set에는 기본적으로 `false`인 두번째 인자가 있습니다. `true`로 변경할 경우 기존 값에 merge하지 않고, 새로운 모델로 덮어쓰게 됩니다.
+대신, action처럼 의존하는 부분을 지우지 않도록 주의해야 합니다.
+
+```tsx
+const useFishStore = create((set) => ({
+  salmon: 1,
+  tuna: 2,
+  deleteEverything: () => set({}, true), // clears the entire store, actions included
+  deleteTuna: () => set((state) => omit(state, ['tuna']), true),
+}))
+```
+
+#### Redux Devtools + Persist 묶어서 사용하기
+Redux Devtools나, Persist 등의 미들웨어를 묶어서 사용할 수 있습니다.
+
+```tsx
+interface BearState {
+  bears: number
+  increase: (by: number) => void
+}
+
+const useBearStore = create<BearState>()(
+  devtools(
+    persist(
+      (set) => ({
+        bears: 0,
+        increase: (by) => set((state) => ({ bears: state.bears + by })),
+      }),
+      { name: 'bearStore' },
+    ),
+  ),
+)
+
+// 좀더 클린코드로 작성하려면
+const myMiddlewares = (f) => devtools(persist(f, { name: 'bearStore' }))
+
+interface BearState {
+  bears: number
+  increase: (by: number) => void
+}
+
+const useBearStore = create<BearState>()(
+  myMiddlewares((set) => ({
+    bears: 0,
+    increase: (by) => set((state) => ({ bears: state.bears + by })),
+  })),
+)
+
+```
 
 ## 필자의 선택
 
