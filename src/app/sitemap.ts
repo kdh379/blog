@@ -1,13 +1,23 @@
 import { allPosts } from "contentlayer/generated";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { MetadataRoute } from "next";
 
 import { siteConfig } from "@/config/site";
 
-const routes = [
-  siteConfig.url,
-  ...allPosts.map((post) => `${siteConfig.url}/${post.slugAsParams}`),
-];
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return routes.map((route) => ({url: route}));
+  return [
+    {
+      url: siteConfig.url,
+      lastModified: dayjs().tz().format(),
+    },
+    ...allPosts.map((post) => ({
+      url: `${siteConfig.url}/${post.slugAsParams}`,
+      lastModified: dayjs(post.date).tz().format(),
+    })),
+  ];
 }
