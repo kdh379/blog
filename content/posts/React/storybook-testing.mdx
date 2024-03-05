@@ -1,0 +1,313 @@
+---
+title: 'Storybook으로 서버 컴포넌트 (RSC) 테스트하기 in Next.js 14'
+description: 'Storybook과 MSW로 React Server Components의 인터랙션을 테스트하는 방법에 대해 알아봅니다.'
+tags:
+  - Storybook
+  - Next.js
+  - RSC
+draft: false
+date: 2024-02-26 11:23:29
+---
+
+[Storybook 8](https://storybook.js.org/blog/storybook-8-beta/?ref=storybookblog.ghost.io) 부터 React Server Component (RSC)를 지원하게 되었습니다.
+이번 글에서는 Next.js 14 기반의 RSC를 Storybook을 통해 테스트하는 방법에 대해 알아보겠습니다.
+
+## 들어가기전에
+
+### RSC가 뭔가요?
+
+RSC는 서버에서 렌더링되는 컴포넌트로, 클라이언트에서 렌더링되는 컴포넌트와는 다르게 서버에서 렌더링되어 클라이언트로 전달됩니다. 이렇게 들으면 SSR과 차이가 없어보입니다.
+
+**SSR은 초기 페이지 로드에 중점을 두고 있습니다.** 사용자는 HTML을 빨리 얻을 수 있지만, 앱과 바로 상호작용할 수 없습니다.
+- 브라우저에서 React.createElemment를 통해 DOM을 다시 렌더링하고, 이벤트 리스너를 연결하는 Hydration 과정이 필요합니다.
+- 서버에서 데이터를 가져와야 할 경우, `useEffect()` Hook으로 클라이언트측에서 데이터를 가져오는 것인데, 이는 Round Trip이 길며, 컴포넌트가 렌더링되고 Hydrate 이후에 일어납니다.
+
+![240302-001709](/posts/storybook-testing/240302-001709.png)
+
+SSR은 SEO 최적화, FCP(Fist Contentful Paint)를 개선하는데 도움이 되었지만, 결국 클라이언트 환경에서 많은 작업의 수행을 필요로 했습니다.
+
+반면, **RSC는 컴포넌트가 서버 환경에서 렌더링되어 클라이언트로 전달됩니다.** 서버에서 렌더링한 후, React Server Component Payload (RSC Payload)라는 특수 데이터 형식으로 클라이언트에 전달됩니다.
+- Server Component의 코드는 클라이언트에 전달되지 않습니다. 반면 SSR은 JS 번들을 통해 클라이언트에 전달됩니다.
+- Server Component는 서버에 직접 접근(Database, FileSystem, 내부 서비스)할 수 있습니다.
+- 결과, 다운로드할 JS Bundle도 없고, 클라이언트측 리렌더링을 요구하지 않으므로 성능이 향상됩니다.
+- 단, 모든 코드는 직렬화되어야 합니다. 즉 `hooks`나 `state`를 사용할 수 없습니다.
+
+![240302-002501](/posts/storybook-testing/240302-002501.png)
+
+> **RSC Payload가 뭔가요?**
+> React Server Component Tree의 압축된 바이너리 표현입니다. 이는 클라이언트의 React에서 DOM을 업데이트하는데 사용됩니다. RSC Payload는 다음이 포함되어 있습니다.
+> - Server Compoennt의 렌더 결과
+> - Client Component를 렌더링해야하는 위치, JS 파일 참조를 위한 Placeholder
+> - Server Component에서 Client Component로 전달되는 Props
+
+Next.js 에서 RSC를 사용하려면 Next.js 13.4 이상이 필요합니다. 사용 방법은 컴포넌트를 비동기 `async`로 선언하면 됩니다.
+자세한 사용 방법은 [공식 문서](https://nextjs.org/docs/app/building-your-application/rendering/server-components)를 참고하세요.
+
+### 왜 Storybook으로 인터랙션을 테스트하나요?
+
+Jest나 Playwright 등을 통해 컴포넌트가 출력된 값이 예상대로 나오는지 테스트할 수 있습니다. 하지만 위 방식만으론 UI 버그를 예방하긴 충분하지 않습니다.
+사용자의 인터랙션은 테스트할 수 있지만, Node.js 환경에서만 동작하기에 시각적 테스트를 할 수는 없습니다.
+
+반면 스토리북은 컴포넌트 단위로 UI를 테스트할 수 있으며, 브라우저 환경에서 동작하기에 시각적 테스트도 가능합니다. 또한, 사용자의 인터랙션을 자동으로 실행하는 테스트 시나리오를 작성할 수 있습니다.
+
+이 글을 통해 스토리북의 Next.js 14 내의 환경 구성 및 RSC를 테스트하는 방법에 대해 알아보겠습니다.
+
+## Storybook 환경 구성
+
+먼저, Next.js 프로젝트에 Storybook을 추가합니다.
+
+```bash
+pnpm dlx storybook@next init
+```
+
+이 후 Storybook의 main.ts에 새로운 RSC 기능을 사용하기 위한 설정을 추가합니다.
+또한, tsconfig의 `paths` alias을 Storybook에서도 사용할 수 있도록 설정합니다.
+
+```ts title=".storybook/main.ts" {1}
+const config: StorybookConfig = {
+  // stories: ['../stories/**/*.mdx', '../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: ['../app/**/*.stories.tsx'],
+  // ... 기존 설정들
+  features: { experimentalRSC: true }
+  staticDirs: [
+    "../public",
+    // 이 블로그에선 next.js localfont를 사용하여서 따로 추가해줬습니다.
+    {
+      from: "../public/fonts",
+      to: "/public/fonts",
+    }
+  ],
+  webpackFinal: async (config) => {
+    if(!config.resolve) return config;
+
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": path.resolve(__dirname, "../src"),
+      "contentlayer/generated": path.resolve(__dirname, "../.contentlayer/generated"),
+    }
+    
+    return config;
+  },
+}
+```
+
+이제 Stories를 작성하여 RSC를 테스트할 수 있습니다. 이 블로그의 페이지는 RSC로 구성되어 있습니다. 그러므로 `PostPage` 컴포넌트를 예시로 들겠습니다.
+
+```tsx title="app/components/pages/PostPage.stories.tsx"
+import { Meta, StoryObj } from "@storybook/react";
+import { allPosts } from "contentlayer/generated";
+
+import Layout from "../Layout";
+import PostPage from "./PostPage";
+
+const meta = {
+  title: "pages/PostPage",
+  component: PostPage,
+} satisfies Meta<typeof PostPage>;
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+const post = allPosts.find((post) => post.slug === "/__test/mdx-example");
+
+if(!post) {
+  throw new Error("No post found");
+}
+
+export const Default: Story = {
+  args: post,
+};
+```
+
+![240302-025743](/posts/storybook-testing/240302-025743.png)
+
+RSC가 작동하는 것은 확인했지만, 스타일과 필요한 Provider가 누락되어있음을 확인할 수 있습니다.
+`./storybook/preview.tsx`의 `decorators`를 통해 필요한 Provider를 추가할 수 있습니다.
+
+```tsx title=".storybook/preview.tsx"
+import type { Preview } from "@storybook/react";
+import Providers from "../src/components/Provider";
+import * as React from "react";
+
+import "@/app/globals.css";
+import "./font-face.css";
+
+const preview: Preview = {
+  parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
+  },
+  decorators: [
+    (Story) => (
+      <Providers>
+        <Story />
+      </Providers>
+    ),
+  ]
+};
+
+export default preview;
+```
+
+<Alert>
+- globals.css에서 tailwindcss 설정을 가져옵니다.
+- Next.js의 localfont는 사용할 수 없으니, font-face 를 따로 생성하였습니다.
+</Alert>
+
+`tailwind.config.ts`에서 content 경로를 추가합니다.
+
+```ts title="tailwind.config.ts"
+const config = {
+  darkMode: ["class"],
+  content: [
+    "./src/**/*.{ts,tsx}",
+    "./storybook/**/*.{ts,tsx}",
+  ],
+  // ... 기타 설정
+}
+```
+
+![240302-031144](/posts/storybook-testing/240302-031144.png)
+
+이제 원하던 화면이 출력되는 것을 확인할 수 있습니다.
+
+## MSW를 통한 RSC 테스트
+
+MSW를 활용하여 데이터를 제어하며 다양한 상태를 테스트해볼 수 있습니다.
+<Alert>
+Next.js의 App Dir는 현재 MSW와 호환되지 않기에, 다소 복잡한 과정을 필요로합니다.
+하지만 Storybook은 브라우저 환경에서 실행되기 때문에, Next.js 프로젝트더라도 문제없이 사용할 수 있습니다.
+</Alert>
+
+먼저, MSW와 msw-storybook-addon을 설치합니다. msw-storybook-addon이 **MSW의 2.0.0 까지만 지원하기에, 그 이상은 설치할 경우 에러가 발생합니다.**
+[Issue#121](https://github.com/mswjs/msw-storybook-addon/issues/121)이 해결되기 전까진 아래 버전을 지켜주세요.
+
+```bash
+pnpm add -D msw@2.0.0
+pnpm dlx storybook add msw-storybook-addon@2.0.0--canary.122.b3ed3b1.0
+pnpm dlx msw init <PUBLIC_DIR>
+```
+
+설치가 무사히 진행되었다면, `public/mockServiceWorker.js` 파일이 생성됨과, `.storybook/main.ts`의 addons에 `msw-storybook-addon`가 추가되어있음을 확인할 수 있습니다.
+
+```ts title=".storybook/main.ts"
+const config: StorybookConfig = {
+  stories: ['../src/**/*.stories.tsx'],
+  addons: [
+    "@storybook/addon-links",
+    "@storybook/addon-essentials",
+    "@chromatic-com/storybook",
+    "@storybook/addon-interactions",
+    "msw-storybook-addon"
+  ],
+  // ... 기타 설정
+}
+```
+
+다음, `.storybook/preview.tsx`에 MSW 초기화 및 `onUnhandledRequest`옵션을 추가합니다.
+
+```tsx title=".storybook/preview.tsx"
+import { initialize, mswLoader } from "msw-storybook-addon";
+
+initialize({onUnhandledRequest: "bypass"}); // handle 등록되지 않은 요청을 통과시킵니다.
+
+const preview: Preview = {
+  loaders: [mswLoader],
+  // ... 기타 설정
+};
+```
+
+이제 MSW를 통해 API 요청을 제어할 수 있습니다. 이 블로그의 링크 카드는 OpenGraph API를 통해 데이터를 가져오고 있어서, 이를 테스트해보겠습니다.
+먼저, API Mocking을 위한 `src/mocks/handlers.ts`를 작성합니다.
+
+```ts title="src/mocks/handlers.ts"
+import { http, HttpResponse } from "msw";
+import { OgObject } from "open-graph-scraper/dist/lib/types";
+
+const MOCK_OG_OBJECT: OgObject = {
+  // MOCK DATA
+};
+
+// Next.js API 를 사용하고 있기에, Next.js DEV 서버 API URL을 사용합니다.
+function nextApi(url: string) {
+  return `http://localhost:3000/api${url}`;
+}
+
+function searchParam(url: string, param: string) {
+  const urlObj = new URL(url);
+  return urlObj.searchParams.get(param);
+}
+
+
+export const handlers = [
+  http.get<OpenGraphReq, any, OgObject>(
+    nextApi("/open-graph"),
+    async ({ request}) => {
+
+      const url = searchParam(request.url, "url");
+      
+      if( url === "https://example.com/error")
+        return HttpResponse.json({}, { status: 503 });
+      else if( url === "pending")
+        return new Promise(() => {});
+
+
+      return HttpResponse.json(MOCK_OG_OBJECT);
+    }
+  ),
+];
+```
+
+이제, stories 파일에 handler를 등록하여 API를 인터셉트할 수 있습니다.
+
+```ts title="LinkedCard.stories.tsx"
+import { Meta, StoryObj } from "@storybook/react";
+
+import { handlers } from "@/mocks/handlers";
+
+import LinkedCard from "./linked-card";
+
+const meta = {
+  title: "ui/LinkedCard",
+  component: LinkedCard,
+  parameters: {
+    layout: "centered",
+    msw: {
+      handlers,
+    },
+  },
+  decorators: [
+    (Story) => (
+      <div className="w-[600px]">
+        <Story />
+      </div>
+    ),
+  ],
+} satisfies Meta<typeof LinkedCard>;
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    title: "Title Example",
+    href: "https://www.example.com",
+  },
+};
+
+export const Loading: Story = {
+  args: {
+    title: "Title Example",
+    href: "pending",
+  },
+};
+```
+
+
+**참조**
+
+<LinkedCard title="react.dev React Server Components" href="https://react.dev/blog/2023/03/22/react-labs-what-we-have-been-working-on-march-2023#react-server-components" />
+<LinkedCard title="Vercel RSC 이해하기" href="https://vercel.com/blog/understanding-react-server-components" />
+<LinkedCard title="Next.js Server Component" href="https://nextjs.org/docs/app/building-your-application/rendering/server-components" />
+<LinkedCard title="Storybook How to use Storybook 8 to RSC app in isolation" href="https://storybook.js.org/blog/build-a-nextjs-app-with-rsc-msw-storybook/?ref=storybookblog.ghost.io" />
