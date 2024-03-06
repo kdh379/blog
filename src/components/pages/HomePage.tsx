@@ -5,6 +5,19 @@ import Link from "next/link";
 import { siteConfig } from "@/config/site";
 
 import { Icons } from "../ui/icons";
+import TypeWriter from "../ui/type-writer";
+
+const skills = [
+  "React",
+  "Next.js",
+  "JavaScript",
+  "TypeScript",
+  "Tailwind CSS",
+  "Zustand",
+  "React-Query",
+  "HTML",
+  "CSS",
+];
 
 function Anchor({ href, children }: { href: string; children: React.ReactNode }) {
   return (
@@ -28,6 +41,7 @@ export default function HomePage() {
       <p>웹 개발과 저에 대해 작성하고 있습니다.</p>
       <p>보고 배운걸 까먹지 않기 위해 기록해둔 곳입니다.</p>
       <p>동료에게 좋은 평가를 받는 것을 좋아합니다. 그래서 더 노력합니다.</p>
+      <p>프론트엔드 개발 시 주로 <TypeWriter strings={skills} />를 사용합니다.</p>
 
       <div className="mt-12">
         <p className="mb-2">Connect me on</p>
