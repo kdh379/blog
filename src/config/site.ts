@@ -7,4 +7,11 @@ export const siteConfig = {
     github: "https://github.com/kdh379",
   },
   github: "https://github.com/kdh379",
+  keywords: [
+    "Next.js",
+    "Front-End",
+    "React",
+    "웹 개발",
+    "기술 블로그",
+  ],
 };

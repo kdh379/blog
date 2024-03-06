@@ -15,11 +15,7 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(siteConfig.url),
   description: siteConfig.description,
-  keywords: [
-    "Next.js",
-    "Frontend",
-    "블로그",
-  ],
+  keywords: siteConfig.keywords,
   creator: "kdh379",
   openGraph: {
     title: {
