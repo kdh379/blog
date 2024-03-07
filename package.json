@@ -28,7 +28,6 @@
     "cmdk": "^0.2.1",
     "contentlayer": "^0.3.4",
     "dayjs": "^1.11.10",
-    "github-markdown-css": "^5.5.1",
     "lucide-react": "^0.323.0",
     "markdown-wasm": "^1.2.0",
     "mdast-util-toc": "^7.0.0",
