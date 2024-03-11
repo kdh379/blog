@@ -30,20 +30,20 @@ export default function LinkedCard({href, title}: LinkCardProps) {
       </a>
     </Button>
     <ErrorBoundary errorComponent={FallbackEmpty}>
-      <div className="bg-muted/50 mobile:h-32 mb-4 flex h-24 overflow-hidden rounded-md border transition-colors">
+      <div className="bg-muted mobile:h-32 mb-4 flex h-24 overflow-hidden rounded-md border transition-colors">
         <React.Suspense
           fallback={
             <div
               className="flex w-full animate-pulse"
               role="status"
             >
-              <div className="mobile:w-32 bg-muted flex w-24 items-center justify-center rounded-l-md">
+              <div className="mobile:w-32 bg-muted-foreground/50 flex w-24 items-center justify-center rounded-l-md">
                 <ImageIcon />
               </div>
               <div className="mobile:p-4 flx-1 flex flex-1 flex-col p-2">
-                <div className="bg-muted/100 h-4 w-3/4 rounded" />
-                <div className="bg-muted/100 mt-2 h-4 w-full rounded" />
-                <div className="bg-muted/100 mt-auto h-4 w-3/4 rounded" />
+                <div className="bg-muted-foreground/50 h-4 w-3/4 rounded" />
+                <div className="bg-muted-foreground/50 mt-2 h-4 w-full rounded" />
+                <div className="bg-muted-foreground/50 mt-auto h-4 w-3/4 rounded" />
               </div>
             </div>
           }
@@ -65,12 +65,7 @@ async function Component({ href }: LinkCardProps) {
   });
 
   if( Object.keys(openGraph).length === 0 )
-    return <div className="flex w-full items-center justify-center">
-      <p className="text-muted-foreground text-center">
-        Open Graph 정보를 가져오지 못했습니다.
-      </p>
-    </div>;
-  
+    throw new Error("No open graph data");
 
   return <a
     href={href}

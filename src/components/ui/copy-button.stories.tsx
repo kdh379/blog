@@ -20,9 +20,13 @@ export const Default: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+
+    // Click Event
     const button = canvas.getByRole("button");
     userEvent.click(button);
     await canvas.findByText("복사되었습니다.");
+
+    // Clipboard
     expect(await navigator.clipboard.readText()).toBe("Copy String");
   },
 };
