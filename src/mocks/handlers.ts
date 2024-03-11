@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import { OgObject } from "open-graph-scraper/dist/lib/types";
 
 const MOCK_OG_OBJECT: OgObject = {
@@ -38,10 +38,9 @@ export const handlers = [
       const url = searchParam(request.url, "url");
       
       if( url === "https://example.com/error")
-        return HttpResponse.json({}, { status: 503 });
+        return HttpResponse.json({}, {status: 503});
       else if( url === "pending")
-        return new Promise(() => {});
-
+        await delay("infinite");
 
       return HttpResponse.json(MOCK_OG_OBJECT);
     }
