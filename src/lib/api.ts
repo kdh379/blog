@@ -51,7 +51,8 @@ export default async function api<T_Key extends keyof APIInterface>(
     params,
     ...options
   }: RequestOption<T_Key>
-) {
+): Promise<APIInterface[T_Key]["res"]>
+{
   const { url, method } = getAPIInfo(key, params);
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method,
@@ -60,6 +61,11 @@ export default async function api<T_Key extends keyof APIInterface>(
     },
     ...options,
   });
+
+  if (!response.ok) 
+    throw new Error(`API request failed: ${response.status} ${response.statusText}`, {
+      cause: response,
+    });
 
   return response.json();
 }

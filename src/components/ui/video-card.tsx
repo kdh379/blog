@@ -1,20 +1,18 @@
 
 import { VideoIcon } from "lucide-react";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import * as React from "react";
 
 import api from "@/lib/api";
 import { cn } from "@/lib/utils";
+
+import FallbackEmpty from "../template/fallback-empty";
 
 interface VideoCardProps {
   href: string;
 }
 
 export default async function VideoCard({ href }: VideoCardProps) {
-
-  const openGraph = await api({
-    key: "getOpenGraph",
-    params: { url: href },
-  });
 
   return <div className="mt-4 flex flex-col gap-y-2">
     <a
@@ -26,20 +24,22 @@ export default async function VideoCard({ href }: VideoCardProps) {
         "hover:text-primary font-medium underline underline-offset-4 transition-colors"
       )}
       >
-        {openGraph?.ogTitle}
+        {href}
       </p>
     </a>
-    <div className="bg-muted/50 relative aspect-video rounded-md pb-[56.25%]">
-      <React.Suspense 
-        fallback={
-          <div>
-            <VideoIcon className="text-muted size-8" />
-          </div>
-        }
-      >
-        <Component href={href} />
-      </React.Suspense>
-    </div>
+    <ErrorBoundary errorComponent={FallbackEmpty}>
+      <div className="aspect-video">
+        <React.Suspense 
+          fallback={
+            <div className="bg-muted flex animate-pulse items-center justify-center rounded-md">
+              <VideoIcon className="text-muted-foreground size-1/2" />
+            </div>
+          }
+        >
+          <Component href={href} />
+        </React.Suspense>
+      </div>
+    </ErrorBoundary>
   </div>;
 }
 
@@ -49,12 +49,14 @@ async function Component({ href }: VideoCardProps) {
     params: { url: href },
   });
 
-  return openGraph?.ogVideo.length &&
+  return (
+    openGraph?.ogVideo?.length && 
     <iframe
       title={openGraph?.ogTitle || "Video"}
       src={openGraph?.ogVideo?.[0]?.url}
-      className="absolute inset-0 size-full rounded-md"
+      className="size-full rounded-md"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowFullScreen
-    />;
+    />
+  );
 };
