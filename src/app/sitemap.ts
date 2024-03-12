@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: siteConfig.url,
-      lastModified: dayjs().tz().format(),
+      lastModified: dayjs().tz("Asia/Seoul").format(),
     },
     ...allPosts.map((post) => ({
       url: `${siteConfig.url}/${post.slugAsParams}`,
