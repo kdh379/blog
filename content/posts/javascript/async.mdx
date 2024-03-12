@@ -170,7 +170,7 @@ Async/Await 문법을 지원하며, get() / post() 같이 요청하는 http meth
 
 ### Event Loop: Microtasks & Macro Tasks
 
-자바스크립트는 비동기 처리를 위해 `Event Loop`를 사용합니다.
+자바스크립트는 싱글스레드 안에서 `Event Loop`에 의해 함수가 실행됩니다.
 
 `Event Loop`는 `Call Stack`과 `Task Queue`를 사용하여 비동기 처리를 합니다.
 아래 gif를 통해 이벤트 루프의 동작 방식을 이해할 수 있습니다.
@@ -210,3 +210,6 @@ ES7부터 추가된 `async/await`는 비동기 처리를 좀 더 쉽게 만들 �
 위 결과에 대해 추적해보며 설명하면 다음과 같습니다.
 
 1. 먼저 엔진이 `console.log`를 call stack에 넣은 후 `Before function!`이 출력됩니다.
+2. `myFunc()`함수가 call stack에서 호출되고 `In function!`이 출력됩니다.
+3. `one()`함수가 실행되고 Promise를 반환합니다. 이후에 `await`을 만나 나머지 기능은 `Micro Task Queue`에 들어가게 됩니다.
+4. `After function!`이 출력되고 Ccall stack에서 더이상 실행할 함수가 없으면, `myFunc()`함수를 Micro Task Queue에서 꺼내온 후 나머지 기능들을 실행합니다.
