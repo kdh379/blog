@@ -19,12 +19,12 @@ export default function ThemeToggle() {
       variant="ghost"
       size="icon"
       className="ml-auto"
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
       {mounted && (<>
-        { theme === "light" 
-          ? <Icons.sun className={cn("size-5")} />
-          : <Icons.moon className={cn("size-5")} />
+        { theme === "dark" 
+          ? <Icons.moon className={cn("size-5")} />
+          : <Icons.sun className={cn("size-5")} />
         }
       </>)}
       <span className="sr-only">Toggle theme</span>
