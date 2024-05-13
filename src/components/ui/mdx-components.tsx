@@ -20,6 +20,7 @@ import CopyButton from "@/components/ui/copy-button";
 import { cn } from "@/lib/utils";
 
 import LinkedCard from "./linked-card";
+import Video from "./video";
 import VideoCard from "./video-card";
 
 const mdxComponents: MDXComponents = {
@@ -31,6 +32,7 @@ const mdxComponents: MDXComponents = {
   AlertTitle,
   AlertDescription,
   LinkedCard,
+  Video,
   VideoCard,
   Callout,
   h1: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
