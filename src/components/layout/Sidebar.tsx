@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import Footer from "@/components/layout/Footer";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { useSidebarStore } from "@/store";
@@ -21,7 +22,7 @@ export default function Sidebar( {className}: SidebarProps ) {
   const setClose = useSidebarStore(state => state.close);
 
   return <>
-    <header className={cn(
+    <aside className={cn(
       "tablet:flex tablet:flex-col tablet:sticky fixed top-8 hidden h-[calc(100vh-3.5rem)] shrink-0",
       className
     )}>
@@ -47,6 +48,7 @@ export default function Sidebar( {className}: SidebarProps ) {
       <ScrollArea className="size-full py-4 pr-4">
         <SidebarNav />
       </ScrollArea>
-    </header>
+      <Footer />  
+    </aside>
   </>;
 }
