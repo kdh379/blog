@@ -82,8 +82,6 @@ export default function RootLayout({
     <html lang="ko" suppressHydrationWarning>
       <link rel="shortcut icon" href="/favicon.png" />
       <meta name="description" content={siteConfig.description} />
-      <meta charSet="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
       <body className={cn(pretendard.className, "relative antialiased transition ease-in-out")}>
         <Providers>
           <Layout>

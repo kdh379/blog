@@ -9,28 +9,17 @@
 이 블로그는 지속적으로 업데이트하며 꾸준히 진행할 예정입니다.
 
 ## 기술 스택
+
 - 코어: TypeScript, React, Next.js 14
 - 스타일링: Tailwind CSS, shadcn-ui
 - 패키지: PNPM
 - 배포: Vercel
 
-## 프로젝트 실행
-1. **Fork or Clone the repository**
+## 개발 환경 구성
 
-    프로젝트를 본인의 Github으로 Fork 하거나 Clone하여 내려받습니다.
-
-2. **Installation**
-
-    이 프로젝트는 `pnpm` 패키지 매니저를 사용하였습니다.  
-    프로젝트 디렉토리에서 의존성 패키지를 설치합니다.
 ```bash
+npm install -g pnpm
 pnpm i
-```
-
-3. **Development**
-
-    개발 서버를 실행하면 `localhost:3000`에서 확인할 수 있습니다.
-```bash
 pnpm dev
 ```
 
@@ -62,4 +51,5 @@ mdx 파싱 및 스타일링을 위해 아래 라이브러리를 사용하였습�
 
 
 ## 이슈
+
 - remark-gfm은 3.0.1 에서 업데이트 하면 안 됨. https://github.com/hashicorp/next-mdx-remote/issues/403
