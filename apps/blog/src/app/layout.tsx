@@ -1,9 +1,10 @@
 import "@repo/ui/globals.css";
 
 import Layout from "@blog/components/Layout";
-import Providers from "@blog/components/Provider";
+import Providers from "@repo/ui/components/Provider";
 import { cn } from "@repo/ui/lib/utils";
 import { siteConfig } from "@repo/ui/site.config";
+import { Analytics } from "@vercel/analytics/react";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 
@@ -87,6 +88,7 @@ export default function RootLayout({
             {children}
           </Layout>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );

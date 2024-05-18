@@ -12,11 +12,13 @@ import {
 import { Callout } from "@ui/components/ui/callout";
 import { CodeBlockWrapper } from "@ui/components/ui/code-block-wrapper";
 import CopyButton from "@ui/components/ui/copy-button";
+import ImageWithFallback from "@ui/components/ui/image-with-fallback";
 import LinkedCard from "@ui/components/ui/linked-card";
 import Video from "@ui/components/ui/video";
 import VideoCard from "@ui/components/ui/video-card";
 import { cn } from "@ui/lib/utils";
 import { MDXComponents } from "mdx/types";
+import { ImageProps } from "next/image";
 import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import * as React from "react";
@@ -117,13 +119,24 @@ const mdxComponents: MDXComponents = {
       {...props}
     />
   ),
+  // img src를 받아서 ImageWithFallback 컴포넌트로 렌더링
+  // @ts-ignore
   img: ({
     className,
     alt,
     ...props
-  }: React.ImgHTMLAttributes<HTMLImageElement>) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img className={cn("rounded-md", className)} alt={alt} {...props} />
+  }: ImageProps) => (
+    <ImageWithFallback 
+      {...props}
+      className={cn("rounded-md", className)}
+      alt={alt}
+      width={700}
+      height={475}
+      style={{
+        width: "100%",
+        height: "auto",
+      }}
+    />
   ),
   hr: ({ ...props }: React.HTMLAttributes<HTMLHRElement>) => (
     <hr className="my-4 tablet:my-8" {...props} />

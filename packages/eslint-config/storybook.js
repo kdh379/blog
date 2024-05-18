@@ -4,7 +4,15 @@ const project = resolve(process.cwd(), "tsconfig.json");
 
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ["eslint:recommended", "prettier", "eslint-config-turbo", "plugin:storybook/recommended"],
+  extends: [
+    "eslint:recommended",
+    require.resolve("@vercel/style-guide/eslint/next"),
+    "eslint-config-turbo",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:tailwindcss/recommended",
+    "plugin:storybook/recommended"
+  ],
   plugins: [
     "simple-import-sort",
     "unused-imports",
@@ -33,7 +41,10 @@ module.exports = {
   overrides: [
     {
       // or whatever matches stories specified in .storybook/main.js
-      files: ['*.stories.@(ts|tsx|js|jsx|mjs|cjs)'],
+      files: [
+        '*.stories.@(ts|tsx|js|jsx|mjs|cjs)',
+        "**/*.ts"
+      ],
       rules: {
         // example of overriding a rule
         'storybook/hierarchy-separator': 'error',

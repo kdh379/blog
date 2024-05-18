@@ -11,7 +11,7 @@ interface ImageWithFallbackProps extends ImageProps {
 export default function ImageWithFallback ({
   src,
   alt,
-  fallbackSrc="/images/empty.png",
+  fallbackSrc="/images/placeholder.png",
   ...props
 }: ImageWithFallbackProps) {
 

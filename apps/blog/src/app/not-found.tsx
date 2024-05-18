@@ -1,7 +1,7 @@
 import { Button } from "@repo/ui/components/ui/button";
 import { Separator } from "@repo/ui/components/ui/separator";
 import Link from "next/link";
- 
+
 export default function NotFound() {
   return (
     <div className="inset-0 m-auto">
