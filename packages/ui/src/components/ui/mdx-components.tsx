@@ -91,7 +91,7 @@ const mdxComponents: MDXComponents = {
     <a
       target="_blank"
       rel="noopener noreferrer"
-      className={cn("hover:text-primary underline underline-offset-4 transition-colors", className)}
+      className={cn("underline underline-offset-4 transition-colors hover:text-primary", className)}
       {...props}
     />
   ),
@@ -122,10 +122,11 @@ const mdxComponents: MDXComponents = {
     alt,
     ...props
   }: React.ImgHTMLAttributes<HTMLImageElement>) => (
+    // eslint-disable-next-line @next/next/no-img-element
     <img className={cn("rounded-md", className)} alt={alt} {...props} />
   ),
   hr: ({ ...props }: React.HTMLAttributes<HTMLHRElement>) => (
-    <hr className="tablet:my-8 my-4" {...props} />
+    <hr className="my-4 tablet:my-8" {...props} />
   ),
   table: ({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) => (
     <div className="my-6 w-full overflow-y-auto">
@@ -134,7 +135,7 @@ const mdxComponents: MDXComponents = {
   ),
   tr: ({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) => (
     <tr
-      className={cn("even:bg-muted m-0 border-t p-0", className)}
+      className={cn("m-0 border-t p-0 even:bg-muted", className)}
       {...props}
     />
   ),
@@ -159,7 +160,6 @@ const mdxComponents: MDXComponents = {
   pre: ({
     className,
     __rawString__,
-    __withMeta__,
     ...props
   }: React.HTMLAttributes<HTMLPreElement> & {
     __rawString__?: string;
@@ -185,7 +185,7 @@ const mdxComponents: MDXComponents = {
   code: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <code
       className={cn(
-        "bg-muted font-pretendard min-w-full rounded px-[0.3rem] py-[0.2rem] text-sm",
+        "min-w-full rounded bg-muted px-[0.3rem] py-[0.2rem] font-pretendard text-sm",
         className
       )}
       {...props}
@@ -197,7 +197,7 @@ const mdxComponents: MDXComponents = {
   Fore: ({ className, ...props }: React.ComponentProps<"p">) => (
     <p
       className={cn(
-        "text-muted-foreground mt-2",
+        "mt-2 text-muted-foreground",
         className
       )}
       {...props}

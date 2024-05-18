@@ -1,4 +1,5 @@
 
+
 import api from "@ui/lib/api";
 import { cn } from "@ui/lib/utils";
 import { VideoIcon } from "lucide-react";
@@ -20,7 +21,7 @@ export default async function VideoCard({ href }: VideoCardProps) {
       rel="noopener noreferrer"
     >
       <p className={cn(
-        "hover:text-primary font-medium underline underline-offset-4 transition-colors"
+        "font-medium underline underline-offset-4 transition-colors hover:text-primary"
       )}
       >
         {href}
@@ -30,8 +31,8 @@ export default async function VideoCard({ href }: VideoCardProps) {
       <div className="aspect-video">
         <React.Suspense 
           fallback={
-            <div className="bg-muted flex animate-pulse items-center justify-center rounded-md">
-              <VideoIcon className="text-muted-foreground size-1/2" />
+            <div className="flex animate-pulse items-center justify-center rounded-md bg-muted">
+              <VideoIcon className="size-1/2 text-muted-foreground" />
             </div>
           }
         >
@@ -58,4 +59,4 @@ async function Component({ href }: VideoCardProps) {
       allowFullScreen
     />
   );
-};
+}

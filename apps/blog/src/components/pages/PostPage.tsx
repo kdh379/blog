@@ -14,13 +14,13 @@ export default async function PostPage(props: PostPageProps) {
 
   const toc = await getTableOfContents(props.body.raw);
 
-  return <div className="desktop:grid desktop:grid-cols-[1fr_300px] desktop:gap-10 relative py-6">
+  return <div className="relative py-6 desktop:grid desktop:grid-cols-[1fr_300px] desktop:gap-10">
     <article className="mx-auto w-full min-w-0">
       <section>
         <h1 className="mb-4 text-4xl font-bold tracking-tight">
           {props.title}
         </h1>
-        <div className="text-muted-foreground space-y-2">
+        <div className="space-y-2 text-muted-foreground">
           {props.description && (
             <p className="text-lg">
               {props.description}
@@ -51,7 +51,7 @@ export default async function PostPage(props: PostPageProps) {
         ))}
       </section>
     </article>
-    <aside className="desktop:block hidden text-sm">
+    <aside className="hidden text-sm desktop:block">
       <div className="sticky top-16">
         <ScrollArea className="h-[calc(100vh-6rem)]">
           <TableOfContents toc={toc} />

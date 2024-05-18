@@ -10,8 +10,8 @@ export default function Video({src}: {src: string}) {
       <div className="aspect-video">
         <Suspense
           fallback={
-            <div className="bg-muted flex animate-pulse items-center justify-center rounded-md">
-              <VideoIcon className="text-muted-foreground size-1/2" />
+            <div className="flex animate-pulse items-center justify-center rounded-md bg-muted">
+              <VideoIcon className="size-1/2 text-muted-foreground" />
             </div>
           }
         >
@@ -20,7 +20,7 @@ export default function Video({src}: {src: string}) {
       </div>
     </ErrorBoundary>
   );
-};
+}
 
 function Component({ src }: {src: string}) {
   return (
@@ -30,4 +30,4 @@ function Component({ src }: {src: string}) {
       muted
     />
   );
-};
+}

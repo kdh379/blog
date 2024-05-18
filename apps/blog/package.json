@@ -7,7 +7,7 @@
     "build": "contentlayer build && next build",
     "content": "contentlayer build",
     "start": "next start",
-    "lint": "eslint . --max-warnings 0",
+    "lint": "eslint . --max-warnings 0 --fix",
     "clean": "rmdir /s /q node_modules"
   },
   "dependencies": {

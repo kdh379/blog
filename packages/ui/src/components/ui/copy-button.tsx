@@ -8,11 +8,11 @@ import React from "react";
 
 interface CopyButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   value: string;
-};
+}
 
 const CopyMessage = () => (
   <div className="flex items-center space-x-2">
-    <CheckCircle className="text-primary size-4" />
+    <CheckCircle className="size-4 text-primary" />
     <span>복사되었습니다.</span>
   </div>
 );

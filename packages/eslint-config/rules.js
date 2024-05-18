@@ -10,26 +10,10 @@ const project = resolve(process.cwd(), "tsconfig.json");
 
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: [
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:tailwindcss/recommended"
-  ],
-  plugins: [
-    "simple-import-sort",
-    "unused-imports",
-    "tailwindcss"
-  ],
-  settings: {
-    tailwindcss: {
-      callees: ["cn"],
-      config: "tailwind.config.js"
-    },
-    next: {
-      rootDir: ["./src/"]
-    }
-  },
   rules: {
+    // https://typescript-eslint.io/troubleshooting/#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
+    "no-undef": "off",
+
     // Code style
     indent: ["error", 2],
     quotes: ["error", "double"],

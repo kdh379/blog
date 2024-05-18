@@ -26,8 +26,8 @@ function NavLink({ href, children }: PropsWithChildren<NavLinkProps>) {
       href={href}
       onClick={setClose}
       className={cn(
-        "text-muted-foreground mb-2 flex w-full text-sm hover:underline",
-        decodeURIComponent(pathname) === href && "text-primary font-bold"
+        "mb-2 flex w-full text-sm text-muted-foreground hover:underline",
+        decodeURIComponent(pathname) === href && "font-bold text-primary"
       )}
     >
       {children}

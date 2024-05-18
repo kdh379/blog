@@ -23,7 +23,7 @@ function Anchor({ href, children }: { href: string; children: React.ReactNode })
       target="_blank"
       rel="noopener noreferrer"
       href={href}
-      className="hover:text-primary hover:border-primary flex items-center gap-x-2 border-b-2 border-dotted transition-colors"
+      className="flex items-center gap-x-2 border-b-2 border-dotted transition-colors hover:border-primary hover:text-primary"
     >
       {children}
     </a>
@@ -45,7 +45,7 @@ export default async function HomePage() {
         <p className="mb-2">Connect me on</p>
         <div className="flex flex-wrap gap-4">
           <Link href="/resume">
-            <div className="text-primary hover:text-primary-foreground after:bg-primary relative flex items-center gap-x-2 border-b-2 border-dotted transition-colors after:absolute after:-left-1 after:bottom-0 after:-z-10 after:h-0 after:w-[calc(100%+8px)] after:rounded-md after:transition-[height] after:hover:h-full">
+            <div className="relative flex items-center gap-x-2 border-b-2 border-dotted text-primary transition-colors after:absolute after:-left-1 after:bottom-0 after:-z-10 after:h-0 after:w-[calc(100%+8px)] after:rounded-md after:bg-primary after:transition-[height] hover:text-primary-foreground after:hover:h-full">
               <Icons.docs className="size-5" />
               Resume
             </div>

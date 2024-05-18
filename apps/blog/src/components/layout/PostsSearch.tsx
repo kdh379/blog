@@ -7,12 +7,12 @@ import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 
-interface PostTreeProps {
+interface PostTreePropsType {
   postTree: PostTree;
   onSelect: (slug?: string) => void;
 }
 
-function PostTreeProps({ postTree, onSelect }: PostTreeProps) {
+function PostTreeProps({ postTree, onSelect }: PostTreePropsType) {
   return postTree.length && postTree.map((post, index) => (
     <React.Fragment key={index}>
       {post.slugAsParams && (
@@ -45,11 +45,11 @@ export default function PostsSearch() {
       <Button
         variant="outline"
         size="icon"
-        className="text-muted-foreground mobile:w-full mobile:justify-start mobile:px-2 ml-auto justify-center gap-x-1 bg-transparent"
+        className="ml-auto justify-center gap-x-1 bg-transparent text-muted-foreground mobile:w-full mobile:justify-start mobile:px-2"
         onClick={() => setOpen(true)}
       >
         <Search className="size-4" />
-        <span className="mobile:block hidden">Search posts...</span>
+        <span className="hidden mobile:block">Search posts...</span>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Type to search posts..." />
@@ -66,4 +66,4 @@ export default function PostsSearch() {
       </CommandDialog>
     </>
   );
-};
+}

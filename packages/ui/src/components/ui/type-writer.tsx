@@ -4,7 +4,7 @@ import { ReactTyped } from "react-typed";
 
 interface TypeWriterProps {
   strings: string[];
-};
+}
 
 export default function TypeWriter({ strings }: TypeWriterProps) {
   return (

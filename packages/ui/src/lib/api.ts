@@ -1,6 +1,6 @@
 interface APIInterface {
   "getOpenGraph": HttpReqRes<OpenGraphReq, OpenGraphRes | undefined>;
-};
+}
 
 const URLDict: Record<keyof APIInterface, HttpRequestInfo> = {
   getOpenGraph: {
