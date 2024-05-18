@@ -1,3 +1,5 @@
+
+import { OpenGraphRes } from "@repo/types/open-graph";
 import { NextRequest, NextResponse } from "next/server";
 import urlMetadata from "url-metadata";
 
@@ -14,7 +16,7 @@ export async function GET(request: NextRequest) {
       cache: "force-cache",
     });
     
-    const ogData = {
+    const ogData: OpenGraphRes = {
       ogTitle: result["og:title"],
       ogDescription: result["og:description"],
       ogImage: result["og:image"] || result["image"],

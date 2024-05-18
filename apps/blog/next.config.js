@@ -5,7 +5,9 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@repo/ui"],
+  transpilePackages: [
+    "@repo/ui",
+  ],
   images: {
     remotePatterns: [
       {

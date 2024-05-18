@@ -2,7 +2,7 @@
   "extends": "@repo/typescript-config/react-library.json",
   "compilerOptions": {
     "paths": {
-      "@ui/*": ["./src/*"]
+      "@ui/*": ["./src/*"],
     }
   },
   "include": [
@@ -10,6 +10,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-  ],
+    "../types/*.d.ts"
+, "../../apps/blog/src/types/unist.d.ts"  ],
   "exclude": ["node_modules"]
 }

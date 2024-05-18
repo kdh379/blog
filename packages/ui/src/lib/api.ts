@@ -1,3 +1,5 @@
+import { OpenGraphReq, OpenGraphRes } from "@repo/types/open-graph";
+
 interface APIInterface {
   "getOpenGraph": HttpReqRes<OpenGraphReq, OpenGraphRes | undefined>;
 }

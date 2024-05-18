@@ -84,6 +84,9 @@ importers:
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -344,6 +347,9 @@ importers:
 
   packages/msw:
     devDependencies:
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../types
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -353,6 +359,8 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+
+  packages/types: {}
 
   packages/typescript-config: {}
 
@@ -419,6 +427,9 @@ importers:
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@repo/types':
+        specifier: workspace:*
+        version: link:../types
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config

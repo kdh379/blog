@@ -1,8 +1,8 @@
-interface OpenGraphReq {
+export interface OpenGraphReq {
   url: string;
 }
 
-interface OpenGraphRes {
+export interface OpenGraphRes {
   ogTitle?: string;
   ogDescription?: string;
   ogImage?: string;

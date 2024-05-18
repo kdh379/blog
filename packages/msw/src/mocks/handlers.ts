@@ -1,3 +1,7 @@
+
+
+
+import { OpenGraphReq, OpenGraphRes } from "@repo/types/open-graph";
 import { delay, http, HttpResponse } from "msw";
 
 const MOCK_OG_OBJECT: OpenGraphRes = {

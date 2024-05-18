@@ -1,7 +1,7 @@
 "use client";
 
+import { getPostTree, PostTree } from "@blog/lib/post";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@repo/ui/components/ui/accordion";
-import { getPostTree, PostTree } from "@repo/ui/lib/post";
 import { cn } from "@repo/ui/lib/utils";
 import { useSidebarStore } from "@repo/ui/store/index";
 import Link from "next/link";

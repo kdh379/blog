@@ -1,0 +1,14 @@
+{
+  "extends": "@repo/typescript-config/base.json",
+  "include": [
+    "src/**/*.ts",
+    "../../packages/types/**/*.d.ts", "../../apps/blog/src/types/unist.d.ts",
+  ],
+  "exclude": ["dist", "build", "node_modules"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@msw/*": ["src/*"],
+    },
+  },
+}
