@@ -4,10 +4,16 @@
   "extends": "./base.json",
   "compilerOptions": {
     "plugins": [{ "name": "next" }],
-    "module": "ESNext",
+    "module": "esnext",
     "moduleResolution": "Bundler",
     "allowJs": true,
     "jsx": "preserve",
-    "noEmit": true
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@blog/*": ["../../apps/blog/src/*"],
+      "contentlayer/generated": ["../../apps/blog/.contentlayer/generated"],
+      "@ui/*": ["../../packages/ui/src/*"]
+    }
   }
 }

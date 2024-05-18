@@ -1,0 +1,110 @@
+---
+title: 'React Query vs SWR'
+description: ''
+tags:
+  - 
+draft: false
+date: 2023-04-30 19:23:00
+---
+
+리액트에서 비동기 통신을 하기 위해서는 상태 관리가 필요합니다.
+상태관리를 통해 로딩,에러,결과를 나눠 API 호출을 처리하고, 반환된 데이터를 컴포넌트에서 사용할 수 있습니다.
+
+최근 React-Query와 SWR 같은 비동기 통신 상태관리 라이브러리가 인기를 끌고 있습니다.
+
+위 라이브러리들은 캐싱을 통해 API 호출을 최적화 하고, TypeScript와 같은 다른 언어를 지원하여 코드 안정성을 향상시키면서, 개발자의 코드 이해도를 높일 수 있습니다.
+
+아래부턴 React-Query와 SWR의 특징에 대해 차이점 비교를 중심으로 살펴보겠습니다.
+
+## 사이즈
+
+React-Query 55kb, swr: 10kb 로 React Query가 훨씬 무겁습니다.
+다만 그만큼 부가적인 기능들 많이 제공합니다. 기능들은 아래에 작성해 두었습니다.
+
+## 데이터 캐싱
+
+**React-Query**
+API 호출을 최소화 하기 위해 받아온 데이터를 캐싱한 후 재활용 합니다. 위를 사용하기 위해선 staleTime 설정을 변경해주면 됩니다. ( default : 0 )
+또한 설정해둔 시간 ( staleTime / cacheTime )이 지나면 자동으로 Gabege Collection이 데이터를 수집 후 폐기합니다.
+
+**SWR**
+캐시가 만료된 경우 데이터를 가져오기 위함으로 사용됩니다.
+
+## 상태 관리
+
+React-Query : 외부 상태관리 라이브러리 ( Redux, Recoil )과 함께 사용이 가능합니다.
+
+SWR : React Hooks를 사용하여 컴포넌트 내에서만 상태관리 됩니다.
+
+## Provider
+
+**React-Query**
+
+React Query를 사용하기 위해선 별도의 Provider를 필수로 App 컴포넌트 상위에서 마운트해야 합니다.
+
+```tsx
+import { QueryClient, QueryClientProvider } from 'react-query';
+import App from './App';
+
+const queryClient = new QueryClient();
+
+ReactDOM.render(
+  <QueryClientProvider client={queryClient}>
+    <App />
+  </QueryClientProvider>,
+  document.getElementById('root')
+);
+```
+
+QueryClient 의 값을 변경하여 캐시전략 및 각종 설정을 변경할 수 있습니다.
+
+관련 설정은 아래에서 확인할 수 있습니다.
+
+<LinkedCard href="https://tanstack.com/query/latest/docs/reference/QueryClient#queryclient" />
+
+또한 DevTools를 지원하여 브라우저 단에서 캐시된 데이터를 탐색하거나, 변경할 수 있습니다.
+
+```tsx
+ReactDOM.render(
+  <QueryClientProvider client={queryClient}>
+    <ReactQueryDevtools initialIsOpen={false} />
+    <App />
+  </QueryClientProvider>,
+  document.getElementById('root')
+);
+```
+
+**SWR**
+
+SWRConfig 라는 설정이 존재해서 App 컴포넌트 위해 마운트해야하지만 필수는 아닙니다.
+
+## Mutation
+
+**React-Query**
+useMutate 를 통해 Creat/Update/Delete 작업을 보낼 경우 useQuery를 통해 Read 해온 데이터는 자동으로 API 호출을 통해 데이터를 업데이트 합니다.
+
+**swr**
+자동으로 업데이트 되지 않고 캐시된 데이터를 보여주기 때문에 mutate 함수를 통해 직접 업데이트 해주거나 useSWR 훅을 한번 더 호출해줘야 합니다.
+
+## Selector
+
+React-Query 애서는 select 를 통해 Response Data 를 수정하는 기능을 제공합니니다.
+
+```tsx
+const { data, isLoading, isError } = useQuery('todos', fetchingFunc, {
+    select: (data) => {
+      // 받아온 데이터의 completed 속성 값을 모두 false로 변경하여 반환합니다.
+      return data.map((todo) => ({ ...todo, completed: false }));
+    },
+  })
+```
+
+## 확장성
+
+React-Query는 REST, GraphQL, gRPC, WebSocket 등 다양한 데이터 소스를 지원하는 방면
+swr은 REST 만 지원합니다.
+
+## 결론
+
+최대한 가벼운 사이즈, 별다른 커스텀이 필요없고 REST 방식의 통신만 사용하는 프로젝트의 경우 SWR
+데이터 캐싱, 전역 상태관리 라이브러리와의 연계, REST 외의 데이터 소스 지원이 필요할 경우 React-Query가 좋은 선택이 될 것 같습니다.
