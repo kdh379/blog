@@ -14,13 +14,25 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '${{ secrets.NODE_VERSION }}'
-
-    - name: Cache node_modules
-      uses: actions/cache@v4
-      id: cache-node-modules
+    
+    - name: Use pnpm
+      uses: pnpm/action-setup@v4
       with:
-        path: node_modules
-        key: npm-packages ${{ hashFiles('**/pnpm-lock.yaml') }}
+        version: 8
+        run_install: false
+
+    - name: Get pnpm store directory
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+    - uses: actions/cache@v4
+      name: Setup pnpm cache
+      with:
+        path: ${{ env.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
 
     - name: Install dependencies
       if: steps.cache-node-modules.outputs.cache-hit != 'true'
