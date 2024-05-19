@@ -1,0 +1,16 @@
+{
+  "extends": "@repo/typescript-config/react-library.json",
+  "compilerOptions": {
+    "paths": {
+      "@ui/*": ["./src/*"],
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "../types/*.d.ts"
+, "../../apps/blog/src/types/unist.d.ts"  ],
+  "exclude": ["node_modules"]
+}

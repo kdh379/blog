@@ -1,0 +1,21 @@
+{
+  "name": "@repo/msw",
+  "version": "0.0.0",
+  "private": true,
+  "files": [],
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "msw": "^2.3.0",
+    "typescript": "^5.3.3",
+    "@repo/types": "workspace:*"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  },
+  "exports": {
+    "./mockServiceWorker": "./public/mockServiceWorker.js",
+    "./handlers": "./src/mocks/handlers.ts"
+  }
+}

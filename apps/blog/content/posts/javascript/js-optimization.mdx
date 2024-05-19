@@ -1,0 +1,151 @@
+---
+title: '메모리 사용량을 줄이는 JS 코드 패턴'
+description: ''
+tags:
+  - JavaScript
+  - Closure
+  - Prototype
+  - Event Binding
+draft: false
+date: 2023-10-13 01:11:00
+---
+
+JavaScript에서 메모리 사용량을 효율적으로 관리하면 애플리케이션의 성능을 향상시키고 더 나은 사용자 경험을 제공할 수 있습니다. 이 포스트에서는 몇 가지 JavaScript 코드 패턴을 다루고 있으며, 이를 통해 메모리 사용량을 줄일 수 있는 방법을 설명합니다.
+
+## Context의 정보가 많은 Closure
+
+클로저는 함수가 자신의 내부가 아닌 외부에서 선언된 변수에 접근하는 것을 뜻합니다. 클로저는 실행할 환경의 변수 스코프를 캡처하여 전달하여 실행할 때 외부 변수를 참조할 수 있게 합니다.
+
+클로저를 통해 함수를 생성할 경우 함수 내부에서 사용되어야 하는 변수들이 메모리에 계속 남아있게 되어 메모리에서 손해를 볼 수 있습니다. 대량의 목록을 처리하는데 클로저를 사용할 경우, 많은 메모리를 사용하게 됩니다.
+
+```js
+const dummyData = generateBulkDummyData();
+
+// 메모리 분석을 위에 window에 할당
+window.arr = dummyData;
+
+window.arr2 = dummyData.map(({ id, name, value, number }) => {
+    return () => [id, name, value, number];
+});
+```
+
+![240220-213349](/posts/js-optimization/240220-213349.png)
+
+DevTools의 메모리 힙 스냅샷을 확인해보면 클로저를 사용할 때 context에 의해 참조되는 변수들이 메모리에 계속 남아있는 것을 확인할 수 있습니다.
+
+이 때 아래와 같이 클로저를 사용하지 않고, **Object**를 전달하여 사용하면 메모리를 줄일 수 있습니다.
+
+```js
+const dummyData = generateBulkDummyData();
+
+window.arr = dummyData;
+
+window.arr2 = dummyData.map((data) => {
+    return () => `${data.id} ${data.name} ${data.value} ${data.number}`;
+});
+```
+
+![240220-213410](/posts/js-optimization/240220-213410.png)
+
+DevTools를 통해 똑같이 메모리 힙 스냅샷을 확인해보면 **Object 만 렉시컬 환경 정보로 저장되어, 실제 메모리 사용량이 줄어든 것을 확인할 수 있습니다.  
+( 9,647,360 -> 8,447,360 )**
+
+다만, 이 경우 **Object의 Propery를 참조할 때마다 Object를 참조해야 하므로 성능이 떨어질 수 있습니다.**  
+그리고 Object 참조 정보를 context에 저장하므로, Object가 GC에 의해 회수되지 않는 문제가 있습니다.
+
+## Object내에 함수가 존재할 경우
+
+Object 내에 함수가 존재하면, Object를 호출할 때마다 함수가 새로 생성되어 메모리를 사용하게 됩니다.  
+이는 Object를 100번 호출하면 100개의 함수가 생성되어 메모리를 사용하게 됩니다.
+
+```js
+window.arr = Array.from({ length: 100 }, (index) => ({
+    method: () => {
+        console.log(index);
+    },
+}));
+```
+
+![240220-213444](/posts/js-optimization/240220-213444.png)
+
+Object를 열어보면, 호출할 때마다 함수가 새로 생성되어 메모리를 사용하게 되는 것을 확인할 수 있습니다.
+
+이를 Prototype을 사용하여 해결할 수 있습니다.
+
+```js
+class Func {
+    constructor(index) {
+        this.index = index;
+    }
+
+    func() {
+        console.log(this.index);
+    }
+}
+
+window.arr = Array.from({ length: 100 }, (index) => new Func(index));
+```
+
+![240220-213452](/posts/js-optimization/240220-213452.png)
+
+Object를 열어보면, prototype을 사용하여 함수를 생성하므로, 함수가 새로 생성되지 않고 prototype을 참조하게 됩니다.
+
+위처럼 class 문법으로 생성하면, **prototype chaining이 발생하여, 객체 간 상속 및 메소드를 공유할 수 있습니다.**
+
+**prototype chain**
+
+-   객체가 특정 속성 또는 메소드에 접근할 때, JavaScript는 해당 객체에서 속성 또는 메소드를 찾고, 없으면 prototype을 참조하여 상위 객체에서 속성 또는 메소드를 찾습니다.
+-   prototype chain을 따라 상위로 올라가며 해당 속성 또는 메소드를 찾을 때까지 반복합니다.
+
+## 이벤트 바인딩 / 이벤트 위임
+
+어떤 페이지에선 목록 안에 대량의 요소를 렌더링해야 할 때가 있습니다. 이 때, 각 요소에 Click 이벤트 리스너를 등록해야 한다면, 대량의 요소의 숫자 만큼 이벤트 리스너가 등록되어 메모리를 사용하게 됩니다.
+
+```js
+function handleClick(id) {
+    alert(`Clicked! ID: ${id}`);
+}
+
+createElementList(1000).forEach((element) => {
+    element.addEventListener("click", () => handleClick(element.dataset.id));
+});
+```
+
+![240220-213501](/posts/js-optimization/240220-213501.png)
+
+Click 이벤트 리스너를 요소마다 바인딩하면, 요소의 숫자 만큼 이벤트 리스너가 등록되어 메모리를 사용하게 됩니다.
+
+요소마다 바인딩하는 대신, 이벤트 위임(Event Delegation)을 통해 부모 요소에서 이벤트를 관리하면 메모리 사용량을 줄일 수 있습니다.
+
+```js
+function handleClick(event) {
+    // 이벤트가 발생한 요소의 식별 과정 필요
+    const { id } = event.target.dataset;
+
+    if (!id) return;
+
+    alert(`Clicked! ID: ${id}`);
+}
+
+const app = document.getElementById("app");
+
+createElementList(1000);
+
+app.addEventListener("click", handleClick);
+```
+
+![240220-213515](/posts/js-optimization/240220-213515.png)
+
+Click 이벤트 리스너를 부모 요소에 바인딩하면, 요소의 숫자와 상관없이 하나의 이벤트 리스너만 등록되어 메모리를 상당량 줄인 것을 확인할 수 있습니다.
+
+하지만 어떤 DOM 요소에서 처리되었는지 event.target을 통해 확인해야 하므로, 추가적인 검사 과정이 필요합니다. 이러한 요소 식별 과정이 유의미한 성능 오버헤드를 발생시키지는 않습니다.
+
+## 결론
+
+JavaScript 코드를 작성할 때 메모리 사용량을 고려하여 작성하면, 더 나은 사용자 경험을 제공할 수 있습니다.  
+특히 JS 함수의 경우, 함수의 선언 형태나 위치에 따라 메모리 사용량이 달라지므로, 메모리 사용량을 고려하여 작성해야 합니다.
+
+개발자는 고사양의 환경에서 개발하여서 크게 체감할 수 없을 수 있지만, 사용자가 접속할 때는 저사양 환경에서도 접속할 수 있음을 인지해야 합니다.특히 모바일의 경우 당장 저의 8GB 램의 갤럭시로 유튜브를 오래 스크롤하면 버벅거리는 것을 경험하게 됩니다.
+
+만약 고도의 최적화가 필요한 경우, canvas를 사용하여 직접 렌더링하는 방법도 고려해볼 수 있습니다.  
+Figma의 경우, canvas를 사용하여 직접 렌더링해서, 다수의 요소를 렌더링하더라도 성능이 좋은 것을 확인할 수 있습니다.
