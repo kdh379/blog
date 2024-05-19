@@ -49,7 +49,7 @@ export default function PostsSearch() {
         onClick={() => setOpen(true)}
       >
         <Search className="size-4" />
-        <span className="hidden mobile:block">Search posts...</span>
+        <span className="sr-only mobile:not-sr-only">Search posts...</span>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Type to search posts..." />

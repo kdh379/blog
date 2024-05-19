@@ -10,6 +10,6 @@
     "**/*.tsx",
     "../../packages/types/**/*.d.ts",
     ".next/types/**/*.ts",
-    ".contentlayer/generated", "../../packages/ui/src/components/Provider.tsx"],
+  ],
   "exclude": ["node_modules"]
 }

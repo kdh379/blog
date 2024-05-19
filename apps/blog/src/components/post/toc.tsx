@@ -1,6 +1,6 @@
 "use client";
 
-import { type TableOfContentsType } from "@repo/ui/lib/toc";
+import { type TableOfContentsType } from "@blog/lib/toc";
 import { cn } from "@repo/ui/lib/utils";
 import React from "react";
 

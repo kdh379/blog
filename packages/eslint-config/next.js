@@ -22,10 +22,12 @@ module.exports = {
   },
   plugins: [
     "simple-import-sort",
-    "unused-imports",
-    "tailwindcss"
+    "unused-imports"
   ],
   settings: {
+    react: {
+      version: "detect",
+    },
     "import/resolver": {
       typescript: {
         project,
