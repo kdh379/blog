@@ -1,7 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [".env.local"],
-  "globalDotEnv": [".env.local"],
+  "globalDependencies": ["pnpm-lock.yaml"],
+  "globalDotEnv": [".env.example"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
