@@ -17,6 +17,7 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-muted-foreground h-6 py-1 underline-offset-4 hover:underline",
+        shimmer: "animate-shimmer bg-linear bg-[length:200%_100%] bg-[linear-gradient(110deg,hsla(var(--background)),45%,hsla(var(--primary)/50%),55%,hsla(var(--background)))] ring-1 hover:ring-2",
       },
       size: {
         default: "h-10 px-4 py-2",
