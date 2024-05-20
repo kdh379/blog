@@ -3,7 +3,7 @@
 import Footer from "@blog/components/layout/Footer";
 import PostsSearch from "@blog/components/layout/PostsSearch";
 import SidebarNav from "@blog/components/layout/SidebarNav";
-import ToggleTheme from "@blog/components/layout/ToggleTheme";
+import ToggleTheme from "@repo/ui/components/ToggleTheme";
 import { ScrollArea } from "@repo/ui/components/ui/scroll-area";
 import { cn } from "@repo/ui/lib/utils";
 import { siteConfig } from "@repo/ui/site.config";
@@ -31,7 +31,7 @@ export default function Sidebar( {className}: SidebarProps ) {
         <Image
           src={siteConfig.image}
           alt="Profile Picture"
-          className="absolute size-full rounded-full object-cover"
+          className="absolute object-cover rounded-full size-full"
           width={150}
           height={150}
           priority
@@ -43,7 +43,7 @@ export default function Sidebar( {className}: SidebarProps ) {
         </div>
         <ToggleTheme />
       </div>
-      <ScrollArea className="size-full py-4 pr-4">
+      <ScrollArea className="py-4 pr-4 size-full">
         <SidebarNav />
       </ScrollArea>
       <Footer />  

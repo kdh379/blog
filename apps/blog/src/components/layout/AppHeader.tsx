@@ -1,7 +1,7 @@
 import MobileSheet from "@blog/components/layout/MobileSheet";
 import PostsSearch from "@blog/components/layout/PostsSearch";
 import Sidebar from "@blog/components/layout/Sidebar";
-import ToggleTheme from "@blog/components/layout/ToggleTheme";
+import ToggleTheme from "@repo/ui/components/ToggleTheme";
 import { siteConfig } from "@repo/ui/site.config";
 import Link from "next/link";
 import React from "react";
@@ -15,7 +15,7 @@ export default function AppHeader( ) {
     <Link href="/">
       <span className="ml-4 text-xl font-bold">{siteConfig.name}</span>
     </Link>
-    <div className="ml-auto flex items-center gap-x-2">
+    <div className="flex items-center ml-auto gap-x-2">
       <PostsSearch />
       <ToggleTheme />
     </div>

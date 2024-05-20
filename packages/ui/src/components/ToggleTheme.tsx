@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@repo/ui/components/ui/button";
-import { Icons } from "@repo/ui/components/ui/icons";
-import { useMounted } from "@repo/ui/hooks/use-mounted";
-import { cn } from "@repo/ui/lib/utils";
+import { Button } from "@ui/components/ui/button";
+import { Icons } from "@ui/components/ui/icons";
+import { useMounted } from "@ui/hooks/use-mounted";
+import { cn } from "@ui/lib/utils";
 import { useTheme } from "next-themes";
 
 
