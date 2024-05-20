@@ -1,21 +1,38 @@
-import { Button } from "@repo/ui/components/ui/button";
-import { Separator } from "@repo/ui/components/ui/separator";
+"use client";
+
+import { Button, buttonVariants } from "@repo/ui/components/ui/button";
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function NotFound() {
+
+  const router = useRouter();
+
   return (
-    <div className="inset-0 m-auto">
-      <div className="flex">
-        <h1>404</h1>
-        <Separator orientation="vertical" className="mx-4 h-6 w-1" />
-        <h2>에러라는 뜻이죠.</h2>
+    <div className="mx-auto mt-10">
+      <h1 className="py-20 text-3xl font-bold text-center">페이지를 찾을 수 없습니다.</h1>
+      <Image
+        src="/images/404.gif"
+        width={600}
+        height={300}
+        alt="404 Not Found"
+        className="aspect-[40:17] rounded-md"
+      />
+      <div className="flex items-center justify-center gap-4 mt-10">
+        <Button
+          variant="secondary"
+          onClick={() => router.back()}
+        >
+          이전 페이지로
+        </Button>
+        <Link 
+          href="/"
+          className={buttonVariants()}
+        >
+          홈으로
+        </Link>
       </div>
-      <p>이런 URL은 제가 구현한 기억이 없습니다.</p>
-      <Button
-        variant="link"
-      >
-        <Link href="/">집으로 돌아가기</Link>
-      </Button>
     </div>
   );
 }
