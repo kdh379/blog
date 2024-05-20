@@ -9,8 +9,7 @@ module.exports = {
     require.resolve("@vercel/style-guide/eslint/next"),
     "eslint-config-turbo",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:tailwindcss/recommended"
+    "plugin:react-hooks/recommended"
   ],
   globals: {
     React: true,
