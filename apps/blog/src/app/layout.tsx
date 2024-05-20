@@ -86,8 +86,8 @@ export default function RootLayout({
       <meta name="description" content={siteConfig.description} />
       <body className={cn(pretendard.className, "relative antialiased transition ease-in-out overflow-x-clip")}>
         <Providers>
-          <AppHeader />
           <Spotlights />
+          <AppHeader />
           <div className={cn(
             "container min-h-screen flex-1 px-8 antialiased tablet:grid tablet:grid-cols-[240px_minmax(0,1fr)] tablet:gap-10 desktop:pl-[calc(100vw-100.55%)] desktop:pr-0"
           )}>
