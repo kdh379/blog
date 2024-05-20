@@ -1,6 +1,8 @@
 import "@repo/ui/globals.css";
 
-import Layout from "@blog/components/Layout";
+import AppHeader from "@blog/components/layout/AppHeader";
+import Sidebar from "@blog/components/layout/Sidebar";
+import Spotlights from "@blog/components/layout/Spotlights";
 import Providers from "@repo/ui/components/Provider";
 import { cn } from "@repo/ui/lib/utils";
 import { siteConfig } from "@repo/ui/site.config";
@@ -82,11 +84,16 @@ export default function RootLayout({
     <html lang="ko" suppressHydrationWarning>
       <link rel="shortcut icon" href="/favicon.png" />
       <meta name="description" content={siteConfig.description} />
-      <body className={cn(pretendard.className, "relative antialiased transition ease-in-out")}>
+      <body className={cn(pretendard.className, "relative antialiased transition ease-in-out overflow-x-clip")}>
         <Providers>
-          <Layout>
-            {children}
-          </Layout>
+          <AppHeader />
+          <Spotlights />
+          <div className={cn(
+            "container min-h-screen flex-1 px-8 antialiased tablet:grid tablet:grid-cols-[240px_minmax(0,1fr)] tablet:gap-10 desktop:pl-[calc(100vw-100.55%)] desktop:pr-0"
+          )}>
+            <Sidebar />
+            <main className="flex flex-col pt-mobileHeader mobile:pt-0">{children}</main>
+          </div>
         </Providers>
         <Analytics />
       </body>
