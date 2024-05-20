@@ -8,17 +8,18 @@
 
 이 블로그는 지속적으로 업데이트하며 꾸준히 진행할 예정입니다.
 
-## 기술 스택
+## 디자인 노트
 
-- 코어: TypeScript, React, Next.js 14
-- 스타일링: Tailwind CSS, shadcn-ui
-- 패키지: PNPM
-- 배포: Vercel
+- Next.js 14의 App Router와 RSC를 사용하였습니다.
+- Tailwind, Shadcn UI를 사용하여 디자인을 구성하였습니다.
+- Turborepo를 사용하여 Monorepo 구조로 구성하였습니다.
+- MDX 파일 생성 및 작성으로 포스트를 작성할 수 있도록 하였습니다.
+- Sentry를 사용하여 에러를 추적하고 있습니다.
 
 ## 개발 환경 구성
 
 ```bash
-npm install -g pnpm
+npm install -g pnpm@8.9.0
 pnpm i
 pnpm dev
 ```
@@ -28,7 +29,7 @@ pnpm dev
 ### contentlayer ( Content Management )
 
 contentlayer가 `/content` 디렉토리에 있는 `mdx` 파일을 관리합니다.  
-관련 설정은 [/contentlayer.config.ts](./contentlayer.config.ts) 에서 확인할 수 있습니다.
+관련 설정은 [contentlayer.config.ts](./apps/blog/contentlayer.config.ts) 에서 확인할 수 있습니다.
 
 파일 수정 시 자동으로 `Hot Reload` 되어 개발중인 웹 페이지에 반영됩니다.
 
@@ -41,15 +42,12 @@ mdx 파싱 및 스타일링을 위해 아래 라이브러리를 사용하였습�
 - [rehype-autolink-headings](https://github.com/rehypejs/rehype-autolink-headings): `<h1>` ~ `<h6>` 태그에 부여된 id를 통해 자동으로 링크를 생성합니다.
 - [rehype-pretty-code](https://rehype-pretty-code.netlify.app/): 코드 블록을 스타일링합니다.
 
-그 외에 Typography 스타일은 [/src/components/ui/mdx-components.tsx](./src/components/ui/mdx-components.tsx) 에서 정의하였습니다.
+그 외에 Typography 스타일은 [/src/components/ui/mdx-components.tsx](./packages/ui/src/components/ui/mdx-components.tsx) 에서 정의하였습니다.
 
 ### Vercel Analytics
 
 [Vercel Analytics](https://vercel.com/analytics)를 사용하여 웹사이트의 트래픽을 추적하고 있습니다.
 
-만약 사용하지 않길 원하거나, Vercel에 배포할 예정이 아니라면 [/src/components/Provider.tsx](./src/components/Provider.tsx)에서 `Analytics` 컴포넌트를 제거해주세요.
-
-
 ## 이슈
 
-- remark-gfm은 3.0.1 에서 업데이트 하면 안 됨. https://github.com/hashicorp/next-mdx-remote/issues/403
+- [remark-gfm](https://github.com/hashicorp/next-mdx-remote/issues/403)은 3.0.1 에서 업데이트 하면 안 됨.
