@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     const ogData: OpenGraphRes = {
       ogTitle: result["og:title"],
       ogDescription: result["og:description"],
-      ogImage: result["og:image"] || result["image"],
+      ogImage: result["og:image[0]:url"] ?? result["og:image"],
       ogVideo: result["og:video:url"],
     };
 
