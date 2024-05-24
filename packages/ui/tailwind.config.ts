@@ -26,9 +26,6 @@ const config = {
   ],
   prefix: "",
   theme: {
-    fontFamily: {
-      "pretendard": ["'Pretendard Variable'", "Pretendard", ...require("tailwindcss/defaultTheme").fontFamily.sans],
-    },
     screens: {
       ...screens,
     },
