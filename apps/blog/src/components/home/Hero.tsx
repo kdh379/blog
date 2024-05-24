@@ -33,7 +33,7 @@ function Anchor({ href, children }: { href: string; children: React.ReactNode })
 function Hero() {
   return (
     <section className="my-8 slide-enter-content">
-      <h1 className="mb-4">프론트엔드 개발자 <b>김도현</b>입니다.</h1>
+      <h1 className="mb-4 text-2xl">프론트엔드 개발자 <span className="font-bold text-primary">김도현</span>입니다.</h1>
 
       <p>웹 개발과 저에 대해 작성하고 있습니다.</p>
       <p>보고 배운걸 까먹지 않기 위해 기록해둔 곳입니다.</p>
