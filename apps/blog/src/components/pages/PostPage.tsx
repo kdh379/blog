@@ -15,9 +15,9 @@ export default async function PostPage(props: PostPageProps) {
 
   const toc = await getTableOfContents(props.body.raw);
 
-  return <div className="relative py-6 desktop:grid desktop:grid-cols-[1fr_300px] desktop:gap-10">
-    <article className="w-full min-w-0 mx-auto">
-      <section>
+  return <main className="relative mt-mobileHeader mobile:mt-0 py-6 desktop:grid desktop:grid-cols-[1fr_300px] desktop:gap-10">
+    <div className="w-full min-w-0 mx-auto space-y-8">
+      <div>
         <h1 className="mb-4 text-4xl font-bold tracking-tight">
           {props.title}
         </h1>
@@ -38,12 +38,7 @@ export default async function PostPage(props: PostPageProps) {
             </span>
           </div>
         </div>
-      </section>
-      <section className="pt-8 pb-12 slide-enter-content">
-        <Mdx
-          code={props.body.code}
-        />
-      </section>
+      </div>
       <section>
         {props.tags && props.tags.map(tag => (
           <Badge key={tag} variant="outline" className="mb-2 mr-2 text-sm">
@@ -51,7 +46,12 @@ export default async function PostPage(props: PostPageProps) {
           </Badge>
         ))}
       </section>
-    </article>
+      <article className="slide-enter-content">
+        <Mdx
+          code={props.body.code}
+        />
+      </article>
+    </div>
     <aside className="hidden text-sm desktop:block">
       <div className="sticky top-16">
         <ScrollArea className="h-[calc(100vh-6rem)]">
@@ -59,7 +59,7 @@ export default async function PostPage(props: PostPageProps) {
         </ScrollArea>
       </div>
     </aside>
-  </div>;
+  </main>;
 }
 
 export function PageSkeleton() {

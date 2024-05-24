@@ -4,7 +4,7 @@ import Hero from "@blog/components/home/Hero";
 
 export default async function HomePage() {
 
-  return <div className="m-auto">
+  return <main className="m-auto pt-mobileHeader desktop:pt-0">
     <Hero />
-  </div>;
+  </main>;
 }

@@ -92,7 +92,7 @@ export default function RootLayout({
             "container min-h-screen flex-1 px-8 antialiased tablet:grid tablet:grid-cols-[240px_minmax(0,1fr)] tablet:gap-10 desktop:pl-[calc(100vw-100.55%)] desktop:pr-0"
           )}>
             <Sidebar />
-            <main className="flex flex-col pt-mobileHeader mobile:pt-0">{children}</main>
+            {children}
           </div>
         </Providers>
         <Analytics />
