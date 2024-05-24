@@ -63,36 +63,40 @@ async function Component({ href }: LinkCardProps) {
 
   console.log(openGraph?.data);
 
-  return <a
-    href={href}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="w-full hover:bg-muted active:opacity-50"
-  >
-    <textarea>
-      {openGraph?.data}
-    </textarea>
-    <div className="flex h-full">
-      <ImageWithFallback
-        src={openGraph?.ogImage || "/images/placeholder.png"}
-        alt={openGraph?.ogTitle || href}
-        fallbackSrc="/images/placeholder.png"
-        width={300}
-        height={300}
-        quality={100}
-        className="h-full w-32 rounded-l-md object-cover object-center transition-[width] hover:w-64"
-      />
-      <div className="flex flex-col flex-1 p-2 overflow-hidden mobile:p-4">
-        <p className="text-lg font-medium line-clamp-1">
-          {openGraph?.ogTitle}
-        </p>
-        <p className="text-sm line-clamp-1 text-muted-foreground mobile:line-clamp-2">
-          {openGraph?.ogDescription}
-        </p>
-        <p className="mt-auto text-sm font-medium underline line-clamp-1 text-primary underline-offset-4">
-          {href}
-        </p>
-      </div>
-    </div>
-  </a>;
+  return (
+    <>
+      <textarea>
+        {openGraph && JSON.stringify(openGraph)}
+      </textarea>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-full hover:bg-muted active:opacity-50"
+      >
+        <div className="flex h-full">
+          <ImageWithFallback
+            src={openGraph?.ogImage || "/images/placeholder.png"}
+            alt={openGraph?.ogTitle || href}
+            fallbackSrc="/images/placeholder.png"
+            width={300}
+            height={300}
+            quality={100}
+            className="h-full w-32 rounded-l-md object-cover object-center transition-[width] hover:w-64"
+          />
+          <div className="flex flex-col flex-1 p-2 overflow-hidden mobile:p-4">
+            <p className="text-lg font-medium line-clamp-1">
+              {openGraph?.ogTitle}
+            </p>
+            <p className="text-sm line-clamp-1 text-muted-foreground mobile:line-clamp-2">
+              {openGraph?.ogDescription}
+            </p>
+            <p className="mt-auto text-sm font-medium underline line-clamp-1 text-primary underline-offset-4">
+              {href}
+            </p>
+          </div>
+        </div>
+      </a>
+    </>
+  );
 }
