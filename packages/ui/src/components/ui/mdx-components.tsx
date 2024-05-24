@@ -142,7 +142,7 @@ const mdxComponents: MDXComponents = {
     <hr className="my-4 tablet:my-8" {...props} />
   ),
   table: ({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) => (
-    <div className="my-6 w-full overflow-y-auto">
+    <div className="w-full my-6 overflow-y-auto">
       <table className={cn("w-full", className)} {...props} />
     </div>
   ),
@@ -198,14 +198,14 @@ const mdxComponents: MDXComponents = {
   code: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <code
       className={cn(
-        "min-w-full rounded bg-muted px-[0.3rem] py-[0.2rem] font-pretendard text-sm",
+        "min-w-full rounded bg-muted px-[0.3rem] py-[0.2rem] text-sm",
         className
       )}
       {...props}
     />
   ),
   CodeBlockWrapper: ({ ...props }) => (
-    <CodeBlockWrapper className="rounded-md border" {...props} />
+    <CodeBlockWrapper className="border rounded-md" {...props} />
   ),
   Fore: ({ className, ...props }: React.ComponentProps<"p">) => (
     <p
