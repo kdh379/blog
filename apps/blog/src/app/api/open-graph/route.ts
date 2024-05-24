@@ -21,10 +21,8 @@ export async function GET(request: NextRequest) {
       ogDescription: result["og:description"],
       ogImage: result["og:image[0]:url"] ?? result["og:image"],
       ogVideo: result["og:video:url"],
+      data: result,
     };
-
-    console.log(result["og:image"]);
-    
 
     return NextResponse.json(ogData);
   } catch (error) {

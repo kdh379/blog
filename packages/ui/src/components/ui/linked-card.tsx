@@ -61,12 +61,17 @@ async function Component({ href }: LinkCardProps) {
     params: { url: href },
   });
 
+  console.log(openGraph?.data);
+
   return <a
     href={href}
     target="_blank"
     rel="noopener noreferrer"
     className="w-full hover:bg-muted active:opacity-50"
   >
+    <textarea>
+      {openGraph?.data}
+    </textarea>
     <div className="flex h-full">
       <ImageWithFallback
         src={openGraph?.ogImage || "/images/placeholder.png"}

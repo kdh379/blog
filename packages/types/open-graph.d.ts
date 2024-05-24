@@ -7,4 +7,5 @@ export interface OpenGraphRes {
   ogDescription?: string;
   ogImage?: string;
   ogVideo?: string;
+  data?: any;
 }
