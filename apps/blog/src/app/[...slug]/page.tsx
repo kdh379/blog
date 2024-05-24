@@ -1,9 +1,10 @@
 
-import PostPage from "@blog/components/pages/PostPage";
+import PostPage, { PageSkeleton } from "@blog/components/pages/PostPage";
 import { siteConfig } from "@repo/ui/site.config";
 import { allPosts } from "contentlayer/generated";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 interface PostPageProps {
   params: {
@@ -65,7 +66,9 @@ const Post = async ({ params }: PostPageProps) => {
     notFound();
   }
   
-  return <PostPage {...post} />;
+  return <Suspense fallback={<PageSkeleton />}>
+    <PostPage {...post} />
+  </Suspense>;
 };
 
 export default Post;

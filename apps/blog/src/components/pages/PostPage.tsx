@@ -3,6 +3,7 @@ import { getTableOfContents } from "@blog/lib/toc";
 import { Badge } from "@repo/ui/components/ui/badge";
 import Mdx from "@repo/ui/components/ui/mdx-components";
 import { ScrollArea } from "@repo/ui/components/ui/scroll-area";
+import { Skeleton } from "@repo/ui/components/ui/skeleton";
 import { Post } from "contentlayer/generated";
 import dayjs from "dayjs";
 import { Calendar, Clock } from "lucide-react";
@@ -15,7 +16,7 @@ export default async function PostPage(props: PostPageProps) {
   const toc = await getTableOfContents(props.body.raw);
 
   return <div className="relative py-6 desktop:grid desktop:grid-cols-[1fr_300px] desktop:gap-10">
-    <article className="mx-auto w-full min-w-0">
+    <article className="w-full min-w-0 mx-auto">
       <section>
         <h1 className="mb-4 text-4xl font-bold tracking-tight">
           {props.title}
@@ -38,7 +39,7 @@ export default async function PostPage(props: PostPageProps) {
           </div>
         </div>
       </section>
-      <section className="slide-enter-content pb-12 pt-8">
+      <section className="pt-8 pb-12 slide-enter-content">
         <Mdx
           code={props.body.code}
         />
@@ -59,4 +60,40 @@ export default async function PostPage(props: PostPageProps) {
       </div>
     </aside>
   </div>;
+}
+
+export function PageSkeleton() {
+  return (
+    <div className="py-6 desktop:gap-10 desktop:grid desktop:grid-cols-[1fr_300px]">
+      <article>
+        <h1 className="space-y-4">
+          <Skeleton className="w-3/4 h-10" />
+          <Skeleton className="w-1/2 h-4" />
+          <Skeleton className="w-1/3 h-4" />
+        </h1>
+        <section className="mt-6 space-y-2">
+          <Skeleton className="w-3/4 h-4" />
+          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-3/4 h-4" />
+          <Skeleton className="w-3/4 h-4" />
+          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-full h-4" />
+          <Skeleton className="w-3/4 h-4" />
+        </section>
+      </article>
+      <aside className="space-y-2">
+        <Skeleton className="w-1/2 h-4" />
+        <Skeleton className="w-1/2 h-4" />
+        <Skeleton className="w-1/2 h-4" />
+        <Skeleton className="w-1/2 h-4" />
+        <Skeleton className="w-1/2 h-4" />
+        <Skeleton className="w-1/2 h-4" />
+        <Skeleton className="w-1/2 h-4" />
+        <Skeleton className="w-1/2 h-4" />
+      </aside>
+    </div>
+  );
 }
