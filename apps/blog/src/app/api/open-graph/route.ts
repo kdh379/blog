@@ -23,6 +23,9 @@ export async function GET(request: NextRequest) {
       ogVideo: result["og:video:url"],
     };
 
+    console.log(result["og:image"]);
+    
+
     return NextResponse.json(ogData);
   } catch (error) {
     return NextResponse.json({ error: "Invalid Error" }, { status: 500 });
