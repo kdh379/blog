@@ -2,7 +2,7 @@ import type { Preview } from "@storybook/react";
 import "@repo/ui/globals.css";
 import "./font-face.css";
 import { initialize, mswLoader } from 'msw-storybook-addon'
-import Providers from "@repo/ui/components/Provider";
+import Providers from "@repo/ui/components/providers";
 
 
 

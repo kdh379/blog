@@ -1,10 +1,10 @@
 "use client";
 
-import Footer from "@blog/components/layout/Footer";
-import PostsSearch from "@blog/components/layout/PostsSearch";
-import SidebarNav from "@blog/components/layout/SidebarNav";
-import { Link } from "@repo/ui/components/Link";
-import ToggleTheme from "@repo/ui/components/ToggleTheme";
+import Footer from "@blog/components/layout/footer";
+import PostsSearch from "@blog/components/layout/posts-search";
+import SidebarNav from "@blog/components/layout/sidebar-nav";
+import { Link } from "@repo/ui/components/link";
+import ToggleTheme from "@repo/ui/components/toggle-theme";
 import { ScrollArea } from "@repo/ui/components/ui/scroll-area";
 import { cn } from "@repo/ui/lib/utils";
 import { siteConfig } from "@repo/ui/site.config";

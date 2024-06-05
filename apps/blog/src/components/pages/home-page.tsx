@@ -1,6 +1,6 @@
 
 
-import Hero from "@blog/components/home/Hero";
+import Hero from "@blog/components/home/hero";
 
 export default async function HomePage() {
 

@@ -1,10 +1,10 @@
 import "@repo/ui/globals.css";
 
-import AppHeader from "@blog/components/layout/AppHeader";
-import Sidebar from "@blog/components/layout/Sidebar";
-import Spotlights from "@blog/components/layout/Spotlights";
-import Providers from "@repo/ui/components/Provider";
-import { ViewTransitions } from "@repo/ui/components/ViewTransition";
+import AppHeader from "@blog/components/layout/app-header";
+import Sidebar from "@blog/components/layout/sidebar";
+import Spotlights from "@blog/components/layout/spotlights";
+import Providers from "@repo/ui/components/providers";
+import { ViewTransitions } from "@repo/ui/components/view-transition";
 import { cn } from "@repo/ui/lib/utils";
 import { siteConfig } from "@repo/ui/site.config";
 import { Analytics } from "@vercel/analytics/react";

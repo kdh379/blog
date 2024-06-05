@@ -1,8 +1,8 @@
-import MobileSheet from "@blog/components/layout/MobileSheet";
-import PostsSearch from "@blog/components/layout/PostsSearch";
-import Sidebar from "@blog/components/layout/Sidebar";
-import { Link } from "@repo/ui/components/Link";
-import ToggleTheme from "@repo/ui/components/ToggleTheme";
+import MobileSheet from "@blog/components/layout/mobile-sheet";
+import PostsSearch from "@blog/components/layout/posts-search";
+import Sidebar from "@blog/components/layout/sidebar";
+import { Link } from "@repo/ui/components/link";
+import ToggleTheme from "@repo/ui/components/toggle-theme";
 import { siteConfig } from "@repo/ui/site.config";
 import React from "react";
 

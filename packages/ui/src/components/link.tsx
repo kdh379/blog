@@ -1,6 +1,6 @@
 "use client";
 
-import { useSetFinishViewTransition } from "@ui/components/ViewTransition";
+import { useSetFinishViewTransition } from "@ui/components/view-transition";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { startTransition, useCallback } from "react";

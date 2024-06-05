@@ -1,5 +1,5 @@
 
-import PostPage from "@blog/components/pages/PostPage";
+import PostPage from "@blog/components/pages/post-page";
 import { siteConfig } from "@repo/ui/site.config";
 import { allPosts } from "contentlayer/generated";
 import { Metadata } from "next";

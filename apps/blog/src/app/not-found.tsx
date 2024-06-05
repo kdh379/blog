@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@repo/ui/components/Link";
+import { Link } from "@repo/ui/components/link";
 import { Button, buttonVariants } from "@repo/ui/components/ui/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";

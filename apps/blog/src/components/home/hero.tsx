@@ -1,4 +1,4 @@
-import { Link } from "@repo/ui/components/Link";
+import { Link } from "@repo/ui/components/link";
 import { buttonVariants } from "@repo/ui/components/ui/button";
 import { Icons } from "@repo/ui/components/ui/icons";
 import Reveal from "@repo/ui/components/ui/reveal";
