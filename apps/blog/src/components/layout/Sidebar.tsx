@@ -3,13 +3,13 @@
 import Footer from "@blog/components/layout/Footer";
 import PostsSearch from "@blog/components/layout/PostsSearch";
 import SidebarNav from "@blog/components/layout/SidebarNav";
+import { Link } from "@repo/ui/components/Link";
 import ToggleTheme from "@repo/ui/components/ToggleTheme";
 import { ScrollArea } from "@repo/ui/components/ui/scroll-area";
 import { cn } from "@repo/ui/lib/utils";
 import { siteConfig } from "@repo/ui/site.config";
 import { useSidebarStore } from "@repo/ui/store/index";
 import Image from "next/image";
-import Link from "next/link";
 
 interface SidebarProps {
   className?: string;

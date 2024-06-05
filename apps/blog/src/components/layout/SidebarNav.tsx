@@ -1,10 +1,10 @@
 "use client";
 
 import { getPostTree, PostTree } from "@blog/lib/post";
+import { Link } from "@repo/ui/components/Link";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@repo/ui/components/ui/accordion";
 import { cn } from "@repo/ui/lib/utils";
 import { useSidebarStore } from "@repo/ui/store/index";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { PropsWithChildren } from "react";
 
@@ -45,7 +45,7 @@ function PostNav({postTree}: PostNavProps) {
       )}
       { post.category && post.children?.length && (
         <AccordionItem value={post.category}>
-          <AccordionTrigger className="mb-2 py-0 text-sm">{post.category}</AccordionTrigger>
+          <AccordionTrigger className="py-0 mb-2 text-sm">{post.category}</AccordionTrigger>
           <AccordionContent className="py-1 pl-2">
             <PostNav postTree={post.children} />
           </AccordionContent>

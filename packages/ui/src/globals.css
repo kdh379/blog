@@ -64,6 +64,10 @@
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
   }
+
+  html {
+    scrollbar-gutter: stable;
+  }
 }
 
 

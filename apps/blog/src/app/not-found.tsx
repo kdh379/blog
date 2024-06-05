@@ -1,8 +1,8 @@
 "use client";
 
+import { Link } from "@repo/ui/components/Link";
 import { Button, buttonVariants } from "@repo/ui/components/ui/button";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function NotFound() {
@@ -26,7 +26,7 @@ export default function NotFound() {
         >
           이전 페이지로
         </Button>
-        <Link 
+        <Link
           href="/"
           className={buttonVariants()}
         >

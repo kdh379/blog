@@ -1,3 +1,4 @@
+import { Link } from "@ui/components/Link";
 import {
   Accordion,
   AccordionContent,
@@ -19,7 +20,6 @@ import VideoCard from "@ui/components/ui/video-card";
 import { cn } from "@ui/lib/utils";
 import { MDXComponents } from "mdx/types";
 import { ImageProps } from "next/image";
-import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import * as React from "react";
 

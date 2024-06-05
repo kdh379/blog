@@ -1,9 +1,9 @@
 import MobileSheet from "@blog/components/layout/MobileSheet";
 import PostsSearch from "@blog/components/layout/PostsSearch";
 import Sidebar from "@blog/components/layout/Sidebar";
+import { Link } from "@repo/ui/components/Link";
 import ToggleTheme from "@repo/ui/components/ToggleTheme";
 import { siteConfig } from "@repo/ui/site.config";
-import Link from "next/link";
 import React from "react";
 
 export default function AppHeader( ) {

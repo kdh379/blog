@@ -1,14 +1,14 @@
+import { Link } from "@repo/ui/components/Link";
 import { buttonVariants } from "@repo/ui/components/ui/button";
 import { Icons } from "@repo/ui/components/ui/icons";
 import { siteConfig } from "@repo/ui/site.config";
 import { Mail } from "lucide-react";
-import Link from "next/link";
 
 
 export default function Footer() {
   return (
     <footer className="container mt-auto">
-      <nav className="mb-2 flex gap-x-2">
+      <nav className="flex mb-2 gap-x-2">
         <Link
           href={siteConfig.links.github}
           target="_blank"
