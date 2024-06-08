@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@ui/lib/utils";
 import { motion } from "framer-motion";
 import { useRef } from "react";
+import { cn } from "@ui/lib/utils";
 
 interface RevealProps {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ interface RevealProps {
 }
 
 export default function Reveal({width = "fit-content", className, children}: RevealProps) {
-  
+
   const ref = useRef<HTMLDivElement>(null);
 
   return (
@@ -35,7 +35,7 @@ export default function Reveal({width = "fit-content", className, children}: Rev
         initial="hidden"
         animate="visible"
         transition={{ duration: 0.5, ease: "easeIn" }}
-        className="absolute top-0 bottom-0 left-0 right-0 z-10 bg-primary"
+        className="absolute inset-0 z-10 bg-primary"
       />
     </div>
   );

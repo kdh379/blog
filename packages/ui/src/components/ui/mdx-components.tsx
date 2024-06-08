@@ -1,14 +1,21 @@
+/* eslint-disable jsx-a11y/anchor-has-content */
+/* eslint-disable jsx-a11y/heading-has-content */
+
+import { MDXComponents } from "mdx/types";
+import { ImageProps } from "next/image";
+import { useMDXComponent } from "next-contentlayer/hooks";
+import * as React from "react";
 import { Link } from "@ui/components/link";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
-  AccordionTrigger
+  AccordionTrigger,
 } from "@ui/components/ui/accordion";
 import {
   Alert,
   AlertDescription,
-  AlertTitle
+  AlertTitle,
 } from "@ui/components/ui/alert";
 import { Callout } from "@ui/components/ui/callout";
 import { CodeBlockWrapper } from "@ui/components/ui/code-block-wrapper";
@@ -18,10 +25,6 @@ import LinkedCard from "@ui/components/ui/linked-card";
 import Video from "@ui/components/ui/video";
 import VideoCard from "@ui/components/ui/video-card";
 import { cn } from "@ui/lib/utils";
-import { MDXComponents } from "mdx/types";
-import { ImageProps } from "next/image";
-import { useMDXComponent } from "next-contentlayer/hooks";
-import * as React from "react";
 
 const mdxComponents: MDXComponents = {
   Accordion,
@@ -103,7 +106,7 @@ const mdxComponents: MDXComponents = {
       {...props}
     />
   ),
-  
+
   ul: ({ className, ...props }: React.HTMLAttributes<HTMLUListElement>) => (
     <ul className={cn("mb-4 ml-6 list-disc", className)} {...props} />
   ),
@@ -126,7 +129,7 @@ const mdxComponents: MDXComponents = {
     alt,
     ...props
   }: ImageProps) => (
-    <ImageWithFallback 
+    <ImageWithFallback
       {...props}
       className={cn("rounded-md", className)}
       alt={alt}
@@ -142,7 +145,7 @@ const mdxComponents: MDXComponents = {
     <hr className="my-4 tablet:my-8" {...props} />
   ),
   table: ({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) => (
-    <div className="w-full my-6 overflow-y-auto">
+    <div className="my-6 w-full overflow-y-auto">
       <table className={cn("w-full", className)} {...props} />
     </div>
   ),
@@ -179,21 +182,23 @@ const mdxComponents: MDXComponents = {
     __withMeta__?: boolean;
   }
   ) => {
-    return <>
-      <pre
-        className={cn(
-          "mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg border px-2 py-4",
-          className
-        )}
-        {...props}
-      />
-      {__rawString__ && (
-        <CopyButton
-          value={__rawString__}
-          className={"absolute right-2.5 top-2"}
+    return (
+      <>
+        <pre
+          className={cn(
+            "mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg border px-2 py-4",
+            className
+          )}
+          {...props}
         />
-      )}
-    </>;
+        {__rawString__ && (
+          <CopyButton
+            value={__rawString__}
+            className={"absolute right-2.5 top-2"}
+          />
+        )}
+      </>
+    );
   },
   code: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <code
@@ -205,7 +210,7 @@ const mdxComponents: MDXComponents = {
     />
   ),
   CodeBlockWrapper: ({ ...props }) => (
-    <CodeBlockWrapper className="border rounded-md" {...props} />
+    <CodeBlockWrapper className="rounded-md border" {...props} />
   ),
   Fore: ({ className, ...props }: React.ComponentProps<"p">) => (
     <p

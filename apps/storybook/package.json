@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "lint": "eslint . --max-warnings 0 --fix",
     "dev": "storybook dev -p 6006",
     "build": "storybook build"
   },
@@ -27,12 +26,10 @@
     "@storybook/addon-themes": "^8.1.1",
     "@storybook/blocks": "^8.1.1",
     "@storybook/react": "^8.1.1",
-    "@storybook/react-vite": "^8.1.1",
     "@storybook/test": "^8.1.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.19",
     "class-variance-authority": "^0.7.0",
     "eslint": "^8",
@@ -40,9 +37,7 @@
     "postcss": "^8.4.38",
     "storybook": "^8.1.1",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5",
-    "vite": "^5.2.11",
-    "vite-tsconfig-paths": "^4.3.2"
+    "typescript": "^5"
   },
   "msw": {
     "workerDirectory": [

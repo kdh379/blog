@@ -68,7 +68,7 @@ export default makeSource({
             if(node.children) {
               const [codeEl] = node.children;
               if(codeEl?.tagName !== "code" || !codeEl.children?.[0] ) return;
-          
+
               node.__rawString__ = codeEl.children?.[0].value;
             }
           }

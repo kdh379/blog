@@ -9,11 +9,11 @@ export default function Video({src}: {src: string}) {
     <ErrorBoundary errorComponent={FallbackEmpty}>
       <div className="aspect-video">
         <Suspense
-          fallback={
+          fallback={(
             <div className="flex animate-pulse items-center justify-center rounded-md bg-muted">
               <VideoIcon className="size-1/2 text-muted-foreground" />
             </div>
-          }
+          )}
         >
           <Component src={src} />
         </Suspense>

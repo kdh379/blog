@@ -33,7 +33,7 @@ function Anchor({ href, children }: { href: string; children: React.ReactNode })
 
 function Hero() {
   return (
-    <section className="my-8 slide-enter-content">
+    <section className="slide-enter-content my-8">
       <Reveal>
         <h1 className="text-2xl">프론트엔드 개발자 <span className="font-bold text-primary">김도현</span>입니다.</h1>
       </Reveal>
@@ -48,7 +48,7 @@ function Hero() {
       <Reveal className="mt-12">
         <p className="mb-2">Connect me on</p>
         <div className="flex flex-wrap items-center gap-4">
-          <Link 
+          <Link
             href="/resume"
             className={buttonVariants({ variant: "shimmer" })}
           >

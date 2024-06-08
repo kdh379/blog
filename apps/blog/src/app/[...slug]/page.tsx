@@ -64,7 +64,7 @@ const Post = async ({ params }: PostPageProps) => {
   if (!post) {
     notFound();
   }
-  
+
   return <PostPage {...post} />;
 };
 

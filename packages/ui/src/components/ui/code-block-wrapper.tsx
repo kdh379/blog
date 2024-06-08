@@ -1,13 +1,13 @@
 "use client";
 
+import { HTMLAttributes, useState } from "react";
 import { Button } from "@ui/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
-  CollapsibleTrigger
+  CollapsibleTrigger,
 } from "@ui/components/ui/collapsible";
 import { cn } from "@ui/lib/utils";
-import { HTMLAttributes, useState } from "react";
 
 interface CodeBlockProps extends HTMLAttributes<HTMLDivElement> {
   expandButtonTitle?: string

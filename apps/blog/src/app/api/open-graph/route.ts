@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const result = await urlMetadata(url, {
       cache: "force-cache",
     });
-    
+
     const ogData: OpenGraphRes = {
       ogTitle: result["og:title"],
       ogDescription: result["og:description"],

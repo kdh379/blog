@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "files": [
-    "next.js",
-    "rules.js"
+    ".eslintrc.base.js",
+    ".eslintrc.react.js",
+    ".eslintrc.next.js",
+    "library.js"
   ],
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.1.0",
@@ -12,15 +14,13 @@
     "@vercel/style-guide": "^5.2.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.3",
-    "eslint-config-prettier": "^9.1.0",
     "eslint-config-turbo": "^1.12.4",
-    "eslint-plugin-only-warn": "^1.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-simple-import-sort": "^12.1.0",
     "eslint-plugin-storybook": "^0.8.0",
     "eslint-plugin-tailwindcss": "^3.14.3",
-    "eslint-plugin-unused-imports": "^3.2.0",
     "typescript": "^5.3.3"
   }
 }

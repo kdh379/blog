@@ -25,7 +25,7 @@ type HttpRequestInfo = {
 
 interface RequestOption<T_Key extends keyof APIInterface> extends RequestInit {
   key: T_Key;
-  params: APIInterface[T_Key]["params"];
+          params: APIInterface[T_Key]["params"];
 }
 
 function getAPIInfo<T_Key extends keyof APIInterface>(
@@ -62,7 +62,7 @@ export default async function api<T_Key extends keyof APIInterface>(
     ...options,
   });
 
-  if (!response.ok) 
+  if (!response.ok)
     throw new Error(`API request failed: ${response.status} ${response.statusText}`, {
       cause: response,
     });

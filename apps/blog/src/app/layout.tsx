@@ -86,7 +86,7 @@ export default function RootLayout({
       <html lang="ko" suppressHydrationWarning>
         <link rel="shortcut icon" href="/favicon.png" />
         <meta name="description" content={siteConfig.description} />
-        <body className={cn(pretendard.className, "relative antialiased transition ease-in-out overflow-x-clip")}>
+        <body className={cn(pretendard.className, "relative overflow-x-clip antialiased transition ease-in-out")}>
           <Providers>
             <Spotlights />
             <AppHeader />

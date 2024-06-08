@@ -11,7 +11,7 @@ export default function NotFound() {
 
   return (
     <div className="mx-auto mt-10">
-      <h1 className="py-20 text-3xl font-bold text-center">페이지를 찾을 수 없습니다.</h1>
+      <h1 className="py-20 text-center text-3xl font-bold">페이지를 찾을 수 없습니다.</h1>
       <Image
         src="/images/404.gif"
         width={600}
@@ -19,7 +19,7 @@ export default function NotFound() {
         alt="404 Not Found"
         className="aspect-[40:17] rounded-md"
       />
-      <div className="flex items-center justify-center gap-4 mt-10">
+      <div className="mt-10 flex items-center justify-center gap-4">
         <Button
           variant="secondary"
           onClick={() => router.back()}

@@ -1,7 +1,7 @@
 import {
   Alert,
   AlertDescription,
-  AlertTitle
+  AlertTitle,
 } from "@ui/components/ui/alert";
 
 interface CalloutProps {

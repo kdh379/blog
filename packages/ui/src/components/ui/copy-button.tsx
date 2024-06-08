@@ -1,10 +1,10 @@
 "use client";
 
+import { CheckCircle, CheckIcon, CopyIcon } from "lucide-react";
+import React from "react";
 import { Button } from "@ui/components/ui/button";
 import { useToast } from "@ui/components/ui/use-toast";
 import { cn } from "@ui/lib/utils";
-import { CheckCircle, CheckIcon, CopyIcon } from "lucide-react";
-import React from "react";
 
 interface CopyButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   value: string;
@@ -29,8 +29,8 @@ export default function CopyButton( props: CopyButtonProps ) {
     setCopied(true);
     setTimeout(() => {
       dismiss();
-      setCopied(false);}, 2000);
-  }; 
+      setCopied(false); }, 2000);
+  };
 
   return (
     <Button

@@ -20,47 +20,47 @@ function useBrowserNativeTransitions() {
             () => void
               ]
               >(null);
-    
+
   useEffect(() => {
     if (!("startViewTransition" in document)) {
       return () => {};
     }
-    
+
     const onPopState = () => {
       let pendingViewTransitionResolve: () => void;
-    
+
       const pendingViewTransition = new Promise<void>((resolve) => {
         pendingViewTransitionResolve = resolve;
       });
-    
+
       const pendingStartViewTransition = new Promise<void>((resolve) => {
         document.startViewTransition(() => {
           resolve();
           return pendingViewTransition;
         });
       });
-    
+
       setCurrentViewTransition([
         pendingStartViewTransition,
         pendingViewTransitionResolve!,
       ]);
     };
     window.addEventListener("popstate", onPopState);
-    
+
     return () => {
       window.removeEventListener("popstate", onPopState);
     };
   }, []);
-    
+
   if (currentViewTransition && currentPathname.current !== pathname)
     use(currentViewTransition[0]);
-    
+
   // Transition 참조를 항상 최신 상태로 유지
   const transitionRef = useRef(currentViewTransition);
   useEffect(() => {
     transitionRef.current = currentViewTransition;
   }, [currentViewTransition]);
-    
+
   useEffect(() => {
     // 새 경로 컴포넌트가 마운트되면 뷰 전환 끝냄
     currentPathname.current = pathname;

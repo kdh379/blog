@@ -29,10 +29,10 @@ export function TableOfContents({ toc }: TocProps) {
   }, [toc.items]);
 
   const activeItem = useActiveItem(itemIds);
-  
+
   if( !toc.items )
     return null;
-  
+
 
   return (
     <div>
@@ -44,13 +44,13 @@ export function TableOfContents({ toc }: TocProps) {
 
 function useActiveItem(itemIds: string[]) {
   const [activeId, setActiveId] = React.useState<string | null>(null);
-  
+
   React.useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            
+
             setActiveId(entry.target.id);
           }
         });

@@ -8,7 +8,7 @@ import { Mail } from "lucide-react";
 export default function Footer() {
   return (
     <footer className="container mt-auto">
-      <nav className="flex mb-2 gap-x-2">
+      <nav className="mb-2 flex gap-x-2">
         <Link
           href={siteConfig.links.github}
           target="_blank"

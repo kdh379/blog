@@ -8,7 +8,7 @@ import React, { PropsWithChildren } from "react";
 
 export default function MobileSheet( props: PropsWithChildren ) {
   const {visible, toggle} = useSidebarStore();
-    
+
   return (
     <>
       <Sheet open={visible} onOpenChange={toggle}>

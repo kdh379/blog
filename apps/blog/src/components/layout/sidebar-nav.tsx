@@ -21,18 +21,20 @@ function NavLink({ href, children }: PropsWithChildren<NavLinkProps>) {
   const pathname = usePathname();
   const setClose = useSidebarStore((state) => state.close);
 
-  return <>
-    <Link
-      href={href}
-      onClick={setClose}
-      className={cn(
-        "mb-2 flex size-full text-sm text-muted-foreground hover:underline",
-        decodeURIComponent(pathname) === href && "font-bold text-primary"
-      )}
-    >
-      {children}
-    </Link>
-  </>;
+  return (
+    <>
+      <Link
+        href={href}
+        onClick={setClose}
+        className={cn(
+          "mb-2 flex size-full text-sm text-muted-foreground hover:underline",
+          decodeURIComponent(pathname) === href && "font-bold text-primary"
+        )}
+      >
+        {children}
+      </Link>
+    </>
+  );
 }
 
 function PostNav({postTree}: PostNavProps) {
@@ -45,7 +47,7 @@ function PostNav({postTree}: PostNavProps) {
       )}
       { post.category && post.children?.length && (
         <AccordionItem value={post.category}>
-          <AccordionTrigger className="py-0 mb-2 text-sm">{post.category}</AccordionTrigger>
+          <AccordionTrigger className="mb-2 py-0 text-sm">{post.category}</AccordionTrigger>
           <AccordionContent className="py-1 pl-2">
             <PostNav postTree={post.children} />
           </AccordionContent>
@@ -62,7 +64,7 @@ export default function SidebarNav() {
   return (
     <nav className="flex-1">
       <NavLink href="/resume">Resume</NavLink>
-      <Accordion 
+      <Accordion
         type="multiple"
         defaultValue={postTree.map((post) => post.category || "")}
         className="flex flex-col gap-y-2"

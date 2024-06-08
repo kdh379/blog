@@ -1,8 +1,8 @@
 "use client";
 
-import { Toaster } from "@ui/components/ui/toaster";
 import { ThemeProvider } from "next-themes";
 import { PropsWithChildren } from "react";
+import { Toaster } from "@ui/components/ui/toaster";
 
 export default function Providers(props: PropsWithChildren) {
   return (

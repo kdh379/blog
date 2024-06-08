@@ -12,7 +12,7 @@ export type PostTree = Item[];
 function createTree(posts: Post[]) {
   const root: Item = {};
 
-  posts.filter((post) => !post.slug.startsWith("/__")).forEach((post) => {    
+  posts.filter((post) => !post.slug.startsWith("/__")).forEach((post) => {
     const slugs = post.slug.split("/").slice(2);
 
     let currentNode = root;
@@ -25,7 +25,7 @@ function createTree(posts: Post[]) {
         foundNode = {
           category: slug,
         };
-        
+
         currentNode.children.push(foundNode);
       }
 
@@ -42,6 +42,6 @@ function createTree(posts: Post[]) {
 
 export function getPostTree(): PostTree {
   const tree = createTree(allPosts);
-  
+
   return tree;
 }

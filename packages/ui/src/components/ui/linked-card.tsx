@@ -1,9 +1,9 @@
 
-import ImageWithFallback from "@ui/components/ui/image-with-fallback";
-import api from "@ui/lib/api";
 import { ImageIcon } from "lucide-react";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import React from "react";
+import api from "@ui/lib/api";
+import ImageWithFallback from "@ui/components/ui/image-with-fallback";
 
 import FallbackEmpty from "../template/fallback-empty";
 import { Button } from "./button";
@@ -15,44 +15,46 @@ interface LinkCardProps {
 
 export default function LinkedCard({href, title}: LinkCardProps) {
 
-  return <>
-    <Button
-      variant="link"
-      className="justify-start w-full p-0"
-    >
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="line-clamp-1 hover:text-primary"
+  return (
+    <>
+      <Button
+        variant="link"
+        className="w-full justify-start p-0"
       >
-        {title || href}
-      </a>
-    </Button>
-    <ErrorBoundary errorComponent={FallbackEmpty}>
-      <div className="flex h-24 mb-4 overflow-hidden transition-colors border rounded-md bg-muted mobile:h-32">
-        <React.Suspense
-          fallback={
-            <div
-              className="flex w-full animate-pulse"
-              role="status"
-            >
-              <div className="flex items-center justify-center w-24 rounded-l-md bg-muted-foreground/50 mobile:w-32">
-                <ImageIcon />
-              </div>
-              <div className="flex flex-col flex-1 p-2 flx-1 mobile:p-4">
-                <div className="w-3/4 h-4 rounded bg-muted-foreground/50" />
-                <div className="w-full h-4 mt-2 rounded bg-muted-foreground/50" />
-                <div className="w-3/4 h-4 mt-auto rounded bg-muted-foreground/50" />
-              </div>
-            </div>
-          }
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="line-clamp-1 hover:text-primary"
         >
-          <Component href={href} />
-        </React.Suspense>
-      </div>
-    </ErrorBoundary>
-  </>;
+          {title || href}
+        </a>
+      </Button>
+      <ErrorBoundary errorComponent={FallbackEmpty}>
+        <div className="mb-4 flex h-24 overflow-hidden rounded-md border bg-muted transition-colors mobile:h-32">
+          <React.Suspense
+            fallback={(
+              <div
+                className="flex w-full animate-pulse"
+                role="status"
+              >
+                <div className="flex w-24 items-center justify-center rounded-l-md bg-muted-foreground/50 mobile:w-32">
+                  <ImageIcon />
+                </div>
+                <div className="flx-1 flex flex-1 flex-col p-2 mobile:p-4">
+                  <div className="h-4 w-3/4 rounded bg-muted-foreground/50" />
+                  <div className="mt-2 h-4 w-full rounded bg-muted-foreground/50" />
+                  <div className="mt-auto h-4 w-3/4 rounded bg-muted-foreground/50" />
+                </div>
+              </div>
+            )}
+          >
+            <Component href={href} />
+          </React.Suspense>
+        </div>
+      </ErrorBoundary>
+    </>
+  );
 }
 
 async function Component({ href }: LinkCardProps) {
@@ -64,33 +66,35 @@ async function Component({ href }: LinkCardProps) {
     },
   });
 
-  return <a
-    href={href}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="w-full hover:bg-muted active:opacity-50"
-  >
-    <div className="flex h-full">
-      <ImageWithFallback
-        src={openGraph?.ogImage || "/images/placeholder.png"}
-        alt={openGraph?.ogTitle || href}
-        fallbackSrc="/images/placeholder.png"
-        width={300}
-        height={300}
-        quality={100}
-        className="h-full w-32 rounded-l-md object-cover object-center transition-[width] hover:w-64"
-      />
-      <div className="flex flex-col flex-1 p-2 overflow-hidden mobile:p-4">
-        <p className="text-lg font-medium line-clamp-1">
-          {openGraph?.ogTitle}
-        </p>
-        <p className="text-sm line-clamp-1 text-muted-foreground mobile:line-clamp-2">
-          {openGraph?.ogDescription}
-        </p>
-        <p className="mt-auto text-sm font-medium underline line-clamp-1 text-primary underline-offset-4">
-          {href}
-        </p>
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="w-full hover:bg-muted active:opacity-50"
+    >
+      <div className="flex h-full">
+        <ImageWithFallback
+          src={openGraph?.ogImage || "/images/placeholder.png"}
+          alt={openGraph?.ogTitle || href}
+          fallbackSrc="/images/placeholder.png"
+          width={300}
+          height={300}
+          quality={100}
+          className="h-full w-32 rounded-l-md object-cover object-center transition-[width] hover:w-64"
+        />
+        <div className="flex flex-1 flex-col overflow-hidden p-2 mobile:p-4">
+          <p className="line-clamp-1 text-lg font-medium">
+            {openGraph?.ogTitle}
+          </p>
+          <p className="line-clamp-1 text-sm text-muted-foreground mobile:line-clamp-2">
+            {openGraph?.ogDescription}
+          </p>
+          <p className="mt-auto line-clamp-1 text-sm font-medium text-primary underline underline-offset-4">
+            {href}
+          </p>
+        </div>
       </div>
-    </div>
-  </a>;
+    </a>
+  );
 }

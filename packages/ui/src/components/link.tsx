@@ -1,9 +1,9 @@
 "use client";
 
-import { useSetFinishViewTransition } from "@ui/components/view-transition";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { startTransition, useCallback } from "react";
+import { useSetFinishViewTransition } from "@ui/components/view-transition";
 
 // copied from https://github.com/vercel/next.js/blob/66f8ffaa7a834f6591a12517618dce1fd69784f6/packages/next/src/client/link.tsx#L180-L191
 function isModifiedEvent(event: React.MouseEvent): boolean {
@@ -55,14 +55,12 @@ export function Link(props: React.ComponentProps<typeof NextLink>) {
 
         e.preventDefault();
 
-        // @ts-ignore
         document.startViewTransition(
           () =>
             new Promise<void>((resolve) => {
               startTransition(() => {
                 // copied from https://github.com/vercel/next.js/blob/66f8ffaa7a834f6591a12517618dce1fd69784f6/packages/next/src/client/link.tsx#L231-L233
-                // @ts-ignore
-                router[replace ? "replace" : "push"](as || href, {
+                router[replace ? "replace" : "push"](as?.toString() || href.toString(), {
                   scroll: scroll ?? true,
                 });
                 finishViewTransition(() => resolve);
@@ -71,7 +69,7 @@ export function Link(props: React.ComponentProps<typeof NextLink>) {
         );
       }
     },
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [props.onClick, href, as, replace, scroll]
   );
