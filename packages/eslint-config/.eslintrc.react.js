@@ -48,12 +48,6 @@ module.exports = {
         project,
       },
     },
-    ignorePatterns: [
-      // Ignore dotfiles
-      ".*.js",
-      "node_modules/",
-      "dist/",
-    ],
   },
   ignorePatterns: [
     // Ignore dotfiles

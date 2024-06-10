@@ -22,7 +22,7 @@ export default function Sidebar( {className}: SidebarProps ) {
   return (
     <>
       <aside className={cn(
-        "fixed top-8 hidden h-[calc(100vh-3.5rem)] shrink-0 tablet:sticky tablet:flex tablet:flex-col",
+        "tablet:sticky tablet:flex tablet:flex-col fixed top-8 hidden h-[calc(100vh-3.5rem)] shrink-0",
         className
       )}>
         <Link href="/" onClick={setClose}>
@@ -38,7 +38,7 @@ export default function Sidebar( {className}: SidebarProps ) {
             priority
           />
         </div>
-        <div className="hidden gap-x-2 mobile:flex">
+        <div className="mobile:flex hidden gap-x-2">
           <div className="flex-1">
             <PostsSearch />
           </div>

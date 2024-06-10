@@ -45,11 +45,11 @@ export default function PostsSearch() {
       <Button
         variant="outline"
         size="icon"
-        className="ml-auto justify-center gap-x-1 bg-transparent text-muted-foreground mobile:w-full mobile:justify-start mobile:px-2"
+        className="text-muted-foreground mobile:w-full mobile:justify-start mobile:px-2 ml-auto justify-center gap-x-1 bg-transparent"
         onClick={() => setOpen(true)}
       >
         <Search className="size-4" />
-        <span className="sr-only mobile:not-sr-only">Search posts...</span>
+        <span className="mobile:not-sr-only sr-only">Search posts...</span>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Type to search posts..." />

@@ -2,6 +2,7 @@
 import { ImageIcon } from "lucide-react";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import React from "react";
+
 import api from "@ui/lib/api";
 import ImageWithFallback from "@ui/components/ui/image-with-fallback";
 
@@ -25,26 +26,26 @@ export default function LinkedCard({href, title}: LinkCardProps) {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="line-clamp-1 hover:text-primary"
+          className="hover:text-primary line-clamp-1"
         >
           {title || href}
         </a>
       </Button>
       <ErrorBoundary errorComponent={FallbackEmpty}>
-        <div className="mb-4 flex h-24 overflow-hidden rounded-md border bg-muted transition-colors mobile:h-32">
+        <div className="bg-muted mobile:h-32 mb-4 flex h-24 overflow-hidden rounded-md border transition-colors">
           <React.Suspense
             fallback={(
               <div
                 className="flex w-full animate-pulse"
                 role="status"
               >
-                <div className="flex w-24 items-center justify-center rounded-l-md bg-muted-foreground/50 mobile:w-32">
+                <div className="bg-muted-foreground/50 mobile:w-32 flex w-24 items-center justify-center rounded-l-md">
                   <ImageIcon />
                 </div>
-                <div className="flx-1 flex flex-1 flex-col p-2 mobile:p-4">
-                  <div className="h-4 w-3/4 rounded bg-muted-foreground/50" />
-                  <div className="mt-2 h-4 w-full rounded bg-muted-foreground/50" />
-                  <div className="mt-auto h-4 w-3/4 rounded bg-muted-foreground/50" />
+                <div className="flx-1 mobile:p-4 flex flex-1 flex-col p-2">
+                  <div className="bg-muted-foreground/50 h-4 w-3/4 rounded" />
+                  <div className="bg-muted-foreground/50 mt-2 h-4 w-full rounded" />
+                  <div className="bg-muted-foreground/50 mt-auto h-4 w-3/4 rounded" />
                 </div>
               </div>
             )}
@@ -71,7 +72,7 @@ async function Component({ href }: LinkCardProps) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="w-full hover:bg-muted active:opacity-50"
+      className="hover:bg-muted w-full active:opacity-50"
     >
       <div className="flex h-full">
         <ImageWithFallback
@@ -83,14 +84,14 @@ async function Component({ href }: LinkCardProps) {
           quality={100}
           className="h-full w-32 rounded-l-md object-cover object-center transition-[width] hover:w-64"
         />
-        <div className="flex flex-1 flex-col overflow-hidden p-2 mobile:p-4">
+        <div className="mobile:p-4 flex flex-1 flex-col overflow-hidden p-2">
           <p className="line-clamp-1 text-lg font-medium">
             {openGraph?.ogTitle}
           </p>
-          <p className="line-clamp-1 text-sm text-muted-foreground mobile:line-clamp-2">
+          <p className="text-muted-foreground mobile:line-clamp-2 line-clamp-1 text-sm">
             {openGraph?.ogDescription}
           </p>
-          <p className="mt-auto line-clamp-1 text-sm font-medium text-primary underline underline-offset-4">
+          <p className="text-primary mt-auto line-clamp-1 text-sm font-medium underline underline-offset-4">
             {href}
           </p>
         </div>

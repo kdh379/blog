@@ -9,7 +9,7 @@ import React from "react";
 export default function AppHeader( ) {
 
   return (
-    <header className="container fixed top-0 z-30 flex h-mobileHeader items-center border-b bg-background/95 py-2 shadow-md backdrop-blur supports-[backdrop-filter]:bg-background/60 tablet:hidden">
+    <header className="h-mobileHeader bg-background/95 supports-[backdrop-filter]:bg-background/60 tablet:hidden container fixed top-0 z-30 flex items-center border-b py-2 shadow-md backdrop-blur">
       <MobileSheet>
         <Sidebar className="static flex flex-col pr-8" />
       </MobileSheet>

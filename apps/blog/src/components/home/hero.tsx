@@ -35,7 +35,7 @@ function Hero() {
   return (
     <section className="slide-enter-content my-8">
       <Reveal>
-        <h1 className="text-2xl">프론트엔드 개발자 <span className="font-bold text-primary">김도현</span>입니다.</h1>
+        <h1 className="text-2xl">프론트엔드 개발자 <span className="text-primary font-bold">김도현</span>입니다.</h1>
       </Reveal>
 
       <Reveal className="mt-4">

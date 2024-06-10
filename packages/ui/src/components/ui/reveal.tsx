@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useRef } from "react";
+
 import { cn } from "@ui/lib/utils";
 
 interface RevealProps {
@@ -35,7 +36,7 @@ export default function Reveal({width = "fit-content", className, children}: Rev
         initial="hidden"
         animate="visible"
         transition={{ duration: 0.5, ease: "easeIn" }}
-        className="absolute inset-0 z-10 bg-primary"
+        className="bg-primary absolute inset-0 z-10"
       />
     </div>
   );

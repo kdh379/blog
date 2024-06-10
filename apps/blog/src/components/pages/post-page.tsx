@@ -16,13 +16,13 @@ export default async function PostPage(props: PostPageProps) {
   const toc = await getTableOfContents(props.body.raw);
 
   return (
-    <main className="relative mt-mobileHeader py-6 mobile:mt-0 desktop:grid desktop:grid-cols-[1fr_300px] desktop:gap-10">
+    <main className="mt-mobileHeader mobile:mt-0 desktop:grid desktop:grid-cols-[1fr_300px] desktop:gap-10 relative py-6">
       <div className="mx-auto w-full min-w-0 space-y-8">
         <div>
           <h1 className="mb-4 text-4xl font-bold tracking-tight">
             {props.title}
           </h1>
-          <div className="space-y-2 text-muted-foreground">
+          <div className="text-muted-foreground space-y-2">
             {props.description && (
               <p className="text-lg">
                 {props.description}
@@ -53,7 +53,7 @@ export default async function PostPage(props: PostPageProps) {
           />
         </article>
       </div>
-      <aside className="hidden text-sm desktop:block">
+      <aside className="desktop:block hidden text-sm">
         <div className="sticky top-16">
           <ScrollArea className="h-[calc(100vh-6rem)]">
             <TableOfContents toc={toc} />
@@ -66,7 +66,7 @@ export default async function PostPage(props: PostPageProps) {
 
 export function PageSkeleton() {
   return (
-    <div className="py-6 desktop:grid desktop:grid-cols-[1fr_300px] desktop:gap-10">
+    <div className="desktop:grid desktop:grid-cols-[1fr_300px] desktop:gap-10 py-6">
       <article>
         <h1 className="space-y-4">
           <Skeleton className="h-10 w-3/4" />

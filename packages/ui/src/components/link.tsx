@@ -3,6 +3,7 @@
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { startTransition, useCallback } from "react";
+
 import { useSetFinishViewTransition } from "@ui/components/view-transition";
 
 // copied from https://github.com/vercel/next.js/blob/66f8ffaa7a834f6591a12517618dce1fd69784f6/packages/next/src/client/link.tsx#L180-L191

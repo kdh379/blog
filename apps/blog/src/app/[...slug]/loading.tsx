@@ -2,7 +2,7 @@ import { Skeleton } from "@repo/ui/components/ui/skeleton";
 
 export default function Loading() {
   return (
-    <div className="py-6 desktop:grid desktop:grid-cols-[1fr_300px] desktop:gap-10">
+    <div className="desktop:grid desktop:grid-cols-[1fr_300px] desktop:gap-10 py-6">
       <article>
         <h1 className="space-y-4">
           <Skeleton className="h-10 w-3/4" />

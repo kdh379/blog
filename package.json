@@ -11,7 +11,7 @@
   },
   "lint-staged": {
     "(apps|packages)/**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix"
+      "eslint -c ./.eslintrc.js --fix"
     ]
   },
   "devDependencies": {

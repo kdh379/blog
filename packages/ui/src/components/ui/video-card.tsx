@@ -3,6 +3,7 @@
 import { VideoIcon } from "lucide-react";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import * as React from "react";
+
 import { cn } from "@ui/lib/utils";
 import api from "@ui/lib/api";
 
@@ -22,7 +23,7 @@ export default async function VideoCard({ href }: VideoCardProps) {
         rel="noopener noreferrer"
       >
         <p className={cn(
-          "font-medium underline underline-offset-4 transition-colors hover:text-primary"
+          "hover:text-primary font-medium underline underline-offset-4 transition-colors"
         )}
         >
           {href}
@@ -32,8 +33,8 @@ export default async function VideoCard({ href }: VideoCardProps) {
         <div className="aspect-video">
           <React.Suspense
             fallback={(
-              <div className="flex animate-pulse items-center justify-center rounded-md bg-muted">
-                <VideoIcon className="size-1/2 text-muted-foreground" />
+              <div className="bg-muted flex animate-pulse items-center justify-center rounded-md">
+                <VideoIcon className="text-muted-foreground size-1/2" />
               </div>
             )}
           >

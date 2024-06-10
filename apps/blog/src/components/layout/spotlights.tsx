@@ -4,7 +4,7 @@ function Spotlights() {
   return (
     <div className="absolute h-screen w-full overflow-hidden">
       <Spotlight
-        className="md:-left-32 md:-top-20 -left-10 -top-40 h-screen"
+        className="-left-10 -top-40 h-screen md:-left-32 md:-top-20"
         fill="white"
       />
       <Spotlight

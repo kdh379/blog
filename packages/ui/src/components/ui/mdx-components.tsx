@@ -5,6 +5,7 @@ import { MDXComponents } from "mdx/types";
 import { ImageProps } from "next/image";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import * as React from "react";
+
 import { Link } from "@ui/components/link";
 import {
   Accordion,
@@ -96,7 +97,7 @@ const mdxComponents: MDXComponents = {
     <a
       target="_blank"
       rel="noopener noreferrer"
-      className={cn("underline underline-offset-4 transition-colors hover:text-primary", className)}
+      className={cn("hover:text-primary underline underline-offset-4 transition-colors", className)}
       {...props}
     />
   ),
@@ -142,7 +143,7 @@ const mdxComponents: MDXComponents = {
     />
   ),
   hr: ({ ...props }: React.HTMLAttributes<HTMLHRElement>) => (
-    <hr className="my-4 tablet:my-8" {...props} />
+    <hr className="tablet:my-8 my-4" {...props} />
   ),
   table: ({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) => (
     <div className="my-6 w-full overflow-y-auto">
@@ -151,7 +152,7 @@ const mdxComponents: MDXComponents = {
   ),
   tr: ({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) => (
     <tr
-      className={cn("m-0 border-t p-0 even:bg-muted", className)}
+      className={cn("even:bg-muted m-0 border-t p-0", className)}
       {...props}
     />
   ),
@@ -203,7 +204,7 @@ const mdxComponents: MDXComponents = {
   code: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <code
       className={cn(
-        "min-w-full rounded bg-muted px-[0.3rem] py-[0.2rem] text-sm",
+        "bg-muted min-w-full rounded px-[0.3rem] py-[0.2rem] text-sm",
         className
       )}
       {...props}
@@ -215,7 +216,7 @@ const mdxComponents: MDXComponents = {
   Fore: ({ className, ...props }: React.ComponentProps<"p">) => (
     <p
       className={cn(
-        "mt-2 text-muted-foreground",
+        "text-muted-foreground mt-2",
         className
       )}
       {...props}

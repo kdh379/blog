@@ -2,6 +2,7 @@
 
 import { CheckCircle, CheckIcon, CopyIcon } from "lucide-react";
 import React from "react";
+
 import { Button } from "@ui/components/ui/button";
 import { useToast } from "@ui/components/ui/use-toast";
 import { cn } from "@ui/lib/utils";
@@ -12,7 +13,7 @@ interface CopyButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
 
 const CopyMessage = () => (
   <div className="flex items-center space-x-2">
-    <CheckCircle className="size-4 text-primary" />
+    <CheckCircle className="text-primary size-4" />
     <span>복사되었습니다.</span>
   </div>
 );

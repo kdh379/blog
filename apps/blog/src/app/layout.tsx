@@ -91,7 +91,7 @@ export default function RootLayout({
             <Spotlights />
             <AppHeader />
             <div className={cn(
-              "container min-h-screen flex-1 px-8 antialiased tablet:grid tablet:grid-cols-[240px_minmax(0,1fr)] tablet:gap-10"
+              "tablet:grid tablet:grid-cols-[240px_minmax(0,1fr)] tablet:gap-10 container min-h-screen flex-1 px-8 antialiased"
             )}>
               <Sidebar />
               {children}
