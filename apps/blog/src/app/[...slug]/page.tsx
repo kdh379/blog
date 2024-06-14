@@ -1,9 +1,10 @@
 
-import PostPage from "@blog/components/pages/post-page";
 import { siteConfig } from "@repo/ui/site.config";
-import { allPosts } from "contentlayer/generated";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+import { allPosts } from "contentlayer/generated";
+import PostPage from "@blog/components/pages/post-page";
 
 interface PostPageProps {
   params: {

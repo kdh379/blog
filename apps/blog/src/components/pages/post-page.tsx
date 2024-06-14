@@ -1,13 +1,14 @@
-import { TableOfContents } from "@blog/components/post/toc";
-import { getTableOfContents } from "@blog/lib/toc";
 import { Badge } from "@repo/ui/components/ui/badge";
 import Mdx from "@repo/ui/components/ui/mdx-components";
 import { ScrollArea } from "@repo/ui/components/ui/scroll-area";
 import { Skeleton } from "@repo/ui/components/ui/skeleton";
-import { Post } from "contentlayer/generated";
 import dayjs from "dayjs";
 import { Calendar, Clock } from "lucide-react";
 import readingTime from "reading-time";
+
+import { Post } from "contentlayer/generated";
+import { getTableOfContents } from "@blog/lib/toc";
+import { TableOfContents } from "@blog/components/post/toc";
 
 interface PostPageProps extends Post {}
 

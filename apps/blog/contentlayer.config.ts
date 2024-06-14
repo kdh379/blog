@@ -1,5 +1,4 @@
 
-import { UnistNode, UnistTree } from "@blog/types/unist";
 import { ComputedFields, defineDocumentType, makeSource } from "contentlayer/source-files";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -8,6 +7,8 @@ import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import remarkToc from "remark-toc";
 import { visit } from "unist-util-visit";
+
+import { UnistNode, UnistTree } from "@blog/types/unist";
 
 const computedFields: ComputedFields = {
   slug: {

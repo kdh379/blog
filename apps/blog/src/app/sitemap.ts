@@ -1,9 +1,10 @@
 import { siteConfig } from "@repo/ui/site.config";
-import { allPosts } from "contentlayer/generated";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { MetadataRoute } from "next";
+
+import { allPosts } from "contentlayer/generated";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

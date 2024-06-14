@@ -1,8 +1,5 @@
 import "@repo/ui/globals.css";
 
-import AppHeader from "@blog/components/layout/app-header";
-import Sidebar from "@blog/components/layout/sidebar";
-import Spotlights from "@blog/components/layout/spotlights";
 import Providers from "@repo/ui/components/providers";
 import { ViewTransitions } from "@repo/ui/components/view-transition";
 import { cn } from "@repo/ui/lib/utils";
@@ -10,6 +7,10 @@ import { siteConfig } from "@repo/ui/site.config";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+
+import Spotlights from "@blog/components/layout/spotlights";
+import Sidebar from "@blog/components/layout/sidebar";
+import AppHeader from "@blog/components/layout/app-header";
 
 export const metadata: Metadata = {
   title: {

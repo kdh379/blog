@@ -1,11 +1,12 @@
 "use client";
 
-import { getPostTree, type PostTree } from "@blog/lib/post";
 import { Button } from "@repo/ui/components/ui/button";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@repo/ui/components/ui/command";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
+
+import { getPostTree, type PostTree } from "@blog/lib/post";
 
 interface PostTreePropsType {
   postTree: PostTree;

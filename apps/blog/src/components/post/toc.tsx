@@ -1,8 +1,9 @@
 "use client";
 
-import { type TableOfContentsType } from "@blog/lib/toc";
 import { cn } from "@repo/ui/lib/utils";
 import React from "react";
+
+import { type TableOfContentsType } from "@blog/lib/toc";
 
 const MAX_DEPTH = 3;
 
