@@ -22,7 +22,7 @@ function useBrowserNativeTransitions() {
               >(null);
 
   useEffect(() => {
-    if (!("startViewTransition" in document)) {
+    if (!("startViewTransition" in document) || pathname === currentPathname.current) {
       return () => {};
     }
 
@@ -50,6 +50,8 @@ function useBrowserNativeTransitions() {
     return () => {
       window.removeEventListener("popstate", onPopState);
     };
+  // pathname을 의존성으로 요구하지만, 동일 페이지내에서 목차로 이동 시 empty return을 위해 비활성화
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (currentViewTransition && currentPathname.current !== pathname)
