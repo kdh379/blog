@@ -60,87 +60,32 @@ ESLint v8.53.0부터 포매팅 규칙을 deprecate 처리하였고, 이후 v10�
 
 VSCode의 확장탭에서 ESLint를 검색하여 설치합니다.
 
-### 방법1. 스크립트를 이용한 ESLint 설정
-
-eslint 의 실행 스크립트를 통해 설정할 수 있습니다.
-
-```bash
-npx eslint --init
-
-# or
-pnpm dlx eslint --init
-```
-
-명령을 실행하면 아래와 같은 질문들이 나옵니다.
-
-```bash
-√ How would you like to use ESLint? · problems
-√ What type of modules does your project use? · esm // javascript
-√ Which framework does your project use? · react
-√ Does your project use TypeScript? · Yes
-√ Where does your code run? · browser
-√ What format do you want your config file to be in? · JSON
-# The config that you've selected requires the following dependencies:
-
-eslint-plugin-react@latest @typescript-eslint/eslint-plugin@latest @typescript-eslint/parser@latest
-√ Would you like to install them now? · Yes
-√ Which package manager do you want to use? · pnpm
-```
-
-설정이 완료되면 `.eslintrc.json` 파일이 생성됩니다.
-
-```json
-{
-  "env": {
-    "browser": true,
-    "es2023": true,
-    "node": true
-  },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
-  ],
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": 2023,
-    "sourceType": "module"
-  },
-  "plugins": [
-    "react",
-    "@typescript-eslint"
-  ],
-  "rules": {
-    "react/prop-types": "off"
-  }
-}
-```
-
-### 방법2. .eslintrc 파일을 이용한 ESLint 설정
+### .eslintrc 파일을 이용한 ESLint 설정
 
 **1. ESLint 패키지중 필요한 패키지를 설치합니다.**
 
 - eslint: ESLint의 코어 패키지
 - eslint-plugin-react: JSX 및 React 컴포넌트 관련 규칙
 - eslint-plugin-react-hooks: React Hooks 관련 규칙
-- eslint-plugin-simple-import-sort: import 정렬 규칙
-- eslint-plugin-unused-imports: 사용하지 않는 import 삭제 규칙
+- eslint-plugin-import: import / export 관련 규칙
+- eslint-plugin-jsx-a11y: JSX 요소의 접근성 관련 규칙
+- @typescript-eslint/eslint-plugin: TypeScript 관련 규칙
+- @typescript-eslint/parser: TypeScript 코드를 분석하기 위한 parser
 - eslint-plugin-tailwindcss: Tailwind CSS 관련 규칙 // Tailwind CSS 를 사용할 경우
 - eslint-config-next: Next.js 프로젝트에서 사용하는 ESLint 설정 // Next.js 프로젝트일 경우
 
+eslint-config-next는 Next CLI로 구성했을 경우 기본 설치되어 있으므로 아래 명령어에 포함하지 않았습니다.
+
 ```bash title="npm"
-npm install --save-dev eslint eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-simple-import-sort eslint-plugin-unused-imports eslint-plugin-tailwindcss eslint-config-next
+npm install --save-dev eslint eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-tailwindcss @typescript-eslint/eslint-plugin @typescript-eslint/parser
 ```
 
 ```bash title="yarn"
-yarn add --dev eslint eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-simple-import-sort eslint-plugin-unused-imports eslint-plugin-tailwindcss eslint-config-next
+yarn add --dev eslint eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-tailwindcss @typescript-eslint/eslint-plugin @typescript-eslint/parser
 ```
 
 ```bash title="pnpm"
-pnpm i -D eslint eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-simple-import-sort eslint-plugin-unused-imports eslint-plugin-tailwindcss eslint-config-next
+pnpm i -D eslint eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-tailwindcss @typescript-eslint/eslint-plugin @typescript-eslint/parser
 ```
 
 **2. .eslintrc.json 파일을 생성하고 아래와 같이 설정합니다.**
@@ -149,55 +94,140 @@ pnpm i -D eslint eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-sim
 
 ```json title=".eslintrc.json"
 {
+  // 플러그인 문서
+  // https://github.com/jsx-eslint/eslint-plugin-react
+  // https://typescript-eslint.io/
+  // https://www.npmjs.com/package/eslint-plugin-jsx-a11y
+  // https://www.npmjs.com/package/eslint-plugin-tailwindcss
   "extends": [
-    "next/core-web-vitals",
+    "next/core-web-vitals", // Next.js 프로젝트일 경우
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
-    "plugin:tailwindcss/recommended"
+    "plugin:jsx-a11y/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:tailwindcss/recommended" // tailwindcss 사용 시
   ],
   "plugins": [
-    "simple-import-sort",
-    "unused-imports",
-    "tailwindcss"
+    "import",
+    "@typescript-eslint",
+    "tailwindcss", // tailwindcss 사용 시
+    "jsx-a11y",
+    "react"
   ],
+  "parser": "@typescript-eslint/parser",
   "settings": {
     "tailwindcss": {
+      // Tailwind를 사용하는 className override 함수를 지정합니다.
       "callees": ["cn"],
       "config": "tailwind.config.js"
     },
-    "next": {
+    "next": { // Next.js 프로젝트일 경우
       "rootDir": ["./src/"]
+    },
+    // React 버전을 지정합니다.
+    // 지정하지 않을 경우, React 라이브러리 전체를 탐색하므로 린트 속도가 느려질 수 있습니다. ( 기본값: "detect" )
+    "react": {
+      "version": "18.3.1"
+    },
+    // typescript, node 모듈 설정
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./tsconfig.json"
+      },
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
     }
   },
   "rules": {
-    // Code style
     "indent": ["error", 2],
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
-    "comma-dangle": ["error", {
-      "arrays": "always-multiline",
-      "objects": "always-multiline",
-      "imports": "never",
-      "exports": "never",
-      "functions": "never"
-    }],
+    "comma-dangle": ["error", "always-multiline"],
+    "no-trailing-spaces": "error",
     "comma-spacing": ["error", { "before": false, "after": true }],
-    "no-console": "warn",
-    "tailwindcss/no-custom-classname": "off",
+    "block-spacing": ["error", "always"],
+    "semi-spacing": "error",
+    "key-spacing": ["error", {
+      "afterColon": true,
+      "beforeColon": false
+    }],
+    "arrow-parens": ["warn", "always"],
+    "arrow-spacing": ["error", { "before": true, "after": true }],
 
-    // import / export
-    "simple-import-sort/imports": "error",
-    "simple-import-sort/exports": "error",
-    "unused-imports/no-unused-imports-ts": ["error"],
+    // <img> 엘리먼트에 유의미한 대체 텍스트가 있는지 체크
+    "jsx-a11y/alt-text": [
+      "warn",
+      {
+        "elements": ["img"]
+      }
+    ],
+    // 유효한 aria-* 속성만 사용
+    "jsx-a11y/aria-props": "warn",
+    // 유효한 aria-* 상태/값만 사용
+    "jsx-a11y/aria-proptypes": "warn",
+    // DOM에서 지원되는 role, ARIA만 사용
+    "jsx-a11y/aria-unsupported-elements": "warn",
+    // 필수 ARIA 속성이 빠져있는지 체크
+    "jsx-a11y/role-has-required-aria-props": "warn",
+    // ARIA 속성은 지원되는 role에서만 사용
+    "jsx-a11y/role-supports-aria-props": "warn",
 
-    // React
+    // import React from 'react'; 를 사용하지 않아도 되도록 설정
     "react/react-in-jsx-scope": 0,
-    "react/jsx-first-prop-new-line": "error",
+    // children이 없는 경우 self-closing 태그로 설정
     "react/self-closing-comp": ["error", {
       "component": true,
       "html": true
+      }],
+    // DOM에 정의되지 않은 속성 사용 체크
+    "react/no-unknown-property": ["error", {
+      "ignore": ["cmdk-input-wrapper"]
     }],
-    "react/no-unknown-property": "error"
+    // JSX가 여러줄로 이루어진 경우, 괄호로 감싸도록 설정
+    "react/jsx-wrap-multilines": [
+      "error",
+      {
+        "declaration": "parens-new-line",
+        "assignment": "parens-new-line",
+        "return": "parens-new-line",
+        "arrow": "parens-new-line",
+        "condition": "parens-new-line",
+        "logical": "parens-new-line",
+        "prop": "parens-new-line"
+      }
+    ],
+    // 정의되지 않은 prop 사용 체크 ( 기본적으로 typescript에서 체크하므로 off )
+    "react/prop-types": "off", // @see https://github.com/shadcn-ui/ui/issues/120
+
+    // console.warn, console.error만 허용
+    "no-console": ["error", {
+      "allow": ["warn", "error"]
+    }],
+
+    // Tailwind 사용시 커스텀 클래스명 사용 체크
+    "tailwindcss/no-custom-classname": "off",
+
+    // import 순서 정렬
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal", ["parent", "sibling", "index"]], // 그룹핑 순서
+        "newlines-between": "always" // 그룹 사이에 빈 줄 추가 여부
+      }
+    ],
+    
+    // 사용하지 않는 변수 체크
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "varsIgnorePattern": "_.*",
+        "argsIgnorePattern": "_.*",
+        "args": "none"
+      }
+    ]
   }
 }
 ```
@@ -212,7 +242,16 @@ pnpm i -D eslint eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-sim
     "eslint.format.enable": true,
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-    "css.lint.unknownAtRules": "ignore", // Tailwind CSS 사용시
+    "css.lint.unknownAtRules": "ignore", // Tailwind CSS 사용 시
+    "typescript.preferences.importModuleSpecifier": "non-relative", // tsconfig의 path alias 사용 시
+}
+```
+
+```json title=".vscode/extensions.json"
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint"
+  ]
 }
 ```
 
