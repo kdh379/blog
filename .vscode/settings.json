@@ -21,16 +21,25 @@
   "pasteImage.insertPattern": "![${imageFileNameWithoutExt}](${imageFilePath})",
   "pasteImage.prefix": "/",
   "cSpell.words": [
-    // tailwindcss
+    // dependencies
     "tailwindcss",
     "callees",
     "classname",
+    "contentlayer",
+    "turborepo",
+    "shadcn",
+
     // mdx
     "rehype",
     // shadcn-ui
     "cmdk",
+
     // font
-    "pretendard"
+    "pretendard",
+
+    // etc
+    "bandal",
+    "tistory",
   ],
   "eslint.workingDirectories": [
     {
