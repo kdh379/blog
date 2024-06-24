@@ -1,4 +1,6 @@
-# 김도현 Blog
+# bandal.dev
+
+[bandal.dev](https://bandal.dev)
 
 ![김도현 Blog](https://res.cloudinary.com/dkhp8gzh3/image/upload/v1709770522/portfolio/haapudjb1zlaxzrzy7fc.png)
 
