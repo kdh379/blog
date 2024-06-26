@@ -30,7 +30,7 @@ pnpm dev
 
 ### contentlayer ( Content Management )
 
-contentlayer가 `/content` 디렉토리에 있는 `mdx` 파일을 관리합니다.  
+contentlayer가 [apps/blog/content](./apps/blog/content/) 디렉토리에 있는 `mdx` 파일을 관리합니다.  
 관련 설정은 [contentlayer.config.ts](./apps/blog/contentlayer.config.ts) 에서 확인할 수 있습니다.
 
 파일 수정 시 자동으로 `Hot Reload` 되어 개발중인 웹 페이지에 반영됩니다.
