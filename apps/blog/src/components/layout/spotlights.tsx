@@ -2,7 +2,7 @@ import { Spotlight } from "@repo/ui/components/ui/spotlight";
 
 function Spotlights() {
   return (
-    <div className="absolute h-screen w-full overflow-hidden -z-10">
+    <div className="absolute -z-10 h-screen w-full overflow-hidden">
       <Spotlight
         className="-left-10 -top-40 h-screen md:-left-32 md:-top-20"
         fill="white"
