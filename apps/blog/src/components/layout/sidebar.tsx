@@ -21,9 +21,8 @@ export default function Sidebar( {className}: SidebarProps ) {
   const setClose = useSidebarStore((state) => state.close);
 
   return (
-    <>
       <aside className={cn(
-        "tablet:sticky tablet:flex tablet:flex-col fixed top-8 hidden h-[calc(100vh-3.5rem)] shrink-0",
+        "tablet:sticky tablet:flex tablet:flex-col fixed top-8 hidden h-[calc(100vh-3.5rem)] shrink-0 print:hidden",
         className
       )}>
         <Link href="/" onClick={setClose}>
@@ -50,6 +49,5 @@ export default function Sidebar( {className}: SidebarProps ) {
         </ScrollArea>
         <Footer />
       </aside>
-    </>
   );
 }
