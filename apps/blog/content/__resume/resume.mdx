@@ -2,7 +2,7 @@
 title: "Resume"
 description: ''
 draft: false
-date: 2024-07-02
+date: 2024-07-03
 ---
 
 ## About Me
@@ -60,28 +60,26 @@ date: 2024-07-02
 - 백오피스 웹 프론트엔드 신규 기능 개발
 - 기존 솔루션 기술지원
 
-#### InnoManager
-<Fore>사내 솔루션을 리포팅 및 상태를 시각화하여 제공하는 대시보드형 신규 웹 솔루션 개발</Fore>
+#### Java 기반 백엔드 성능 모니터링 웹 앱
+
 <Steps>
 
 **Period**
 2023. 03. ~ 2023. 12.
 
 **Tech Stack**
-- TypeScript, React, Astro
+- TypeScript, React, Next.js
 - React-Query, Context API, Recoil
-- Tailwind CSS, ( 레거시: SCSS, CSS Module )
-- ECharts
+- Tailwind CSS, SCSS
 
 **What did I do**
 - 오픈소스 모니터링 솔루션을 분석하며 기획, 설계, 기술스택 선정, 개발 등 다방면의 역할 수행
 - `Vanilla JS` 기반의 사내 디자인 시스템을 `React`로 마이그레이션
-  - UI 컴포넌트, Modal(Dialog, Drawer, Tooltip) 등
-  - Radix, Headless UI를 참고하여 Custom Hooks 및 Compound Components 패턴으로 유연한 사용이 가능하도록 개발
-- `ECharts` 기반의 대시보드 화면 개발
+  - UI 컴포넌트, Modal(Dialog, Drawer, Tooltip) 등을 `React`로 재구성
+- Apache ECharts 기반의 대시보드 화면 개발
 - 실시간 차트 데이터 API 응답 사이즈 개선
   - 기존엔 화면에 보여주기 위한 시간대의 전체 데이터를 받아오는 방식이었으나, API 응답 크기를 줄이기 위해 각 차트의 마지막 데이터 Timestamp를 전송.
-  - Timestamp부터 최신 데이터까지만 DB에서 가져오도록 API를 개선하여 응답 크기를 90%이상 감소.
+  - Timestamp부터 최신 데이터까지만 DB에서 가져오도록 API를 개선하여 응답 크기를 기존 10MB에서 1MB 이내로 90%이상 감소.
 - <Link
     href="/React/concurrent"
     className="font-normal hover:text-primary"
@@ -91,8 +89,8 @@ date: 2024-07-02
 
 </Steps>
 
-#### 설정관리 UI
-<Fore>사내 솔루션의 제품 설정 신규 웹 솔루션 개발</Fore>
+#### JAVA 기반 솔루션 어드민 페이지 웹 앱
+
 <Steps>
 
 **Period**
