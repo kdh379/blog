@@ -12,11 +12,17 @@ date: 2024-05-13 18:10:48
 ---
 
 만약 React에서 Form을 사용할 때 리렌더링 문제에 대해 조사해 본 적이 있으시다면, [React-Hook-Form](https://react-hook-form.com/)에 대해 들어보셨을 것입니다.
-React-Hook-Form은 React에서 Input 입력마다 상태가 변경되어 리렌더링 되는 문제를 `Ref`를 이용하여 해결한 라이브러리입니다.
-또한 유연하게 Form 컴포넌트를 구성할 수 있어서, 다양한 Form 상태를 관리할 수 있습니다.
+React-Hook-Form은 아래의 기능들을 제공합니다.
+- Input 입력마다 상태가 변경되어 리렌더링 되는 문제를 `register`의 ref를 사용하여 해결합니다.
+- `Controller`를 통해 외부 라이브러리와 쉽게 연동할 수 있습니다.(Input에 사용 시 입력마다 리렌더링됩니다.)
+- 복잡한 검증 로직을 간단하게 작성할 수 있습니다.
+- `FormContext`를 활용하여 유연하게 Form 컴포넌트를 구성할 수 있어서, Props Drilling을 피할 수 있습니다.
 
 그리고 최근, Next.js 14에서 Server Actions가 안정화 되었다는 발표가 나오면서, React-Hook-Form에서 Server Actions를 사용해보고 싶어졌습니다.
-이번 글에선 제가 Next.js 14에서 React-Hook-Form으로 **progressive enhancement**를 유지하며 Serer Actions를 어떻게 처리하였는지 공유하고자 합니다.
+이번 글에선 제가 Next.js 14에서 React-Hook-Form으로 Server Action을 수행하며 Client Side에서 성공/실패 핸들링을 아래 두가지 방법으로 소개하겠습니다.
+- RHF handleSubmit + `onSubmit attr` 사용하기
+- useFormState + `action attr`사용하기
+
 React-Hook-Form은 아직까지 Server Actions를 지원하지 않고 있지만, 향 후 지원 예정인 점을 참고해주세요. 이번 글에선 7.51.4 버전을 사용하였습니다.
 그전에 Server Actions에 대해 간단히 설명드리겠습니다.
 
@@ -26,173 +32,259 @@ React-Hook-Form은 아직까지 Server Actions를 지원하지 않고 있지만,
 RSC(React-Server-Component)에서 비동기로 서버 자원을 가져오거나, `form`으로 양식 제출 및 데이터 변경을 처리할 수 있습니다.
 
 Server Actions를 사용하면 다음의 이점을 가질 수 있습니다.
-- **서버에서 동작**: API 엔드포인트를 만들 필요가 없습니다. 서버에서 직접 실행하여 데이터를 가져오거나, 추가/수정/삭제할 수 있습니다.
-- **비동기 실행**: 비동기로 실행되는 함수입니다. Server / Client Component 모두 사용 가능하며 재사용성이 높습니다.
-- **progressive enhancement(점진적 향상)**: JS를 불러오는 중이거나, 비활성화된 상태더라도 양식을 제출할 수 있습니다.
-- **캐싱 및 재검증 통합**: 변경된 UI와 새로운 데이터를 한번의 왕복으로 가져올 수 있습니다.
 
-## 환경 구성
+**Server Actions의 장점**  
+1. **보안 강화**
+  - 중요한 로직을 서버에서 실행하여 클라이언트측 보안 취약점을 최소화할 수 있습니다.
+  - 민감한 데이터 및 API 주소와 키를 노출하지 않을 수 있습니다.
+2. **성능 최적화**
+  - `useEffect` or `useQuery`를 사용하지 않아서 클라이언트-서버간 왕복 횟수를 줄일 수 있습니다.
+3. **코드 분할 및 관리의 용이성**
+  - 서버와 클라이언트 코드를 명확히 분리하여 관리할 수 있습니다.
+  - 비즈니스 로직을 서버에 집중시켜 관리와 유지보수가 용이합니다.
 
-아래 설명은 Next.js 14 버전을 사용하고 있다는 가정하에 작성되었습니다.
-우선, React-Hook-Form과 검증을 위한 Zod를 설치합니다.
 
-```bash
-pnpm i react-hook-form zod @hookform/resolvers
+**Server Actions로 Form 양식 제출 시 이점**  
+1. **점진적 향상 (Progressvie Enhancement)**
+  - JS를 불러오는 중이거나, 비활성화된 상태더라도 양식을 제출할 수 있습니다.
+2. **서버측 유효성 검사**
+  - 서버측에서 폼 데이터 유효성 검사를 수행할 수 있습니다.
+  - 클라이언트측에서 검증 우회 시도를 방지할 수 있습니다.
+
+
+
+## 1안) RHF handleSubmit + onSubmit 사용하기
+
+**2024-10-01에 작성되었습니다.**
+
+RHF(React-Hook-Form)와 **Server Action**을 함께 사용할 때, `<form />`요소의 `action`속성을 사용하는데 제한이 있습니다.
+- **점진적 향상 사용의 어려움**: RHF은 `handleSubmit`으로 동작하나, `action`은 `useFormState`의 `dispacth`함수를 실행해야 하며, 이는 RHF의 `formState`를 변경시키지 못합니다.
+- **폼 제출 후 처리**: `useFormState`의 `disptach`를 사용하여 폼 제출 후 처리 시 `useEffect`의 의존성 배열을 통해야만 합니다.
+
+### useFormState와의 차이점
+
+`action` 속성으로 `dispatch`를 수행하는 것과 직접 `server action`함수를 실행하는건 **점진적 향상**의 가능 유무에 있습니다.
+이를 배제하는 대신, `server action` 함수의 반환값을 이용하여 성공실/실패 시 로직을 **RHF**의 `handleSubmit` 함수 내에서 직접 처리할 수 있습니다.
+
+비교표
+
+| 구분 | useFormState + action | RHF handleSubmit + onSubmit |
+| --- | --- | --- |
+| 보안 강화 | 가능 | 가능 |
+| 점진적 향상 | 가능 | 불가능 |
+| 폼 상태 관리 | react 18: `useFormStatus` pending<br/>react 19: `useActionState` isPending  | RHF `formState` |
+| 폼 제출 후 처리 | `useEffect`의 의존성 배열 | `handleSubmit` 내부에서 직접 처리 |
+| 유효성 검사 | 서버측 중심 | 클라이언트측, 서버 측 병행 가능 |
+
+**useFormState + action**
+
+```tsx
+const [state, formAction] = useFormState(submitForm, null);
+const form = useForm();
+
+useEffect(() => {
+  if( !state ) return;
+
+  switch (state.code) {
+  case "SUCCESS":
+    console.log("Form submitted successfully!");
+    break;
+  case "VALIDATION_ERROR":
+    console.log("Validation Error", state.fieldErrors);
+    break;
+  case "EXISTS_ERROR":
+    console.log("Exists Error", state.key, state.message);
+    break;
+  case "INTERNAL_ERROR":
+    console.log("Internal Error", state.err);
+    break;
+  }
+}, [state]);
+
+
+return (
+  <Form {...form}>
+    <form
+      action={formAction}
+    >
+      ...
+    </form>
+  </Form>
+);
+
+const SubmitButton = () => {
+  const { isPending } = useFormStatus();
+  return (
+    <button type="submit" disabled={isPending}>Submit</button>
+  );
+};
 ```
+
+**RHF handleSubmit**
+
+```tsx
+const form = useForm();
+
+const onSubmit = async (data: FormValues) => {
+  const state = await submitForm(null, data);
+
+  switch (state.code) {
+  case "SUCCESS":
+    console.log("Form submitted successfully!");
+    break;
+  case "VALIDATION_ERROR":
+    console.log("Validation Error", state.fieldErrors);
+    break;
+  case "EXISTS_ERROR":
+    console.log("Exists Error", state.key, state.message);
+    break;
+  case "INTERNAL_ERROR":
+    console.log("Internal Error", state.err);
+    break;
+  }
+};
+
+return (
+  <Form {...form}>
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+    >
+      ...
+      <button type="submit" disabled={form.formState.isSubmitting}>Submit</button>
+    </form>
+  </Form>
+);
+```
+
+**참고를 위해 Next.js 대규모 오픈 소스를 참고하였습니다.**
+
+- [inbox-zero](https://github.com/elie222/inbox-zero)
+  - useForm + handleSubmit 내에서 server action 함수 실행
+- [formbricks](https://github.com/formbricks/formbricks)
+  - useForm + handleSubmit 내에서 server action 함수 실행
+- [dub](https://github.com/dubinc/dub)
+  - useFormState + action 사용, useEffect로 상태 처리
+  - [next-safe-action](https://www.npmjs.com/package/next-safe-action/v/4.0.4)의 `useAction`훅을 사용한 상태 처리
+
+
+## 2안) useFormState + action 사용하기
+
+꼭 2안을 사용할 필요는 없습니다.
+아래는 React-Hook-Form 라이브러리를 사용하며 **점진적 향상을 취하기 위해 행하는 복잡한 작업들을 소개합니다.**
+위의 **비교표**와 같이 차이는 크지 않지만 복잡도는 더욱 높아집니다.
+
+아래 작성된 소스 코드는 Github 저장소에서 확인할 수 있습니다.
+Github Repo: [React-Hook-Form-Server-Actions](https://github.com/kdh379/react-hook-form-server-actions)
+
+아래 설명은 Next.js 14 + shadcn-ui를 사용하여 작성되었습니다.
+
+**구현에 필요한 목록은 다음과 같습니다.**
+**1. useFormState의 dispatch를 `<form />`의 action으로 사용하기**
+**2. useFormState의 state를 useEffect의 의존성 배열로 사용하여 상태에 따라 처리하기**
 
 ## Form 작성
-
-### Server Action 함수 작성
-
-우선 Form submit 시 작업을 처리하기 위한 Server Action 함수를 간단하게 작성해보겠습니다.
-글 후반부에서 Zod 검증과 Error 핸들링을 추가하겠습니다.
-
-`/src/app/action.ts`
-```ts
-"use server";
-
-import { z } from "zod";
-
-const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-});
-
-export type FormValues = z.infer<typeof formSchema>;
-
-export async function submitForm(
-  _prevState: any,
-  formData: FormData
-): Promise<ActionState | void> {
-
-  console.log("server action", formData);
-
-  return {
-    status: "success",
-    data: {
-      email: formData.email,
-      password: formData.password,
-    },
-  };
-}
-```
-
-Next.js에서 ServerAction을 사용하기 위한 Action 함수는 위가 기본 형태입니다.
-Action 함수는 이전 상태 저장을 위한 prevState와 formData만 인자로 받을 수 있으므로 Argument부분은 고정입니다.
-위에서 만든 action은 Input 유효성 검사나 에러, 성공 시 핸들링하지 않습니다. 아래부터 각 기능들을 추가해보겠습니다.
 
 ### Form Page
 
 React-Hook-Form은 Context 기반이여서 클라이언트 컴포넌트에서만 동작합니다. 파일 상단에 `use client` 를 선언하여 사용합니다.
-방금 작성한 Action함수를 사용하기 위해 `useFormState`를 사용하여 Form 상태를 관리합니다.
-ServerActions를 사용하기 위해선 `<form />`의 `action` 속성에 `formAction`을 넣어주어야 합니다.
+Action함수를 사용하기 위해 `useFormState`를 사용하여 Server Action 함수를 주입합니다.
+**점진적 향상**을 사용하기 위해선 `<form />`의 `action` 속성에 `useFormState`의 `dispatch`를 넣어주어야 합니다.
 
 `/src/app/client-side-form.tsx`
 
 ```tsx
 "use client";
 
-import { useFormState } from "react-dom";
-import { useForm } from "react-hook-form";
-
-import { FormValues, submitForm } from "@/app/actions";
-
 export default function ClientSideForm() {
 
-  const [state, formAction] = useFormState(submitForm, null);
-  const form = useForm();
+  const [state, dispatch] = useFormState(submitForm, null);
+  const form = useFormAction<FormValues>({
+    state,
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    onSuccess: () => {
+      toast({
+        title: "Form submitted successfully!",
+        duration: 5000,
+      });
+    },
+  });
 
   return (
     <Form {...form}>
       <form
-        action={formAction}
+        action={dispatch}
+        className="space-y-4"
       >
-        ...
-      </form>
-    </Form>
-  );
-}
-```
-
-### Input Component
-
-`<input />` 컴포넌트를 만들어보겠습니다.
-React-Hook-Form은 `Ref`를 통해 입력값을 관리하기 때문에, fowardRef를 사용하여 구현하여야만 합니다.
-
-`/src/components/ui/input.tsx`
-
-```tsx
-import * as React from "react";
-
-import { cn } from "@/lib/utils";
-
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {}
-
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ type, ...props }, ref) => {
-    return (
-      <input
-        type={type}
-        ref={ref}
-        {...props}
-      />
-    );
-  }
-);
-Input.displayName = "Input";
-
-export { Input };
-```
-
-이 후, 필드 영역에 Input 컴포넌트를 사용하여 Form을 구성하면 됩니다.
-
-```tsx
-"use client";
-
-import { useFormState } from "react-dom";
-import { useForm } from "react-hook-form";
-
-import { FormValues, submitForm } from "@/app/actions";
-
-export default function ClientSideForm() {
-
-  const [state, formAction] = useFormState(submitForm, null);
-  const form = useForm();
-
-  return (
-    <Form {...form}>
-      <form
-        action={formAction}
-      >
-        <Input
-          type="email"
+        <FormField
+          control={form.control}
           name="email"
-          placeholder="Email"
-          {...form.register("email")}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center justify-between">
+                Email
+                <FormMessage />
+              </FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="email"
+                  placeholder="abc@abc.com"
+                />
+              </FormControl>
+            </FormItem>
+          )}
         />
-        <Input
-          type="password"
+        <FormField
+          control={form.control}
           name="password"
-          placeholder="Password"
-          {...form.register("password")}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center justify-between">
+                Password
+                <FormMessage />
+              </FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="password"
+                  placeholder="********"
+                />
+              </FormControl>
+            </FormItem>
+          )}
         />
-        <button type="submit">Submit</button>
+        <div className="flex justify-end">
+          <SubmitButton />
+        </div>
       </form>
     </Form>
   );
 }
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button
+      isLoading={pending}
+    >
+      Submit
+    </Button>
+  );
+}
 ```
 
-## React-Hook-Form의 Server-Actions
+### React-Hook-Form의 Server-Actions
 
-`<form />`의 action을 통해 submit을 하여도, React-Hook-Form의 상태는 변하지 않습니다.
-이는 React-Hook-Form이 Context 기반으로 동작하기 때문입니다.
+action의 `disptach`함수는 RHF의 formState를 변경시키지 못하므로, 추가 작업이 필요합니다.
 그래서 저는 Custom Hook을 만들어서 Form의 상태를 관리하였습니다.
 
-### 상태 종류 정의
+#### 에러 헨들링 종류 정의
 
-먼저, 상태 종류를 관리하기 위한 type 파일을 작성합니다.
+먼저, 에러 헨들링을 위한 type 파일을 작성합니다.
 
 아래 중 VALIDATION_ERROR는 Zod를 통해 검증된 데이터가 아닌 경우 발생하는 에러입니다.
 나머지는 사용할 상태를 커스텀하여 작성합니다.
@@ -222,11 +314,11 @@ type ActionState =
     };
 ```
 
-### Custom Hook 작성
+#### Custom Hook 작성
 
 다음, `useForm`훅을 대체할 Custom Hook을 작성합니다.
-Action 함수에서 반환된 state를 인자로 받아서 내부에서 상태를 관리하고, 에러 핸들링을 처리합니다.
-또한, **성공 시 Client 단에서 처리할 수 있는 `onSuccess` 함수를 인자로 받아서 처리합니다.**
+`useFormState` 훅에서 반환된 state를 `useEffect`의 의존성 배열로 사용하여, 상태에 따라 처리할 수 있도록 합니다.
+또한, 성공 시 Client 단에서 처리할 수 있는 `onSuccess` 함수를 인자로 받아서 처리합니다.
 
 `/src/hooks/useFormAction.ts`
 
@@ -245,15 +337,15 @@ type UseFormActionProps<TFieldValues extends FieldValues = FieldValues, TContext
 
 export function useFormAction<TFieldValues extends FieldValues = FieldValues, TContext = any>({
   state,
-  onSuccess,
+  onSuccess: onSuccessProp,
   ...props
 }: UseFormActionProps<TFieldValues, TContext>) {
   const form = useForm({
     ...props,
   });
 
-  const handleSuccess = useCallback(() => {
-    onSuccess?.();
+  const onSuccess = useCallback(() => {
+    onSuccessProp?.();
   // eslint-disable-next-line
   }, []);
 
@@ -262,7 +354,7 @@ export function useFormAction<TFieldValues extends FieldValues = FieldValues, TC
     form.clearErrors();
 
     switch (state.code) {
-    case "INTERNAL_ERROR": // 알 수 없는 오류 핸들링
+    case "INTERNAL_ERROR":
       toast({
         title: "Something went wrong.",
         description: "Please try again later.",
@@ -270,21 +362,21 @@ export function useFormAction<TFieldValues extends FieldValues = FieldValues, TC
         duration: 5000,
       });
       break;
-    case "VALIDATION_ERROR": // Zod 유효성 검사 에러 시 form field에 에러 상태 추가
+    case "VALIDATION_ERROR":
       const { fieldErrors } = state;
       Object.keys(fieldErrors).forEach((key) => {
         form.setError(key as any, { message: fieldErrors[key].flat().join(" ") });
       });
       break;
-    case "EXISTS_ERROR": // Custom Error Handling
+    case "EXISTS_ERROR":
       form.setError(state.key as any, { message: state.message });
       break;
-    case "SUCCESS": // 성공 시 처리
+    case "SUCCESS":
       toast({
         title: state.message,
         duration: 5000,
       });
-      handleSuccess();
+      onSuccess();
       form.reset();
       break;
     }
@@ -296,11 +388,8 @@ export function useFormAction<TFieldValues extends FieldValues = FieldValues, TC
   };
 }
 
-// ActionState 타입인지 확인을 위한 Type Guard
 const hasState = (state: ActionState | unknown): state is ActionState => {
-
   if(!state || typeof state !== "object") return false;
-
   return "code" in state;
 };
 ```
@@ -440,305 +529,6 @@ catch (error) {
 }
 ```
 
-### Form Component
-
-Form을 유연하게 사용하고, Form 메시지를 표시하기 위한 Form 컴포넌트를 작성합니다.
-아래는 `shadcn-ui`의 Form 컴포넌트를 사용하여 작성하였습니다.
-
-`/src/components/ui/form.tsx`
-
-```tsx
-import * as LabelPrimitive from "@radix-ui/react-label";
-import { Slot } from "@radix-ui/react-slot";
-import * as React from "react";
-import {
-  Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
-  FormProvider,
-  useFormContext
-} from "react-hook-form";
-
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
-
-const Form = FormProvider;
-
-type FormFieldContextValue<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-> = {
-  name: TName
-}
-
-const FormFieldContext = React.createContext<FormFieldContextValue>(
-  {} as FormFieldContextValue
-);
-
-const FormField = <
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
->({
-    ...props
-  }: ControllerProps<TFieldValues, TName>) => {
-  return (
-    <FormFieldContext.Provider value={{ name: props.name }}>
-      <Controller {...props} />
-    </FormFieldContext.Provider>
-  );
-};
-
-const useFormField = () => {
-  const fieldContext = React.useContext(FormFieldContext);
-  const itemContext = React.useContext(FormItemContext);
-  const { getFieldState, formState } = useFormContext();
-
-  const fieldState = getFieldState(fieldContext.name, formState);
-
-  if (!fieldContext) {
-    throw new Error("useFormField should be used within <FormField>");
-  }
-
-  const { id } = itemContext;
-
-  return {
-    id,
-    name: fieldContext.name,
-    formItemId: `${id}-form-item`,
-    formDescriptionId: `${id}-form-item-description`,
-    formMessageId: `${id}-form-item-message`,
-    ...fieldState,
-  };
-};
-
-type FormItemContextValue = {
-  id: string
-}
-
-const FormItemContext = React.createContext<FormItemContextValue>(
-  {} as FormItemContextValue
-);
-
-const FormItem = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { className?: string }
->(({ className, ...props }, ref) => {
-  const id = React.useId();
-
-  return (
-    <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("space-y-2", className)} {...props} />
-    </FormItemContext.Provider>
-  );
-});
-FormItem.displayName = "FormItem";
-
-const FormLabel = React.forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & { className?: string }
->(({ className, ...props }, ref) => {
-  const { error, formItemId } = useFormField();
-
-  return (
-    <Label
-      ref={ref}
-      className={cn(error && "text-destructive", className)}
-      htmlFor={formItemId}
-      {...props}
-    />
-  );
-});
-FormLabel.displayName = "FormLabel";
-
-const FormControl = React.forwardRef<
-  React.ElementRef<typeof Slot>,
-  React.ComponentPropsWithoutRef<typeof Slot>
->(({ ...props }, ref) => {
-  const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
-
-  return (
-    <Slot
-      ref={ref}
-      id={formItemId}
-      aria-describedby={
-        !error
-          ? `${formDescriptionId}`
-          : `${formDescriptionId} ${formMessageId}`
-      }
-      aria-invalid={!!error}
-      {...props}
-    />
-  );
-});
-FormControl.displayName = "FormControl";
-
-const FormDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement> & { className?: string }
->(({ className, ...props }, ref) => {
-  const { formDescriptionId } = useFormField();
-
-  return (
-    <p
-      ref={ref}
-      id={formDescriptionId}
-      className={cn("text-muted-foreground text-sm", className)}
-      {...props}
-    />
-  );
-});
-FormDescription.displayName = "FormDescription";
-
-const FormMessage = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement> & { className?: string }
->(({ className, children, ...props }, ref) => {
-  const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message) : children;
-
-  if (!body) {
-    return null;
-  }
-
-  return (
-    <p
-      ref={ref}
-      id={formMessageId}
-      className={cn("text-destructive text-sm font-medium", className)}
-      {...props}
-    >
-      {body}
-    </p>
-  );
-});
-FormMessage.displayName = "FormMessage";
-
-export {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useFormField
-};
-```
-
-### Form Page 수정
-
-마지막으로, Form 컴포넌트를 수정하여 Custom Hook을 사용하도록 변경합니다.
-
-```tsx
-"use client";
-
-import { useFormState } from "react-dom";
-import { useForm, Form } from "react-hook-form";
-
-import { useFormAction } from "@/hooks/useFormAction";
-
-export default function ClientSideForm() {
-
-  const [state, formAction] = useFormState(submitForm, null);
-  const form = useFormAction<FormValues>({
-    state,
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-    onSuccess: () => {
-      console.log("Form submitted successfully!");
-    },
-  });
-
-  return (
-    <Form {...form}>
-      <form
-        action={formAction}
-      >
-        <FormFields />
-      </form>
-    </Form>
-  );
-}
-```
-
-#### 로딩 및 에러 상태 표시
-
-action에서 반환 된 에러 처리 및 action 실행 중 로딩 상태를 표시해보겠습니다.
-
-React-Query를 사용해보셨다면 `isLoading` 표시가 얼마나 간단한지 알 수 있을 것입니다.
-
-```tsx
-const { isLoading, data } = useMutation(...)
-```
-
-위에서 isLoading만 확인하면 됩니다.
-하지만, ServerActions`에선 위보단 약간 더 복잡합니다.
-
-우선, **Form의 Fields 영역을 다른 컴포넌트로 분리시켜야만 합니다.**
-그리고 `useFormStatus`의 `pending` 상태를 확인하여 로딩 상태를 표시할 수 있습니다.
-
-```tsx
-function FormFields() {
-  const form = useFormContext();
-  const { pending } = useFormStatus();
-
-  return (
-    <div className="space-y-4">
-      <FormField
-        control={form.control}
-        name="email"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="flex items-center justify-between">
-              Email
-              <FormMessage />
-            </FormLabel>
-            <FormControl>
-              <Input
-                {...field}
-                type="email"
-                placeholder="abc@abc.com"
-                disabled={pending}
-              />
-            </FormControl>
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="password"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="flex items-center justify-between">
-              Password
-              <FormMessage />
-            </FormLabel>
-            <FormControl>
-              <Input
-                {...field}
-                type="password"
-                placeholder="********"
-                disabled={pending}
-              />
-            </FormControl>
-          </FormItem>
-        )}
-      />
-      <div className="flex justify-end">
-        <Button
-          isLoading={pending}
-        >
-          Submit
-        </Button>
-      </div>
-    </div>
-  );
-}
-```
-
 ## 결과 확인
 
 React-Hook-Form에서 Server Actions를 사용하기 위한 모든 과정을 마쳤습니다.
@@ -751,9 +541,6 @@ React-Hook-Form에서 Server Actions를 사용하기 위한 모든 과정을 마
 ![240513-232910](/posts/react-hook-form-with-nextjs-server-actions/240513-232910.png)
 
 ![240513-232803](/posts/react-hook-form-with-nextjs-server-actions/240513-232803.png)
-
-**위 작성된 소스 코드는 아래 Github 저장소에서 확인할 수 있습니다.**
-**Github Repo: [React-Hook-Form-Server-Actions](https://github.com/kdh379/react-hook-form-server-actions)**
 
 ## Bonus: Zod 에러 메시지 커스터마이징
 
@@ -809,14 +596,18 @@ z.setErrorMap(zodErrorMap);
 
 여기까지 읽어주신 분들께 감사드립니다.
 
-위 글은 대부분 제가 작성한 소스코드를 기반으로 작성되었습니다.
-여러 문장의 글보다 직접 위 글에 있는 Custom Hook을 사용해보면 더욱 이해가 빠르게 될 것입니다.
+**저의 결론은 2안의 점진적 향상을 취하는 대신 복잡한 사용성을 갖기 보단,1안의 방법을 사용하는 것이 더 좋다고 생각합니다.**
+여러 대규모 오픈소스를 참고하였으나, 대부분 1안의 방법을 사용하고 있었습니다.
 
-Custom Hook은 최대한 복잡한 사용을 요구하지 않도록 작성해보았습니다.
-또한 React-Hook-Form의 에러 상태를 활용하며, Ref를 활용한 렌더링 최적화 및 progressive enhancement를 유지하도록 작성하였습니다.
+아직까진 ServerActions가 좋은 DX를 제공하진 않는다고 생각합니다.
 
-아직까진 ServerActions가 좋은 DX를 제공하진 않습니다.
-하지만, 올해 출시 예정인 React 19부터는 공식적으로 form action이 추가되므로, 앞으로 계속 개선될 것으로 기대합니다.
+로딩 상태를 처리하기 위해선 `useFormStatus`를 사용해야 하며, 이는 `<form />` 요소 내에 존재해야만 합니다.
+또한 성공/실패 시 클라이언트에서 trigger하기 위해선 `useEffect`를 사용해야 함이 번거롭습니다.
+React 공식문서의 [Effect가 필요하지 않을 수 있습니다.](https://ko.react.dev/learn/you-might-not-need-an-effect)에서 **사용자 이벤트를 처리하는 데 Effect가 필요하지 않습니다.** 라는 내용과 충돌합니다.
+
+하지만 React 19의 canary에서는, `useFormStatus` 대신 `useActionState`에 의해 `isPending`을 사용할 수 있게 하여, 로딩 상태 관리를 더 편하게 하였고,
+앞으로도 더 많은 기능이 추가해 줄 것이라고 생각합니다.
+
 
 
 
@@ -825,3 +616,9 @@ Custom Hook은 최대한 복잡한 사용을 요구하지 않도록 작성해보
 <LinkedCard href="https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations" />
 <LinkedCard href="https://react-hook-form.com/faqs#PerformanceofReactHookForm" />
 <LinkedCard href="https://github.com/react-hook-form/react-hook-form/issues/10391" />
+<LinkedCard href="https://ko.react.dev/learn/you-might-not-need-an-effect" />
+
+참조한 오픈소스 목록
+<LinkedCard href="https://github.com/elie222/inbox-zero" />
+<LinkedCard href="https://github.com/formbricks/formbricks" />
+<LinkedCard href="https://github.com/dubinc/dub" />
