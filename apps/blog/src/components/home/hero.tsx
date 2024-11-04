@@ -52,9 +52,9 @@ function Hero() {
             <Icons.docs className="size-5" />
             Resume
           </Link>
-          <Anchor href="mailto:ehgus37625@naver.com">
+          <Anchor href="mailto:bandal2kim@gmail.com">
             <Icons.email className="size-5" />
-            ehgus37625@naver.com
+            bandal2kim@gmail.com
           </Anchor>
           <Anchor href={siteConfig.github}>
             <Icons.github className="size-5" />
